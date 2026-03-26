@@ -351,6 +351,23 @@
     return { a, b, answer: a + b };
   }
 
+  function updateStreak() {
+    const today = new Date().toDateString();
+    const lastVisit = localStorage.getItem('lastVisit');
+    let streak = parseInt(localStorage.getItem('streak') || '0');
+    if (lastVisit === today) {
+      // already updated today
+    } else if (lastVisit === new Date(Date.now() - 86400000).toDateString()) {
+      streak++;
+      localStorage.setItem('streak', streak);
+      localStorage.setItem('lastVisit', today);
+    } else {
+      streak = 1;
+      localStorage.setItem('streak', streak);
+      localStorage.setItem('lastVisit', today);
+    }
+  }
+
   function buildTable() {
     questions = Array.from({ length: NUM_ROWS }, generateQuestion);
     const tbody = document.getElementById('tableBody');
@@ -442,14 +459,13 @@
     const starStr = '⭐'.repeat(stars) + '⬜'.repeat(5 - stars);
     document.getElementById('starsDisplay').textContent = starStr;
 
-    if (answered === NUM_ROWS && correct === NUM_ROWS) {
-      showCelebration(correct);
-    } else if (answered === NUM_ROWS) {
+    if (answered === NUM_ROWS) {
       showCelebration(correct);
     }
   }
 
   function showCelebration(score) {
+    updateStreak();
     const cel = document.getElementById('celebration');
     const msg = document.getElementById('celebrationMsg');
 
