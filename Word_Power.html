@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Word Power ⚡</title>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #FFD93D;
+    --red: #E63946;
+    --blue: #1D3557;
+    --green: #2DC653;
+    --white: #F8F9FA;
+    --dark: #0D0D0D;
+    --correct: #2DC653;
+    --wrong: #E63946;
+    --purple: #9C27B0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  html, body { height: 100%; overflow-x: hidden; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--blue);
+    min-height: 100vh;
+    position: relative;
+  }
+
+  .bg-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .bg-layer::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+
+  .bg-layer::after {
+    content: '';
+    position: absolute;
+    inset: -100%;
+    background: repeating-linear-gradient(
+      55deg, transparent, transparent 40px,
+      rgba(255,255,255,0.015) 40px, rgba(255,255,255,0.015) 80px
+    );
+    animation: slideBg 30s linear infinite;
+  }
+
+  @keyframes slideBg {
+    from { transform: translateX(0); }
+    to   { transform: translateX(200px); }
+  }
+
+  .floater {
+    position: fixed;
+    font-size: 2rem;
+    opacity: 0.07;
+    pointer-events: none;
+    animation: floatUp linear infinite;
+    z-index: 0;
+  }
+
+  @keyframes floatUp {
+    0%   { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+    10%  { opacity: 0.07; }
+    90%  { opacity: 0.07; }
+    100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    padding: 24px 20px 48px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 20px;
+    animation: dropIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+
+  @keyframes dropIn {
+    from { transform: translateY(-60px) scale(0.8); opacity: 0; }
+    to   { transform: translateY(0) scale(1); opacity: 1; }
+  }
+
+  .header h1 {
+    font-family: 'Bangers', cursive;
+    font-size: clamp(2.5rem, 10vw, 4rem);
+    color: var(--gold);
+    letter-spacing: 3px;
+    line-height: 1;
+    text-shadow: 3px 3px 0 var(--red), 6px 6px 0 rgba(0,0,0,0.3);
+  }
+
+  .header p {
+    color: rgba(255,255,255,0.65);
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-top: 6px;
+    letter-spacing: 1px;
+  }
+
+  .top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255,255,255,0.07);
+    border: 2px solid rgba(255,255,255,0.12);
+    border-radius: 16px;
+    padding: 12px 18px;
+    margin-bottom: 20px;
+    animation: fadeUp 0.5s ease 0.2s both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .score-label {
+    font-family: 'Bangers', cursive;
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 2px;
+  }
+
+  .score-val {
+    font-family: 'Bangers', cursive;
+    font-size: 2rem;
+    color: var(--gold);
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+    letter-spacing: 1px;
+  }
+
+  .progress-wrap {
+    flex: 1;
+    margin: 0 16px;
+  }
+
+  .progress-track {
+    background: rgba(255,255,255,0.1);
+    border-radius: 50px;
+    height: 10px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), #FF9F43);
+    border-radius: 50px;
+    transition: width 0.4s ease;
+    box-shadow: 0 0 8px rgba(255,217,61,0.6);
+  }
+
+  .progress-text {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.5);
+    font-weight: 700;
+    text-align: center;
+    margin-top: 4px;
+    letter-spacing: 1px;
+  }
+
+  .card {
+    background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+    border: 2px solid rgba(255,255,255,0.12);
+    border-radius: 24px;
+    padding: 32px 24px 28px;
+    text-align: center;
+    margin-bottom: 20px;
+    animation: fadeUp 0.5s ease 0.3s both;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle at 60% 40%, rgba(255,217,61,0.04), transparent 60%);
+    pointer-events: none;
+  }
+
+  .theme-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.6);
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 50px;
+    margin-bottom: 20px;
+  }
+
+  .question-num {
+    font-family: 'Bangers', cursive;
+    font-size: 1rem;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+
+  .word-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 16px 0 28px;
+    flex-wrap: wrap;
+  }
+
+  .letter-box {
+    width: 58px;
+    height: 68px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bangers', cursive;
+    font-size: 2.2rem;
+    letter-spacing: 1px;
+    border: 3px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.06);
+    color: white;
+    text-shadow: 1px 2px 0 rgba(0,0,0,0.3);
+    transition: all 0.3s;
+  }
+
+  .letter-box.blank {
+    border: 3px dashed var(--gold);
+    background: rgba(255,217,61,0.08);
+    color: var(--gold);
+    font-size: 2.5rem;
+    animation: blankPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes blankPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255,217,61,0.3); }
+    50%       { box-shadow: 0 0 0 8px rgba(255,217,61,0); }
+  }
+
+  .letter-box.blank.correct {
+    border-color: var(--correct);
+    background: rgba(45,198,83,0.2);
+    color: var(--correct);
+    animation: popBounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .letter-box.blank.wrong {
+    border-color: var(--wrong);
+    background: rgba(230,57,70,0.2);
+    color: var(--wrong);
+    animation: shake 0.4s ease;
+  }
+
+  @keyframes popBounce {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.3); }
+    100% { transform: scale(1); }
+  }
+
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20%      { transform: translateX(-8px); }
+    40%      { transform: translateX(8px); }
+    60%      { transform: translateX(-5px); }
+    80%      { transform: translateX(5px); }
+  }
+
+  .clue-emoji {
+    font-size: 3.5rem;
+    display: block;
+    margin-bottom: 4px;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-6px); }
+  }
+
+  .choices {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    animation: fadeUp 0.5s ease 0.4s both;
+    margin-bottom: 20px;
+  }
+
+  .choice-btn {
+    font-family: 'Bangers', cursive;
+    font-size: 1.8rem;
+    color: white;
+    background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06));
+    border: 2px solid rgba(255,255,255,0.2);
+    border-radius: 16px;
+    padding: 16px 8px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    text-shadow: 1px 2px 0 rgba(0,0,0,0.3);
+    transition: transform 0.12s, box-shadow 0.12s, background 0.15s;
+    box-shadow: 0 5px 0 rgba(0,0,0,0.25);
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .choice-btn:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 0 rgba(0,0,0,0.25);
+    background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
+  }
+
+  .choice-btn:active:not(:disabled) {
+    transform: translateY(3px);
+    box-shadow: 0 2px 0 rgba(0,0,0,0.25);
+  }
+
+  .choice-btn:disabled { cursor: default; }
+
+  .choice-btn.correct {
+    background: linear-gradient(135deg, #2DC653, #1a8a35);
+    border-color: #2DC653;
+    box-shadow: 0 5px 0 #0f5c22;
+    transform: translateY(-3px);
+  }
+
+  .choice-btn.wrong {
+    background: linear-gradient(135deg, #E63946, #a01f2a);
+    border-color: #E63946;
+    box-shadow: 0 5px 0 #6b1017;
+  }
+
+  .choice-btn.dimmed { opacity: 0.3; }
+
+  .feedback {
+    font-family: 'Bangers', cursive;
+    font-size: 1.4rem;
+    letter-spacing: 1px;
+    min-height: 36px;
+    text-align: center;
+    margin-bottom: 16px;
+    transition: all 0.2s;
+  }
+
+  .feedback.correct { color: var(--correct); text-shadow: 0 0 20px rgba(45,198,83,0.5); }
+  .feedback.wrong   { color: var(--wrong);   text-shadow: 0 0 20px rgba(230,57,70,0.5); }
+  .feedback.empty   { color: transparent; }
+
+  .btn-next {
+    font-family: 'Bangers', cursive;
+    font-size: 1.4rem;
+    letter-spacing: 2px;
+    background: linear-gradient(135deg, var(--gold), #FF9F43);
+    color: var(--dark);
+    border: none;
+    border-radius: 50px;
+    padding: 14px 40px;
+    cursor: pointer;
+    box-shadow: 0 6px 0 #b8960a, 0 8px 16px rgba(0,0,0,0.2);
+    transition: transform 0.12s, box-shadow 0.12s;
+    display: none;
+    margin: 0 auto;
+  }
+
+  .btn-next.show { display: block; animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+  @keyframes popIn {
+    from { transform: scale(0.5); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+  }
+
+  .btn-next:hover { transform: translateY(-3px); box-shadow: 0 9px 0 #b8960a; }
+  .btn-next:active { transform: translateY(3px); box-shadow: 0 3px 0 #b8960a; }
+
+  .results {
+    display: none;
+    text-align: center;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .results.show { display: block; }
+
+  .results-trophy {
+    font-size: 5rem;
+    display: block;
+    margin-bottom: 12px;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .results-title {
+    font-family: 'Bangers', cursive;
+    font-size: clamp(2rem, 8vw, 3.5rem);
+    color: var(--gold);
+    letter-spacing: 3px;
+    text-shadow: 3px 3px 0 var(--red);
+    margin-bottom: 8px;
+  }
+
+  .results-score {
+    font-family: 'Bangers', cursive;
+    font-size: 1.6rem;
+    color: white;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+  }
+
+  .results-stars {
+    font-size: 2.5rem;
+    letter-spacing: 6px;
+    margin-bottom: 24px;
+    display: block;
+  }
+
+  .btn-new {
+    font-family: 'Bangers', cursive;
+    font-size: 1.4rem;
+    letter-spacing: 2px;
+    background: linear-gradient(135deg, #E63946, #c1121f);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 14px 40px;
+    cursor: pointer;
+    box-shadow: 0 6px 0 #7d0d14, 0 8px 16px rgba(0,0,0,0.2);
+    transition: transform 0.12s, box-shadow 0.12s;
+    margin-bottom: 16px;
+    display: block;
+    width: 100%;
+  }
+
+  .btn-new:hover { transform: translateY(-3px); box-shadow: 0 9px 0 #7d0d14; }
+  .btn-new:active { transform: translateY(3px); box-shadow: 0 3px 0 #7d0d14; }
+
+  .btn-home {
+    font-family: 'Bangers', cursive;
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.7);
+    border: 2px solid rgba(255,255,255,0.15);
+    border-radius: 50px;
+    padding: 12px 32px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: block;
+    width: 100%;
+    text-decoration: none;
+    text-align: center;
+  }
+
+  .btn-home:hover { background: rgba(255,255,255,0.14); color: white; }
+
+  .confetti-piece {
+    position: fixed;
+    top: -20px;
+    border-radius: 2px;
+    animation: confettiFall linear forwards;
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  @keyframes confettiFall {
+    0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+    80%  { opacity: 1; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+
+  .splash {
+    position: fixed;
+    inset: 0;
+    background: var(--blue);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    animation: splashOut 0.5s ease 1.6s both;
+  }
+
+  @keyframes splashOut {
+    to { opacity: 0; pointer-events: none; }
+  }
+
+  .splash-icon {
+    font-size: 5rem;
+    animation: splashBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both;
+  }
+
+  .splash-title {
+    font-family: 'Bangers', cursive;
+    font-size: 3rem;
+    color: var(--gold);
+    letter-spacing: 4px;
+    text-shadow: 3px 3px 0 var(--red);
+    animation: splashBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.4s both;
+  }
+
+  @keyframes splashBounce {
+    from { transform: scale(0); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+  }
+</style>
+</head>
+<body>
+
+<div class="splash">
+  <div class="splash-icon">⚡</div>
+  <div class="splash-title">WORD POWER</div>
+</div>
+
+<div class="bg-layer"></div>
+<div class="floater" style="left:5%;  animation-duration:16s; animation-delay:0s;">⚡</div>
+<div class="floater" style="left:20%; animation-duration:22s; animation-delay:3s;">🏈</div>
+<div class="floater" style="left:45%; animation-duration:18s; animation-delay:6s;">🦸</div>
+<div class="floater" style="left:65%; animation-duration:20s; animation-delay:1s;">⭐</div>
+<div class="floater" style="left:85%; animation-duration:14s; animation-delay:4s;">🏆</div>
+
+<div class="page">
+
+  <div class="header">
+    <h1>⚡ WORD POWER ⚡</h1>
+    <p>Find the missing letter to complete the word!</p>
+  </div>
+
+  <div class="top-bar">
+    <div>
+      <div class="score-label">SCORE</div>
+      <div class="score-val" id="scoreVal">0</div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill" style="width:0%"></div>
+      </div>
+      <div class="progress-text" id="progressText">0 / 10</div>
+    </div>
+    <div>
+      <div class="score-label">BEST</div>
+      <div class="score-val" id="bestVal">0</div>
+    </div>
+  </div>
+
+  <div id="gameArea">
+    <div class="card" id="questionCard">
+      <span class="clue-emoji" id="clueEmoji">⭐</span>
+      <div class="theme-badge" id="themeBadge">SPORT</div>
+      <div class="question-num" id="questionNum">QUESTION 1 OF 10</div>
+      <div class="word-display" id="wordDisplay"></div>
+    </div>
+
+    <div class="choices" id="choicesGrid"></div>
+
+    <div class="feedback empty" id="feedback">-</div>
+    <button class="btn-next" id="btnNext" onclick="nextQuestion()">NEXT ➜</button>
+  </div>
+
+  <div class="results" id="resultsScreen">
+    <span class="results-trophy" id="resultsTrophy">🏆</span>
+    <div class="results-title" id="resultsTitle">AMAZING!</div>
+    <div class="results-score" id="resultsScore">10 out of 10</div>
+    <span class="results-stars" id="resultsStars">⭐⭐⭐⭐⭐</span>
+    <button class="btn-new" onclick="startGame()">🔄 NEW ROUND!</button>
+    <a class="btn-home" href="index.html">🏠 Back to HQ</a>
+  </div>
+
+</div>
+
+<script>
+  const ALL_WORDS = [
+    { word: "ball",  blank: 1, emoji: "⚽", theme: "SPORT" },
+    { word: "goal",  blank: 1, emoji: "🥅", theme: "SPORT" },
+    { word: "kick",  blank: 1, emoji: "🦵", theme: "SPORT" },
+    { word: "race",  blank: 1, emoji: "🏃", theme: "SPORT" },
+    { word: "swim",  blank: 2, emoji: "🏊", theme: "SPORT" },
+    { word: "jump",  blank: 1, emoji: "🤸", theme: "SPORT" },
+    { word: "team",  blank: 2, emoji: "👕", theme: "SPORT" },
+    { word: "wins",  blank: 1, emoji: "🏆", theme: "SPORT" },
+    { word: "fast",  blank: 1, emoji: "⚡", theme: "SPORT" },
+    { word: "flag",  blank: 2, emoji: "🚩", theme: "SPORT" },
+    { word: "club",  blank: 2, emoji: "🏈", theme: "SPORT" },
+    { word: "gold",  blank: 1, emoji: "🥇", theme: "SPORT" },
+    { word: "oval",  blank: 1, emoji: "🏟️", theme: "SPORT" },
+    { word: "mark",  blank: 2, emoji: "🙌", theme: "SPORT" },
+    { word: "punt",  blank: 1, emoji: "🦶", theme: "SPORT" },
+    { word: "hero",  blank: 1, emoji: "🦸", theme: "MOVIE" },
+    { word: "star",  blank: 2, emoji: "⭐", theme: "MOVIE" },
+    { word: "film",  blank: 1, emoji: "🎬", theme: "MOVIE" },
+    { word: "wolf",  blank: 2, emoji: "🐺", theme: "MOVIE" },
+    { word: "fish",  blank: 2, emoji: "🐟", theme: "MOVIE" },
+    { word: "ship",  blank: 2, emoji: "🚢", theme: "MOVIE" },
+    { word: "bird",  blank: 1, emoji: "🐦", theme: "MOVIE" },
+    { word: "mask",  blank: 1, emoji: "🎭", theme: "MOVIE" },
+    { word: "cape",  blank: 1, emoji: "🦸", theme: "MOVIE" },
+    { word: "fire",  blank: 2, emoji: "🔥", theme: "MOVIE" },
+    { word: "gang",  blank: 1, emoji: "😈", theme: "MOVIE" },
+    { word: "claw",  blank: 2, emoji: "🦅", theme: "MOVIE" },
+    { word: "roar",  blank: 1, emoji: "🦁", theme: "MOVIE" },
+    { word: "dark",  blank: 1, emoji: "🌑", theme: "MOVIE" },
+    { word: "paws",  blank: 1, emoji: "🐾", theme: "MOVIE" },
+  ];
+
+  const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  let questions = [], current = 0, score = 0, answered = false;
+  let best = parseInt(localStorage.getItem('wordBest') || '0');
+
+  function startGame() {
+    const shuffled = [...ALL_WORDS].sort(() => Math.random() - 0.5);
+    questions = shuffled.slice(0, 10);
+    current = 0;
+    score = 0;
+    answered = false;
+    document.getElementById('resultsScreen').classList.remove('show');
+    document.getElementById('gameArea').style.display = 'block';
+    document.getElementById('scoreVal').textContent = '0';
+    document.getElementById('bestVal').textContent = best;
+    renderQuestion();
+  }
+
+  function renderQuestion() {
+    answered = false;
+    const q = questions[current];
+    const word = q.word.toUpperCase();
+    const blankIdx = q.blank;
+
+    document.getElementById('progressFill').style.width = (current / 10 * 100) + '%';
+    document.getElementById('progressText').textContent = current + ' / 10';
+    document.getElementById('questionNum').textContent = 'QUESTION ' + (current + 1) + ' OF 10';
+    document.getElementById('themeBadge').textContent = q.theme;
+    document.getElementById('clueEmoji').textContent = q.emoji;
+
+    const display = document.getElementById('wordDisplay');
+    display.innerHTML = '';
+    for (let i = 0; i < word.length; i++) {
+      const box = document.createElement('div');
+      box.className = 'letter-box' + (i === blankIdx ? ' blank' : '');
+      box.id = 'letterBox' + i;
+      box.textContent = i === blankIdx ? '_' : word[i];
+      display.appendChild(box);
+    }
+
+    const correct = word[blankIdx];
+    const wrongs = ALPHABET.filter(l => l !== correct).sort(() => Math.random() - 0.5).slice(0, 3);
+    const choices = [correct, ...wrongs].sort(() => Math.random() - 0.5);
+
+    const grid = document.getElementById('choicesGrid');
+    grid.innerHTML = '';
+    choices.forEach(letter => {
+      const btn = document.createElement('button');
+      btn.className = 'choice-btn';
+      btn.textContent = letter;
+      btn.onclick = () => handleChoice(btn, letter, correct);
+      grid.appendChild(btn);
+    });
+
+    const fb = document.getElementById('feedback');
+    fb.className = 'feedback empty';
+    fb.textContent = '-';
+    document.getElementById('btnNext').classList.remove('show');
+  }
+
+  function handleChoice(btn, chosen, correct) {
+    if (answered) return;
+    answered = true;
+
+    const blankBox = document.getElementById('letterBox' + questions[current].blank);
+    const fb = document.getElementById('feedback');
+    const allBtns = document.querySelectorAll('.choice-btn');
+    allBtns.forEach(b => b.disabled = true);
+
+    if (chosen === correct) {
+      score++;
+      document.getElementById('scoreVal').textContent = score;
+      btn.classList.add('correct');
+      blankBox.textContent = chosen;
+      blankBox.classList.remove('blank');
+      blankBox.classList.add('correct');
+      fb.className = 'feedback correct';
+      const msgs = ['SUPERSTAR!', 'NAILED IT!', 'BRILLIANT!', 'HERO MOVE!', 'ON FIRE!', 'SMASHED IT!'];
+      fb.textContent = msgs[Math.floor(Math.random() * msgs.length)];
+      if (score > best) {
+        best = score;
+        localStorage.setItem('wordBest', best);
+        document.getElementById('bestVal').textContent = best;
+      }
+    } else {
+      btn.classList.add('wrong');
+      blankBox.classList.add('wrong');
+      blankBox.textContent = chosen;
+      fb.className = 'feedback wrong';
+      const msgs = ['SO CLOSE!', 'NEARLY!', 'KEEP GOING!', 'TRY AGAIN NEXT TIME!'];
+      fb.textContent = msgs[Math.floor(Math.random() * msgs.length)];
+      allBtns.forEach(b => {
+        if (b.textContent === correct) b.classList.add('correct');
+        else if (b !== btn) b.classList.add('dimmed');
+      });
+    }
+
+    setTimeout(() => {
+      if (current < 9) {
+        document.getElementById('btnNext').classList.add('show');
+      } else {
+        setTimeout(() => showResults(), 800);
+      }
+    }, 600);
+  }
+
+  function nextQuestion() {
+    current++;
+    renderQuestion();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function showResults() {
+    document.getElementById('gameArea').style.display = 'none';
+    document.getElementById('progressFill').style.width = '100%';
+    document.getElementById('progressText').textContent = '10 / 10';
+
+    const results = document.getElementById('resultsScreen');
+    results.classList.add('show');
+
+    let trophy, title;
+    if (score === 10)     { trophy = '🏆'; title = 'PERFECT!';    launchConfetti(70); }
+    else if (score >= 8)  { trophy = '🌟'; title = 'AMAZING!';    launchConfetti(40); }
+    else if (score >= 6)  { trophy = '👊'; title = 'GREAT JOB!'; }
+    else if (score >= 4)  { trophy = '💪'; title = 'KEEP GOING!'; }
+    else                  { trophy = '🔄'; title = 'TRY AGAIN!'; }
+
+    document.getElementById('resultsTrophy').textContent = trophy;
+    document.getElementById('resultsTitle').textContent = title;
+    document.getElementById('resultsScore').textContent = score + ' out of 10';
+
+    const stars = Math.min(5, Math.round(score / 2));
+    document.getElementById('resultsStars').textContent = '⭐'.repeat(stars) + '⬜'.repeat(5 - stars);
+    results.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function launchConfetti(count) {
+    const colors = ['#FFD93D','#2DC653','#6EC6F5','#E63946','#9C27B0','#FF9F43'];
+    for (let i = 0; i < count; i++) {
+      setTimeout(() => {
+        const p = document.createElement('div');
+        p.className = 'confetti-piece';
+        p.style.left = Math.random() * 100 + 'vw';
+        p.style.background = colors[Math.floor(Math.random() * colors.length)];
+        p.style.width = (8 + Math.random() * 8) + 'px';
+        p.style.height = (8 + Math.random() * 8) + 'px';
+        p.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        p.style.animationDuration = (2 + Math.random() * 2) + 's';
+        p.style.animationDelay = (Math.random() * 0.3) + 's';
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), 5000);
+      }, i * 25);
+    }
+  }
+
+  document.getElementById('bestVal').textContent = best;
+  startGame();
+</script>
+</body>
+</html>
