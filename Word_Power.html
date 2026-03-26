@@ -621,6 +621,23 @@
   let questions = [], current = 0, score = 0, answered = false;
   let best = parseInt(localStorage.getItem('wordBest') || '0');
 
+  function updateStreak() {
+    const today = new Date().toDateString();
+    const lastVisit = localStorage.getItem('lastVisit');
+    let streak = parseInt(localStorage.getItem('streak') || '0');
+    if (lastVisit === today) {
+      // already updated today
+    } else if (lastVisit === new Date(Date.now() - 86400000).toDateString()) {
+      streak++;
+      localStorage.setItem('streak', streak);
+      localStorage.setItem('lastVisit', today);
+    } else {
+      streak = 1;
+      localStorage.setItem('streak', streak);
+      localStorage.setItem('lastVisit', today);
+    }
+  }
+
   function startGame() {
     const shuffled = [...ALL_WORDS].sort(() => Math.random() - 0.5);
     questions = shuffled.slice(0, 10);
@@ -729,6 +746,7 @@
   }
 
   function showResults() {
+    updateStreak();
     document.getElementById('gameArea').style.display = 'none';
     document.getElementById('progressFill').style.width = '100%';
     document.getElementById('progressText').textContent = '10 / 10';
