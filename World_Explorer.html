@@ -92,7 +92,7 @@
   .choice-btn.wrong { background: linear-gradient(135deg, #E63946, #a01f2a); border-color: #E63946; box-shadow: 0 5px 0 #6b1017; }
   .choice-btn.dimmed { opacity: 0.3; }
 
-  .feedback { font-family: 'Bangers', cursive; font-size: 1.2rem; letter-spacing: 1px; min-height: 30px; text-align: center; margin-bottom: 10px; }
+  .feedback { font-family: 'Bangers', cursive; font-size: 1.1rem; letter-spacing: 1px; min-height: 30px; text-align: center; margin-bottom: 10px; }
   .feedback.correct { color: var(--correct); text-shadow: 0 0 20px rgba(45,198,83,0.5); }
   .feedback.wrong { color: var(--wrong); text-shadow: 0 0 20px rgba(230,57,70,0.5); }
   .feedback.empty { color: transparent; }
@@ -238,6 +238,15 @@ const ALL_FLAGS = {
   'Egypt':'🇪🇬','South Africa':'🇿🇦','Tanzania':'🇹🇿',
   'China':'🇨🇳','India':'🇮🇳','Japan':'🇯🇵',
   'Australia':'🇦🇺','New Zealand':'🇳🇿','Fiji':'🇫🇯',
+};
+
+const COUNTRY_TO_CONT_NAME = {
+  'USA':'North America','Canada':'North America','Mexico':'North America',
+  'Brazil':'South America','Argentina':'South America','Chile':'South America',
+  'France':'Europe','Germany':'Europe','Italy':'Europe',
+  'Egypt':'Africa','South Africa':'Africa','Tanzania':'Africa',
+  'China':'Asia','India':'Asia','Japan':'Asia',
+  'Australia':'Australia','New Zealand':'Australia','Fiji':'Australia',
 };
 
 const CONTINENTS = [
@@ -418,8 +427,16 @@ function handleCountryQ(btn,chosen,correct,contName){
     if(total>best){best=total;localStorage.setItem('worldBest',best);document.getElementById('bestVal').textContent=best;}
   } else {
     btn.classList.add('wrong');
-    setFB('wrong',['SO CLOSE!','NEARLY THERE!','KEEP GOING!','GOOD TRY!']);
-    allBtns.forEach(b=>{if(b.textContent.includes(correct))b.classList.add('correct');else if(b!==btn)b.classList.add('dimmed');});
+    const wrongContinent = COUNTRY_TO_CONT_NAME[chosen] || 'another continent';
+    const fb = document.getElementById('feedback');
+    fb.className = 'feedback wrong';
+    fb.textContent = chosen + ' is in ' + wrongContinent + '!';
+    allBtns.forEach(b=>{
+      if(b.textContent.includes(correct))b.classList.add('correct');
+      else if(b!==btn)b.classList.add('dimmed');
+    });
+    setTimeout(()=>{ if(current<TOTAL-1)showNext(); else setTimeout(showResults,900); },700);
+    return;
   }
   setTimeout(()=>{ if(current<TOTAL-1)showNext(); else setTimeout(showResults,900); },700);
 }
