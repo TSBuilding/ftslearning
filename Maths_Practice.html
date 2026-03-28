@@ -47,15 +47,29 @@
     to { transform: translateX(-200px); }
   }
 
-  .container {
-    max-width: 760px;
-    margin: 0 auto;
-  }
+  .container { max-width: 760px; margin: 0 auto; }
 
-  .header {
-    text-align: center;
-    margin-bottom: 24px;
+  .btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    background: rgba(0,0,0,0.08);
+    color: #555;
+    border: 2px solid rgba(0,0,0,0.1);
+    border-radius: 50px;
+    padding: 8px 20px;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-decoration: none;
+    margin-bottom: 16px;
+    display: block;
+    width: fit-content;
   }
+  .btn-back:hover { background: rgba(0,0,0,0.13); color: #333; }
+
+  .header { text-align: center; margin-bottom: 24px; }
 
   .header h1 {
     font-family: 'Fredoka One', cursive;
@@ -66,12 +80,7 @@
     line-height: 1.1;
   }
 
-  .header p {
-    font-size: 1.05rem;
-    color: #555;
-    margin-top: 6px;
-    font-weight: 600;
-  }
+  .header p { font-size: 1.05rem; color: #555; margin-top: 6px; font-weight: 600; }
 
   .score-bar {
     display: flex;
@@ -86,22 +95,9 @@
     border: 3px solid var(--sun);
   }
 
-  .score-display {
-    font-family: 'Fredoka One', cursive;
-    font-size: 1.6rem;
-    color: var(--dark);
-  }
-
-  .score-display span {
-    color: var(--purple);
-    font-size: 2rem;
-  }
-
-  .stars-display {
-    font-size: 1.4rem;
-    letter-spacing: 2px;
-    min-width: 120px;
-  }
+  .score-display { font-family: 'Fredoka One', cursive; font-size: 1.6rem; color: var(--dark); }
+  .score-display span { color: var(--purple); font-size: 2rem; }
+  .stars-display { font-size: 1.4rem; letter-spacing: 2px; min-width: 120px; }
 
   .btn-new {
     font-family: 'Fredoka One', cursive;
@@ -116,7 +112,6 @@
     transition: transform 0.1s, box-shadow 0.1s;
     letter-spacing: 0.5px;
   }
-
   .btn-new:hover { transform: translateY(-2px); box-shadow: 0 7px 0 #c0392b, 0 9px 12px rgba(0,0,0,0.15); }
   .btn-new:active { transform: translateY(3px); box-shadow: 0 2px 0 #c0392b; }
 
@@ -130,56 +125,20 @@
 
   table { width: 100%; border-collapse: collapse; }
 
-  thead tr {
-    background: linear-gradient(135deg, #667EEA, #764BA2);
-    color: white;
-  }
-
-  thead th {
-    font-family: 'Fredoka One', cursive;
-    font-size: 1rem;
-    padding: 14px 8px;
-    letter-spacing: 0.5px;
-    font-weight: 400;
-  }
-
+  thead tr { background: linear-gradient(135deg, #667EEA, #764BA2); color: white; }
+  thead th { font-family: 'Fredoka One', cursive; font-size: 1rem; padding: 14px 8px; letter-spacing: 0.5px; font-weight: 400; }
   thead th:first-child { width: 44px; }
 
-  tbody tr {
-    border-bottom: 2px solid #F0F0F0;
-    transition: background 0.2s;
-  }
-
+  tbody tr { border-bottom: 2px solid #F0F0F0; transition: background 0.2s; }
   tbody tr:nth-child(even) { background: #FAFBFF; }
   tbody tr:last-child { border-bottom: none; }
   tbody tr:hover { background: #F0F4FF; }
 
-  td {
-    padding: 10px 6px;
-    text-align: center;
-    vertical-align: middle;
-  }
+  td { padding: 10px 6px; text-align: center; vertical-align: middle; }
 
-  .row-num {
-    font-family: 'Fredoka One', cursive;
-    color: #BBBBC8;
-    font-size: 0.95rem;
-    width: 36px;
-  }
-
-  .num-cell {
-    font-family: 'Fredoka One', cursive;
-    font-size: 1.5rem;
-    color: #333;
-    min-width: 52px;
-  }
-
-  .op-cell {
-    font-family: 'Fredoka One', cursive;
-    font-size: 1.4rem;
-    color: var(--purple);
-    width: 28px;
-  }
+  .row-num { font-family: 'Fredoka One', cursive; color: #BBBBC8; font-size: 0.95rem; width: 36px; }
+  .num-cell { font-family: 'Fredoka One', cursive; font-size: 1.5rem; color: #333; min-width: 52px; }
+  .op-cell { font-family: 'Fredoka One', cursive; font-size: 1.4rem; color: var(--purple); width: 28px; }
 
   .answer-input {
     font-family: 'Fredoka One', cursive;
@@ -195,71 +154,23 @@
     transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
     -moz-appearance: textfield;
   }
-
   .answer-input::-webkit-outer-spin-button,
   .answer-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+  .answer-input:focus { border-color: var(--purple); background: white; box-shadow: 0 0 0 3px rgba(168,85,247,0.2); }
+  .answer-input.correct { border-color: var(--green); background: #E8FFF0; color: #1a7a1a; animation: pop 0.3s ease; }
+  .answer-input.wrong { border-color: var(--red); background: #FFF0F0; color: #cc0000; animation: shake 0.4s ease; }
 
-  .answer-input:focus {
-    border-color: var(--purple);
-    background: white;
-    box-shadow: 0 0 0 3px rgba(168,85,247,0.2);
-  }
+  @keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-6px); } 40% { transform: translateX(6px); } 60% { transform: translateX(-4px); } 80% { transform: translateX(4px); } }
 
-  .answer-input.correct {
-    border-color: var(--green);
-    background: #E8FFF0;
-    color: #1a7a1a;
-    animation: pop 0.3s ease;
-  }
-
-  .answer-input.wrong {
-    border-color: var(--red);
-    background: #FFF0F0;
-    color: #cc0000;
-    animation: shake 0.4s ease;
-  }
-
-  @keyframes pop {
-    0%   { transform: scale(1); }
-    50%  { transform: scale(1.15); }
-    100% { transform: scale(1); }
-  }
-
-  @keyframes shake {
-    0%,100% { transform: translateX(0); }
-    20%      { transform: translateX(-6px); }
-    40%      { transform: translateX(6px); }
-    60%      { transform: translateX(-4px); }
-    80%      { transform: translateX(4px); }
-  }
-
-  .result-badge {
-    display: inline-block;
-    font-family: 'Fredoka One', cursive;
-    font-size: 0.95rem;
-    padding: 4px 12px;
-    border-radius: 50px;
-    min-width: 90px;
-    transition: all 0.25s;
-  }
-
+  .result-badge { display: inline-block; font-family: 'Fredoka One', cursive; font-size: 0.95rem; padding: 4px 12px; border-radius: 50px; min-width: 90px; transition: all 0.25s; }
   .result-badge.empty   { background: transparent; color: transparent; }
   .result-badge.correct { background: var(--green); color: white; box-shadow: 0 3px 0 #3a9e4a; }
   .result-badge.wrong   { background: var(--red);   color: white; box-shadow: 0 3px 0 #cc3333; }
 
-  .celebration {
-    display: none;
-    text-align: center;
-    margin-top: 20px;
-    animation: fadeIn 0.5s ease;
-  }
-
+  .celebration { display: none; text-align: center; margin-top: 20px; animation: fadeIn 0.5s ease; }
   .celebration.show { display: block; }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
   .celebration-msg {
     font-family: 'Fredoka One', cursive;
@@ -274,20 +185,11 @@
   }
 
   .confetti-piece {
-    position: fixed;
-    width: 10px; height: 10px;
-    top: -20px;
-    border-radius: 2px;
-    animation: confettiFall linear forwards;
-    pointer-events: none;
-    z-index: 999;
+    position: fixed; width: 10px; height: 10px; top: -20px;
+    border-radius: 2px; animation: confettiFall linear forwards;
+    pointer-events: none; z-index: 999;
   }
-
-  @keyframes confettiFall {
-    0%   { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
-    80%  { opacity: 1; }
-    100% { transform: translateY(110vh) rotate(720deg) scale(0.5); opacity: 0; }
-  }
+  @keyframes confettiFall { 0% { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; } 80% { opacity: 1; } 100% { transform: translateY(110vh) rotate(720deg) scale(0.5); opacity: 0; } }
 
   @media (max-width: 520px) {
     .num-cell { font-size: 1.2rem; min-width: 38px; }
@@ -301,6 +203,9 @@
 <body>
 
 <div class="container">
+
+  <a class="btn-back" href="index.html">🏠 Back to HQ</a>
+
   <div class="header">
     <h1>🔢 Maths Practice! 🔢</h1>
     <p>Type your answer and press Enter — can you get them all right?</p>
@@ -332,6 +237,7 @@
   <div class="celebration" id="celebration">
     <div class="celebration-msg" id="celebrationMsg"></div>
   </div>
+
 </div>
 
 <script>
@@ -356,15 +262,10 @@
     const lastVisit = localStorage.getItem('lastVisit');
     let streak = parseInt(localStorage.getItem('streak') || '0');
     if (lastVisit === today) {
-      // already updated today
     } else if (lastVisit === new Date(Date.now() - 86400000).toDateString()) {
-      streak++;
-      localStorage.setItem('streak', streak);
-      localStorage.setItem('lastVisit', today);
+      streak++; localStorage.setItem('streak', streak); localStorage.setItem('lastVisit', today);
     } else {
-      streak = 1;
-      localStorage.setItem('streak', streak);
-      localStorage.setItem('lastVisit', today);
+      streak = 1; localStorage.setItem('streak', streak); localStorage.setItem('lastVisit', today);
     }
   }
 
@@ -372,7 +273,6 @@
     questions = Array.from({ length: NUM_ROWS }, generateQuestion);
     const tbody = document.getElementById('tableBody');
     tbody.innerHTML = '';
-
     questions.forEach((q, i) => {
       const tr = document.createElement('tr');
       tr.innerHTML = `
@@ -382,22 +282,14 @@
         <td class="num-cell" id="b${i}">${q.b}</td>
         <td class="op-cell">=</td>
         <td>
-          <input
-            class="answer-input"
-            id="ans${i}"
-            type="number"
-            min="0" max="99"
-            placeholder="?"
-            autocomplete="off"
-            oninput="checkAnswer(${i})"
-            onkeydown="handleKey(event, ${i})"
-          >
+          <input class="answer-input" id="ans${i}" type="number" min="0" max="99"
+            placeholder="?" autocomplete="off"
+            oninput="checkAnswer(${i})" onkeydown="handleKey(event, ${i})">
         </td>
         <td><span class="result-badge empty" id="res${i}">-</span></td>
       `;
       tbody.appendChild(tr);
     });
-
     updateScore();
     document.getElementById('celebration').classList.remove('show');
     setTimeout(() => document.getElementById('ans0')?.focus(), 100);
@@ -407,7 +299,6 @@
     const input = document.getElementById(`ans${i}`);
     const badge = document.getElementById(`res${i}`);
     const val = input.value.trim();
-
     if (val === '') {
       input.className = 'answer-input';
       badge.className = 'result-badge empty';
@@ -415,10 +306,8 @@
       updateScore();
       return;
     }
-
     const num = parseInt(val, 10);
     const correct = questions[i].answer;
-
     if (num === correct) {
       input.className = 'answer-input correct';
       badge.className = 'result-badge correct';
@@ -428,7 +317,6 @@
       badge.className = 'result-badge wrong';
       badge.textContent = '✘ Try again';
     }
-
     updateScore();
   }
 
@@ -440,9 +328,7 @@
   }
 
   function updateScore() {
-    let correct = 0;
-    let answered = 0;
-
+    let correct = 0, answered = 0;
     questions.forEach((q, i) => {
       const input = document.getElementById(`ans${i}`);
       if (!input) return;
@@ -452,36 +338,21 @@
         if (parseInt(val, 10) === q.answer) correct++;
       }
     });
-
     document.getElementById('scoreNum').textContent = correct;
-
     const stars = Math.min(5, Math.floor(correct / 3));
-    const starStr = '⭐'.repeat(stars) + '⬜'.repeat(5 - stars);
-    document.getElementById('starsDisplay').textContent = starStr;
-
-    if (answered === NUM_ROWS) {
-      showCelebration(correct);
-    }
+    document.getElementById('starsDisplay').textContent = '⭐'.repeat(stars) + '⬜'.repeat(5 - stars);
+    if (answered === NUM_ROWS) showCelebration(correct);
   }
 
   function showCelebration(score) {
     updateStreak();
     const cel = document.getElementById('celebration');
     const msg = document.getElementById('celebrationMsg');
-
     let text;
-    if (score === NUM_ROWS) {
-      text = `🎉 AMAZING! Perfect score — ${score} out of ${NUM_ROWS}! You're a Maths Star! 🌟`;
-      launchConfetti(60);
-    } else if (score >= 12) {
-      text = `🌟 Brilliant! ${score} out of ${NUM_ROWS}! Nearly perfect!`;
-      launchConfetti(30);
-    } else if (score >= 9) {
-      text = `👍 Great job! ${score} out of ${NUM_ROWS}! Keep practising!`;
-    } else {
-      text = `💪 ${score} out of ${NUM_ROWS} — don't give up, try again!`;
-    }
-
+    if (score === NUM_ROWS) { text = `🎉 AMAZING! Perfect score — ${score} out of ${NUM_ROWS}! You're a Maths Star! 🌟`; launchConfetti(60); }
+    else if (score >= 12)   { text = `🌟 Brilliant! ${score} out of ${NUM_ROWS}! Nearly perfect!`; launchConfetti(30); }
+    else if (score >= 9)    { text = `👍 Great job! ${score} out of ${NUM_ROWS}! Keep practising!`; }
+    else                    { text = `💪 ${score} out of ${NUM_ROWS} — don't give up, try again!`; }
     msg.textContent = text;
     cel.classList.add('show');
     cel.scrollIntoView({ behavior: 'smooth', block: 'center' });
