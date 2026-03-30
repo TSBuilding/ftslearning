@@ -44,12 +44,14 @@
   .cards-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 32px; }
 
   .card { position: relative; border-radius: 20px; padding: 24px 18px 20px; cursor: pointer; text-decoration: none; display: block; overflow: hidden; border: 3px solid rgba(255,255,255,0.15); transition: transform 0.15s, box-shadow 0.15s; animation: cardPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
-  .card:nth-child(1) { animation-delay: 0.15s; background: linear-gradient(135deg, #E63946, #c1121f); box-shadow: 0 8px 0 #7d0d14; }
-  .card:nth-child(2) { animation-delay: 0.25s; background: linear-gradient(135deg, #2196F3, #1565C0); box-shadow: 0 8px 0 #0d3c6e; }
-  .card:nth-child(3) { animation-delay: 0.35s; background: linear-gradient(135deg, #9C27B0, #6A1B9A); box-shadow: 0 8px 0 #3a0f54; }
-  .card:nth-child(4) { animation-delay: 0.45s; background: linear-gradient(135deg, #FF9800, #E65100); box-shadow: 0 8px 0 #7f2900; }
-  .card:nth-child(5) { animation-delay: 0.55s; background: linear-gradient(135deg, #00BCD4, #006064); box-shadow: 0 8px 0 #003033; }
-  .card:nth-child(6) { animation-delay: 0.65s; background: linear-gradient(135deg, #4CAF50, #1B5E20); box-shadow: 0 8px 0 #0a2e0c; }
+  .card:nth-child(1) { animation-delay: 0.10s; background: linear-gradient(135deg, #E63946, #c1121f); box-shadow: 0 8px 0 #7d0d14; }
+  .card:nth-child(2) { animation-delay: 0.18s; background: linear-gradient(135deg, #2196F3, #1565C0); box-shadow: 0 8px 0 #0d3c6e; }
+  .card:nth-child(3) { animation-delay: 0.26s; background: linear-gradient(135deg, #9C27B0, #6A1B9A); box-shadow: 0 8px 0 #3a0f54; }
+  .card:nth-child(4) { animation-delay: 0.34s; background: linear-gradient(135deg, #FF9800, #E65100); box-shadow: 0 8px 0 #7f2900; }
+  .card:nth-child(5) { animation-delay: 0.42s; background: linear-gradient(135deg, #00BCD4, #006064); box-shadow: 0 8px 0 #003033; }
+  .card:nth-child(6) { animation-delay: 0.50s; background: linear-gradient(135deg, #4CAF50, #1B5E20); box-shadow: 0 8px 0 #0a2e0c; }
+  .card:nth-child(7) { animation-delay: 0.58s; background: linear-gradient(135deg, #CE1126, #002B5C); box-shadow: 0 8px 0 #001228; }
+  .card:nth-child(8) { animation-delay: 0.66s; background: linear-gradient(135deg, #607D8B, #263238); box-shadow: 0 8px 0 #111c20; }
 
   @keyframes cardPop { from { transform: scale(0.7) translateY(30px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
 
@@ -101,7 +103,7 @@
 </div>
 
 <div class="bg-layer"></div>
-<div class="floater" style="left:8%; animation-duration:18s; animation-delay:0s;">🏈</div>
+<div class="floater" style="left:8%;  animation-duration:18s; animation-delay:0s;">🏈</div>
 <div class="floater" style="left:22%; animation-duration:22s; animation-delay:4s;">⭐</div>
 <div class="floater" style="left:40%; animation-duration:15s; animation-delay:2s;">🦸</div>
 <div class="floater" style="left:60%; animation-duration:20s; animation-delay:7s;">🏊</div>
@@ -148,10 +150,16 @@
     </a>
 
     <a class="card" href="What_Comes_Next.html">
-      <span class="new-badge">NEW 🔢</span>
       <span class="card-icon">🧠</span>
       <div class="card-title">What Comes Next?</div>
       <div class="card-desc">Crack the number pattern — gets harder each round!</div>
+    </a>
+
+    <a class="card" href="Crows_Cash.html">
+      <span class="new-badge">NEW 🦅</span>
+      <span class="card-icon">💰</span>
+      <div class="card-title">Crows Cash</div>
+      <div class="card-desc">Earn money, hit the Crows shop, work out the change!</div>
     </a>
 
     <a class="card coming-soon" href="#">
@@ -166,6 +174,13 @@
       <span class="card-icon">🎯</span>
       <div class="card-title">Mystery Mission</div>
       <div class="card-desc">Something epic is coming...</div>
+    </a>
+
+    <a class="card coming-soon" href="#">
+      <span class="coming-badge">Coming Soon</span>
+      <span class="card-icon">🏈</span>
+      <div class="card-title">AFL Quiz</div>
+      <div class="card-desc">How well do you know your footy?</div>
     </a>
 
   </div>
