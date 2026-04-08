@@ -55,16 +55,17 @@
   .cards-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 32px; }
 
   .card { position: relative; border-radius: 20px; padding: 24px 18px 20px; cursor: pointer; text-decoration: none; display: block; overflow: hidden; border: 3px solid rgba(255,255,255,0.15); transition: transform 0.15s, box-shadow 0.15s; animation: cardPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
-  .card:nth-child(1) { animation-delay: 0.12s; background: linear-gradient(135deg, #E63946, #c1121f); box-shadow: 0 8px 0 #7d0d14; }
-  .card:nth-child(2) { animation-delay: 0.19s; background: linear-gradient(135deg, #2196F3, #1565C0); box-shadow: 0 8px 0 #0d3c6e; }
-  .card:nth-child(3) { animation-delay: 0.26s; background: linear-gradient(135deg, #9C27B0, #6A1B9A); box-shadow: 0 8px 0 #3a0f54; }
-  .card:nth-child(4) { animation-delay: 0.33s; background: linear-gradient(135deg, #FF9800, #E65100); box-shadow: 0 8px 0 #7f2900; }
-  .card:nth-child(5) { animation-delay: 0.40s; background: linear-gradient(135deg, #00BCD4, #006064); box-shadow: 0 8px 0 #003033; }
-  .card:nth-child(6) { animation-delay: 0.47s; background: linear-gradient(135deg, #4CAF50, #1B5E20); box-shadow: 0 8px 0 #0a2e0c; }
-  .card:nth-child(7) { animation-delay: 0.54s; background: linear-gradient(135deg, #F59E0B, #92400e); box-shadow: 0 8px 0 #4a1f00; }
-  .card:nth-child(8) { animation-delay: 0.61s; background: linear-gradient(135deg, #050a1a, #7B2FBE); box-shadow: 0 8px 0 #1a0050; }
-  .card:nth-child(9) { animation-delay: 0.68s; background: linear-gradient(135deg, #607D8B, #263238); box-shadow: 0 8px 0 #111c20; }
-  .card:nth-child(10) { animation-delay: 0.75s; background: linear-gradient(135deg, #E91E63, #880E4F); box-shadow: 0 8px 0 #4a0028; }
+  .card:nth-child(1)  { animation-delay: 0.12s; background: linear-gradient(135deg, #E63946, #c1121f); box-shadow: 0 8px 0 #7d0d14; }
+  .card:nth-child(2)  { animation-delay: 0.19s; background: linear-gradient(135deg, #2196F3, #1565C0); box-shadow: 0 8px 0 #0d3c6e; }
+  .card:nth-child(3)  { animation-delay: 0.26s; background: linear-gradient(135deg, #9C27B0, #6A1B9A); box-shadow: 0 8px 0 #3a0f54; }
+  .card:nth-child(4)  { animation-delay: 0.33s; background: linear-gradient(135deg, #FF9800, #E65100); box-shadow: 0 8px 0 #7f2900; }
+  .card:nth-child(5)  { animation-delay: 0.40s; background: linear-gradient(135deg, #00BCD4, #006064); box-shadow: 0 8px 0 #003033; }
+  .card:nth-child(6)  { animation-delay: 0.47s; background: linear-gradient(135deg, #4CAF50, #1B5E20); box-shadow: 0 8px 0 #0a2e0c; }
+  .card:nth-child(7)  { animation-delay: 0.54s; background: linear-gradient(135deg, #F59E0B, #92400e); box-shadow: 0 8px 0 #4a1f00; }
+  .card:nth-child(8)  { animation-delay: 0.61s; background: linear-gradient(135deg, #0f766e, #134e4a); box-shadow: 0 8px 0 #052e2a; }
+  .card:nth-child(9)  { animation-delay: 0.68s; background: linear-gradient(135deg, #050a1a, #7B2FBE); box-shadow: 0 8px 0 #1a0050; }
+  .card:nth-child(10) { animation-delay: 0.75s; background: linear-gradient(135deg, #607D8B, #263238); box-shadow: 0 8px 0 #111c20; }
+  .card:nth-child(11) { animation-delay: 0.82s; background: linear-gradient(135deg, #E91E63, #880E4F); box-shadow: 0 8px 0 #4a0028; }
 
   @keyframes cardPop { from { transform: scale(0.7) translateY(30px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
 
@@ -141,7 +142,6 @@
     <div class="streak-count" id="streakCount">0🔥</div>
   </div>
 
-  <!-- FTS Bank featured -->
   <a class="bank-card" href="FTS_Bank.html">
     <span class="bank-new-badge">🏦 MY BANK</span>
     <div class="bank-card-inner">
@@ -194,17 +194,16 @@
     </a>
 
     <a class="card" href="Spelling_Bee.html">
-      <span class="new-badge">NEW 🐝</span>
       <span class="card-icon">🐝</span>
       <div class="card-title">Spelling Bee</div>
       <div class="card-desc">Listen to the word, type it in — can you spell it right?</div>
     </a>
 
-    <a class="card coming-soon" href="#">
-      <span class="coming-badge">Coming Soon</span>
-      <span class="card-icon">⏱️</span>
+    <a class="card" href="Times_Tables.html">
+      <span class="new-badge">NEW ✖️</span>
+      <span class="card-icon">✖️</span>
       <div class="card-title">Times Tables</div>
-      <div class="card-desc">Multiplication speed runs</div>
+      <div class="card-desc">See how numbers multiply — watch the patterns appear!</div>
     </a>
 
     <a class="card coming-soon" href="#">
