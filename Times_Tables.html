@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Times Tables — FTS Learning HQ</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:      #0e1a2e;
+    --card:    #162033;
+    --card2:   #1d2d47;
+    --border:  rgba(255,255,255,0.07);
+    --text:    #eef2ff;
+    --muted:   #7a90b8;
+    --gold:    #f6c90e;
+    --teal:    #2dd4bf;
+    --teal2:   #0d9488;
+    --coral:   #fb7185;
+    --purple:  #a78bfa;
+    --green:   #4ade80;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { height: 100%; }
+  body {
+    background: var(--bg);
+    font-family: 'Nunito', sans-serif;
+    color: var(--text);
+    min-height: 100%;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse at 10% 10%, rgba(45,212,191,0.07) 0%, transparent 55%),
+      radial-gradient(ellipse at 90% 90%, rgba(167,139,250,0.06) 0%, transparent 55%);
+    pointer-events: none; z-index: 0;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    position: relative; z-index: 2;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px 0;
+    max-width: 700px; margin: 0 auto;
+  }
+  .back-btn {
+    background: var(--card2); border: none; color: var(--muted);
+    font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 700;
+    padding: 8px 16px; border-radius: 20px; cursor: pointer;
+    text-decoration: none; transition: all 0.2s;
+  }
+  .back-btn:hover { color: var(--text); background: #253552; }
+  .header-title { font-family: 'Fredoka One', cursive; font-size: 24px; color: var(--gold); letter-spacing: 1px; }
+  .header-sub { font-size: 11px; color: var(--muted); font-weight: 700; text-align: right; }
+
+  /* ── SCREENS ── */
+  .screen { position: relative; z-index: 1; display: none; }
+  .screen.active { display: block; }
+
+  /* ══════════════════════════════════════
+     PICK SCREEN
+  ══════════════════════════════════════ */
+  #pick-screen {
+    max-width: 700px; margin: 0 auto;
+    padding: 24px 20px 48px;
+  }
+
+  .pick-intro {
+    text-align: center;
+    padding: 20px 0 28px;
+  }
+  .pick-intro .big-icon { font-size: 56px; display: block; margin-bottom: 12px; animation: bob 2.5s ease-in-out infinite; }
+  @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+  .pick-intro h2 { font-family: 'Fredoka One', cursive; font-size: 26px; color: var(--text); line-height: 1.2; }
+  .pick-intro h2 span { color: var(--gold); }
+  .pick-intro p { font-size: 15px; color: var(--muted); font-weight: 600; margin-top: 8px; }
+
+  .table-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+  .table-btn {
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: 18px;
+    padding: 18px 8px 14px;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    cursor: pointer; transition: all 0.2s;
+    animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
+  .table-btn:nth-child(1)  { animation-delay: 0.04s; }
+  .table-btn:nth-child(2)  { animation-delay: 0.08s; }
+  .table-btn:nth-child(3)  { animation-delay: 0.12s; }
+  .table-btn:nth-child(4)  { animation-delay: 0.16s; }
+  .table-btn:nth-child(5)  { animation-delay: 0.20s; }
+  .table-btn:nth-child(6)  { animation-delay: 0.24s; }
+  .table-btn:nth-child(7)  { animation-delay: 0.28s; }
+  .table-btn:nth-child(8)  { animation-delay: 0.32s; }
+  .table-btn:nth-child(9)  { animation-delay: 0.36s; }
+  .table-btn:nth-child(10) { animation-delay: 0.40s; }
+  .table-btn:nth-child(11) { animation-delay: 0.44s; }
+  .table-btn:nth-child(12) { animation-delay: 0.48s; }
+  @keyframes popIn { from{transform:scale(0.7) translateY(20px);opacity:0} to{transform:scale(1) translateY(0);opacity:1} }
+
+  .table-btn:active { transform: scale(0.94); }
+
+  .table-btn .num {
+    font-family: 'Fredoka One', cursive;
+    font-size: 28px; line-height: 1;
+  }
+  .table-btn .label { font-size: 11px; font-weight: 800; color: var(--muted); letter-spacing: 0.5px; }
+
+  /* colour per table */
+  .table-btn[data-n="2"]  { --c:#f472b6; } .table-btn[data-n="2"]:hover  { background:#2a1a2e; border-color:#f472b6; }
+  .table-btn[data-n="3"]  { --c:#fb923c; } .table-btn[data-n="3"]:hover  { background:#2a1e14; border-color:#fb923c; }
+  .table-btn[data-n="4"]  { --c:#facc15; } .table-btn[data-n="4"]:hover  { background:#2a2510; border-color:#facc15; }
+  .table-btn[data-n="5"]  { --c:#4ade80; } .table-btn[data-n="5"]:hover  { background:#122a1c; border-color:#4ade80; }
+  .table-btn[data-n="6"]  { --c:#2dd4bf; } .table-btn[data-n="6"]:hover  { background:#0e2422; border-color:#2dd4bf; }
+  .table-btn[data-n="7"]  { --c:#60a5fa; } .table-btn[data-n="7"]:hover  { background:#101e30; border-color:#60a5fa; }
+  .table-btn[data-n="8"]  { --c:#a78bfa; } .table-btn[data-n="8"]:hover  { background:#1a142e; border-color:#a78bfa; }
+  .table-btn[data-n="9"]  { --c:#f87171; } .table-btn[data-n="9"]:hover  { background:#2a1212; border-color:#f87171; }
+  .table-btn[data-n="10"] { --c:#34d399; } .table-btn[data-n="10"]:hover { background:#0e2420; border-color:#34d399; }
+  .table-btn[data-n="11"] { --c:#e879f9; } .table-btn[data-n="11"]:hover { background:#220e26; border-color:#e879f9; }
+  .table-btn[data-n="12"] { --c:#f6c90e; } .table-btn[data-n="12"]:hover { background:#2a2208; border-color:#f6c90e; }
+  .table-btn[data-n="1"]  { --c:#94a3b8; } .table-btn[data-n="1"]:hover  { background:#1e2535; border-color:#94a3b8; }
+
+  .table-btn .num { color: var(--c, var(--teal)); }
+
+  /* ══════════════════════════════════════
+     LEARN SCREEN
+  ══════════════════════════════════════ */
+  #learn-screen {
+    max-width: 700px; margin: 0 auto;
+    padding: 16px 16px 48px;
+    display: none;
+    flex-direction: column;
+    gap: 16px;
+  }
+  #learn-screen.active { display: flex; }
+
+  /* Equation bar */
+  .equation-bar {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 20px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  }
+  .eq-nav {
+    background: var(--card2);
+    border: none; color: var(--muted);
+    font-size: 22px; width: 44px; height: 44px;
+    border-radius: 12px; cursor: pointer;
+    transition: all 0.2s; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .eq-nav:hover { background: #253552; color: var(--text); }
+  .eq-nav:disabled { opacity: 0.25; cursor: default; }
+
+  .eq-display {
+    flex: 1; text-align: center;
+  }
+  .eq-counter {
+    font-size: 11px; font-weight: 800; color: var(--muted);
+    letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px;
+  }
+  .eq-main {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(28px, 7vw, 42px);
+    line-height: 1;
+    color: var(--text);
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+  }
+  .eq-main .eq-a { color: var(--accent, var(--teal)); }
+  .eq-main .eq-op { color: var(--muted); }
+  .eq-main .eq-b { color: var(--text); }
+  .eq-main .eq-eq { color: var(--muted); }
+  .eq-main .eq-result {
+    color: var(--gold);
+    min-width: 40px;
+    transition: opacity 0.3s;
+  }
+  .eq-main .eq-result.hidden { opacity: 0; }
+
+  /* Array section */
+  .array-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    min-height: 180px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .array-label {
+    font-size: 13px; font-weight: 800; color: var(--muted);
+    letter-spacing: 1px; text-transform: uppercase;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .array-running {
+    font-family: 'Fredoka One', cursive;
+    font-size: 18px; color: var(--gold);
+    transition: all 0.3s;
+  }
+
+  .array-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-height: 80px;
+  }
+
+  .array-row {
+    display: flex; gap: 6px; align-items: center;
+    opacity: 0; transform: translateX(-16px);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+  }
+  .array-row.visible { opacity: 1; transform: translateX(0); }
+
+  .array-row .row-label {
+    font-size: 12px; font-weight: 800; color: var(--muted);
+    width: 24px; text-align: right; flex-shrink: 0;
+  }
+
+  .dot {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--accent, var(--teal));
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    opacity: 0; transform: scale(0);
+    transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+    flex-shrink: 0;
+  }
+  .dot.show { opacity: 1; transform: scale(1); }
+
+  /* dot size adapts to count */
+  .dots-small .dot { width: 22px; height: 22px; }
+  .dots-tiny  .dot { width: 16px; height: 16px; }
+
+  .array-summary {
+    font-size: 14px; font-weight: 700; color: var(--muted);
+    text-align: center; padding-top: 4px;
+    min-height: 20px;
+    transition: opacity 0.3s;
+  }
+  .array-summary.shown { color: var(--green); }
+
+  /* Grid section */
+  .grid-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  }
+  .grid-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .grid-title { font-size: 13px; font-weight: 800; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+  .grid-hint { font-size: 12px; font-weight: 700; color: var(--muted); font-style: italic; }
+
+  .times-grid {
+    display: grid;
+    grid-template-columns: 28px repeat(10, 1fr);
+    gap: 3px;
+  }
+
+  .tg-cell {
+    aspect-ratio: 1;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 6px;
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(9px, 2.2vw, 13px);
+    transition: all 0.25s;
+    position: relative;
+  }
+
+  /* header row/col */
+  .tg-cell.hdr {
+    background: var(--card2);
+    color: var(--muted);
+    font-size: clamp(9px, 2vw, 12px);
+  }
+  .tg-cell.hdr.active-hdr {
+    background: var(--accent, var(--teal));
+    color: #0a1a18;
+  }
+
+  /* regular cells */
+  .tg-cell.val {
+    background: rgba(255,255,255,0.03);
+    color: rgba(255,255,255,0.25);
+  }
+
+  /* cells in the active table row/col */
+  .tg-cell.val.in-table {
+    background: rgba(45,212,191,0.08);
+    color: rgba(255,255,255,0.5);
+  }
+
+  /* the specific current fact */
+  .tg-cell.val.current-fact {
+    background: var(--gold) !important;
+    color: #1a1200 !important;
+    transform: scale(1.15);
+    box-shadow: 0 0 12px rgba(246,201,14,0.5);
+    z-index: 2;
+  }
+
+  /* previously visited facts */
+  .tg-cell.val.visited {
+    background: rgba(45,212,191,0.18);
+    color: var(--teal);
+  }
+
+  .corner { background: transparent !important; }
+
+  /* pattern hint strip */
+  .pattern-strip {
+    margin-top: 10px;
+    background: rgba(246,201,14,0.06);
+    border: 1px solid rgba(246,201,14,0.15);
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--gold);
+    min-height: 36px;
+    transition: opacity 0.4s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .pattern-strip.hidden { opacity: 0; }
+  .pattern-icon { font-size: 16px; flex-shrink: 0; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 380px) {
+    .times-grid { gap: 2px; }
+    .tg-cell { border-radius: 4px; }
+    .dot { width: 22px; height: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <a href="index.html" class="back-btn">← Home</a>
+  <div>
+    <div class="header-title">✖️ Times Tables</div>
+    <div class="header-sub">FTS Learning HQ</div>
+  </div>
+</div>
+
+<!-- ══ PICK SCREEN ══ -->
+<div id="pick-screen" class="screen active">
+  <div class="pick-intro">
+    <span class="big-icon">🔢</span>
+    <h2>Which table do you want<br>to explore, <span>FTS</span>?</h2>
+    <p>Pick any number and see how it multiplies!</p>
+  </div>
+
+  <div class="table-grid">
+    <div class="table-btn" data-n="1"><span class="num">1</span><span class="label">× table</span></div>
+    <div class="table-btn" data-n="2"><span class="num">2</span><span class="label">× table</span></div>
+    <div class="table-btn" data-n="3"><span class="num">3</span><span class="label">× table</span></div>
+    <div class="table-btn" data-n="4"><span class="num">4</span><span class="label">× table</span></div>
+    <div class="table-btn" data-n="5"><span class="num">5</span><span class="label">× table</span></div>
+    <div class="table-btn" data-n="6"><span class="num">6</span><span class="label">× table</span></div>
+    <div class="table-btn" data-n="7"><span class="num">7</span><span class="label">× table</span></div>
+    <div class="table-btn" data-n="8"><span class="num">8</span><span class="label">× table</span></div>
+    <div class="table-btn" data-n="9"><span class="num">9</span><span class="label">× table</span></div>
+    <div class="table-btn" data-n="10"><span class="num">10</span><span class="label">× table</span></div>
+    <div class="table-btn" data-n="11"><span class="num">11</span><span class="label">× table</span></div>
+    <div class="table-btn" data-n="12"><span class="num">12</span><span class="label">× table</span></div>
+  </div>
+</div>
+
+<!-- ══ LEARN SCREEN ══ -->
+<div id="learn-screen" class="screen">
+
+  <!-- Equation + nav -->
+  <div class="equation-bar">
+    <button class="eq-nav" id="prev-btn">‹</button>
+    <div class="eq-display">
+      <div class="eq-counter" id="eq-counter">1 of 10</div>
+      <div class="eq-main">
+        <span class="eq-a" id="eq-a">3</span>
+        <span class="eq-op">×</span>
+        <span class="eq-b" id="eq-b">1</span>
+        <span class="eq-eq">=</span>
+        <span class="eq-result hidden" id="eq-result">3</span>
+      </div>
+    </div>
+    <button class="eq-nav" id="next-btn">›</button>
+  </div>
+
+  <!-- Array visualisation -->
+  <div class="array-card">
+    <div class="array-label">
+      <span id="array-label-text">Building the groups…</span>
+      <span class="array-running" id="array-running"></span>
+    </div>
+    <div class="array-groups" id="array-groups"></div>
+    <div class="array-summary" id="array-summary"></div>
+  </div>
+
+  <!-- Times table grid -->
+  <div class="grid-card">
+    <div class="grid-header">
+      <div class="grid-title">📊 The full times table</div>
+      <div class="grid-hint">You are here 👆</div>
+    </div>
+    <div class="times-grid" id="times-grid"></div>
+    <div class="pattern-strip hidden" id="pattern-strip">
+      <span class="pattern-icon">💡</span>
+      <span id="pattern-text"></span>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── COLOURS PER TABLE ──────────────────────────────────────────────────
+const TABLE_COLORS = {
+  1:'#94a3b8', 2:'#f472b6', 3:'#fb923c', 4:'#facc15',
+  5:'#4ade80', 6:'#2dd4bf', 7:'#60a5fa', 8:'#a78bfa',
+  9:'#f87171', 10:'#34d399', 11:'#e879f9', 12:'#f6c90e'
+};
+
+// ── PATTERN HINTS ──────────────────────────────────────────────────────
+const PATTERNS = {
+  1:  n => `Anything × 1 is always itself — ${n} × 1 = ${n}. The 1 table never changes!`,
+  2:  n => `The 2s are just counting in 2s: 2, 4, 6, 8… the answers are always even!`,
+  5:  n => `The 5s always end in 0 or 5 — easy to spot! ${n} × 5 = ${n*5}`,
+  10: n => `The 10s just add a zero to the end — ${n} × 10 = ${n}0. Always!`,
+  11: n => n <= 9 ? `The 11s repeat the digit for single numbers: ${n} × 11 = ${n}${n}!` : null,
+  4:  n => `The 4s are just the 2s doubled — ${n} × 2 = ${n*2}, so ${n} × 4 = ${n*4}`,
+  9:  n => {
+    const ans = n * 9;
+    const d = ans.toString().split('').reduce((a,b) => a + parseInt(b), 0);
+    return `The 9s are magic — the digits of the answer always add up to 9! ${ans} → ${d === 9 ? d : ans.toString().replace('',' + ')}.`;
+  }
+};
+
+// ── STATE ──────────────────────────────────────────────────────────────
+let currentTable = 2;
+let currentStep  = 1; // 1–10
+let visitedSteps = new Set();
+let animTimer    = null;
+
+// ── PICK SCREEN ────────────────────────────────────────────────────────
+document.querySelectorAll('.table-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    currentTable = parseInt(btn.dataset.n);
+    currentStep  = 1;
+    visitedSteps = new Set();
+    startLearn();
+  });
+});
+
+function startLearn() {
+  document.getElementById('pick-screen').classList.remove('active');
+  const ls = document.getElementById('learn-screen');
+  ls.classList.add('active');
+  ls.style.display = 'flex';
+
+  // Set accent colour
+  const color = TABLE_COLORS[currentTable];
+  document.documentElement.style.setProperty('--accent', color);
+
+  buildGrid();
+  loadStep(currentStep);
+}
+
+// ── GRID ───────────────────────────────────────────────────────────────
+function buildGrid() {
+  const grid = document.getElementById('times-grid');
+  grid.innerHTML = '';
+
+  // corner
+  const corner = document.createElement('div');
+  corner.className = 'tg-cell corner';
+  grid.appendChild(corner);
+
+  // column headers (1–10)
+  for (let c = 1; c <= 10; c++) {
+    const cell = document.createElement('div');
+    cell.className = 'tg-cell hdr col-hdr';
+    cell.id = `ch-${c}`;
+    cell.textContent = c;
+    grid.appendChild(cell);
+  }
+
+  // rows
+  for (let r = 1; r <= 10; r++) {
+    // row header
+    const rh = document.createElement('div');
+    rh.className = 'tg-cell hdr row-hdr';
+    rh.id = `rh-${r}`;
+    rh.textContent = r;
+    grid.appendChild(rh);
+
+    for (let c = 1; c <= 10; c++) {
+      const cell = document.createElement('div');
+      cell.className = 'tg-cell val';
+      cell.id = `cell-${r}-${c}`;
+      cell.textContent = r * c;
+      grid.appendChild(cell);
+    }
+  }
+}
+
+function updateGrid() {
+  const t = currentTable;
+  const s = currentStep;
+
+  // reset all
+  document.querySelectorAll('.tg-cell.hdr').forEach(el => el.classList.remove('active-hdr'));
+  document.querySelectorAll('.tg-cell.val').forEach(el => {
+    el.classList.remove('in-table', 'current-fact', 'visited');
+  });
+
+  // highlight active headers — both row and column for current table
+  // The table is shown as: currentTable × step
+  // So we highlight row=currentTable and col=step (if table <= 10)
+  if (t <= 10) {
+    const rh = document.getElementById(`rh-${t}`);
+    if (rh) rh.classList.add('active-hdr');
+  }
+  const ch = document.getElementById(`ch-${s}`);
+  if (ch) ch.classList.add('active-hdr');
+
+  // highlight the whole row for this table (in-table)
+  if (t <= 10) {
+    for (let c = 1; c <= 10; c++) {
+      const cell = document.getElementById(`cell-${t}-${c}`);
+      if (cell) cell.classList.add('in-table');
+    }
+  }
+
+  // visited steps
+  visitedSteps.forEach(vs => {
+    if (vs !== s && t <= 10) {
+      const cell = document.getElementById(`cell-${t}-${vs}`);
+      if (cell) { cell.classList.remove('in-table'); cell.classList.add('visited'); }
+    }
+  });
+
+  // current fact
+  if (t <= 10) {
+    const cur = document.getElementById(`cell-${t}-${s}`);
+    if (cur) { cur.classList.remove('in-table', 'visited'); cur.classList.add('current-fact'); }
+  }
+}
+
+// ── LOAD STEP ──────────────────────────────────────────────────────────
+function loadStep(step) {
+  if (animTimer) { clearTimeout(animTimer); animTimer = null; }
+
+  currentStep = step;
+  visitedSteps.add(step);
+
+  const t = currentTable;
+  const s = step;
+  const result = t * s;
+
+  // equation bar
+  document.getElementById('eq-counter').textContent = `${s} of 10`;
+  document.getElementById('eq-a').textContent = t;
+  document.getElementById('eq-b').textContent = s;
+  const eqResult = document.getElementById('eq-result');
+  eqResult.textContent = result;
+  eqResult.classList.add('hidden');
+
+  // nav buttons
+  document.getElementById('prev-btn').disabled = (step === 1);
+  document.getElementById('next-btn').disabled = (step === 10);
+
+  // grid
+  updateGrid();
+
+  // array
+  buildArray(t, s, result);
+
+  // pattern hint
+  showPattern(t, s);
+}
+
+// ── ARRAY ANIMATION ────────────────────────────────────────────────────
+function buildArray(t, s, result) {
+  const container = document.getElementById('array-groups');
+  const label     = document.getElementById('array-label-text');
+  const running   = document.getElementById('array-running');
+  const summary   = document.getElementById('array-summary');
+  const eqResult  = document.getElementById('eq-result');
+
+  container.innerHTML = '';
+  running.textContent = '';
+  summary.textContent = '';
+  summary.classList.remove('shown');
+
+  // We show: s groups of t dots (s rows, each with t dots)
+  // But if t is large, swap for readability: show t groups of s
+  // Actually let's show: t rows of s dots — so t × s
+  // Label: "t groups of s"
+  const groups  = t;  // number of rows
+  const perGroup = s; // dots per row
+
+  label.textContent = `${groups} group${groups!==1?'s':''} of ${perGroup} — watch them build!`;
+
+  // dot size class
+  const sizeClass = perGroup > 9 ? 'dots-tiny' : perGroup > 6 ? 'dots-small' : '';
+
+  // build row elements (hidden)
+  for (let g = 0; g < groups; g++) {
+    const row = document.createElement('div');
+    row.className = 'array-row' + (sizeClass ? ' ' + sizeClass : '');
+
+    const rowLbl = document.createElement('span');
+    rowLbl.className = 'row-label';
+    rowLbl.textContent = `${g+1}.`;
+    row.appendChild(rowLbl);
+
+    for (let d = 0; d < perGroup; d++) {
+      const dot = document.createElement('div');
+      dot.className = 'dot';
+      row.appendChild(dot);
+    }
+    container.appendChild(row);
+  }
+
+  // animate rows in sequentially
+  let runningTotal = 0;
+  const ROW_DELAY = 420;  // ms between rows
+  const DOT_DELAY = 55;   // ms between dots within a row
+
+  for (let g = 0; g < groups; g++) {
+    const rowEl   = container.children[g];
+    const dots    = rowEl.querySelectorAll('.dot');
+    const rowStart = g * ROW_DELAY + 200;
+    const groupVal = (g + 1) * perGroup;
+
+    // show row
+    animTimer = setTimeout(() => {
+      rowEl.classList.add('visible');
+    }, rowStart);
+
+    // show dots one by one
+    dots.forEach((dot, di) => {
+      setTimeout(() => {
+        dot.classList.add('show');
+      }, rowStart + 60 + di * DOT_DELAY);
+    });
+
+    // update running total after row complete
+    const totalTime = rowStart + 60 + (perGroup - 1) * DOT_DELAY + 150;
+    setTimeout(() => {
+      runningTotal = groupVal;
+      running.textContent = runningTotal;
+    }, totalTime);
+  }
+
+  // reveal answer after all groups done
+  const allDone = (groups - 1) * ROW_DELAY + 200 + 60 + (perGroup - 1) * DOT_DELAY + 300;
+
+  setTimeout(() => {
+    eqResult.classList.remove('hidden');
+    running.textContent = result;
+    label.textContent = `${groups} groups of ${perGroup} = ${result}`;
+    summary.textContent = `${t} × ${s} = ${result} ✓`;
+    summary.classList.add('shown');
+  }, allDone);
+}
+
+// ── PATTERN HINTS ──────────────────────────────────────────────────────
+function showPattern(t, s) {
+  const strip = document.getElementById('pattern-strip');
+  const text  = document.getElementById('pattern-text');
+  const fn    = PATTERNS[t];
+  let msg     = null;
+
+  if (fn) {
+    const result = fn(s);
+    if (result) msg = result;
+  }
+
+  // Symmetry hint for any table
+  if (!msg && t !== s) {
+    if (s === t) {
+      msg = `${t} × ${s} — when both numbers are the same, that's a square number!`;
+    }
+  }
+
+  // Show "same either way" for non-matching pairs
+  if (!msg && t !== s && t <= 10 && s <= 10) {
+    msg = `Did you notice? ${t} × ${s} = ${s} × ${t} = ${t*s}. It works both ways!`;
+  }
+
+  if (msg) {
+    text.textContent = msg;
+    strip.classList.remove('hidden');
+  } else {
+    strip.classList.add('hidden');
+  }
+}
+
+// ── NAV ────────────────────────────────────────────────────────────────
+document.getElementById('prev-btn').addEventListener('click', () => {
+  if (currentStep > 1) loadStep(currentStep - 1);
+});
+document.getElementById('next-btn').addEventListener('click', () => {
+  if (currentStep < 10) loadStep(currentStep + 1);
+});
+
+// ── BACK TO PICK ───────────────────────────────────────────────────────
+document.querySelector('.back-btn').addEventListener('click', e => {
+  const ls = document.getElementById('learn-screen');
+  if (ls.classList.contains('active')) {
+    e.preventDefault();
+    ls.classList.remove('active');
+    ls.style.display = 'none';
+    document.getElementById('pick-screen').classList.add('active');
+    document.documentElement.style.setProperty('--accent', 'var(--teal)');
+  }
+});
+</script>
+</body>
+</html>
