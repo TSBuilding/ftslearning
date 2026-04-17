@@ -694,67 +694,54 @@
 <script>
 // ── DEFAULT WORD LIST ──────────────────────────────────────────────────────
 const DEFAULT_WORDS = [
-  // ── CONFIDENCE BUILDERS (easier, kept from original) ─────────────────
-  { word: "chess",     sentence: "FTS played a game of chess." },
-  { word: "chest",     sentence: "FTS found a treasure chest." },
-  { word: "cheese",    sentence: "FTS put cheese on his sandwich." },
-  { word: "church",    sentence: "The church bell rang loudly." },
-  { word: "shell",     sentence: "FTS found a pretty shell at the beach." },
-  { word: "ship",      sentence: "The big ship sailed across the sea." },
-  { word: "brush",     sentence: "FTS used a brush to paint a picture." },
-  { word: "fish",      sentence: "FTS caught a fish in the river." },
-  { word: "teeth",     sentence: "FTS brushed his teeth twice a day." },
-  { word: "thick",     sentence: "FTS wore a thick warm jumper." },
-  { word: "drum",      sentence: "FTS banged on the drum." },
-  { word: "dog",       sentence: "The dog wagged its tail." },
-  { word: "bed",       sentence: "FTS jumped on his bed." },
-  { word: "bird",      sentence: "A small bird sat on the branch." },
-
-  // ── HARDER ch WORDS ──────────────────────────────────────────────────
-  { word: "cheetah",   sentence: "The cheetah is the fastest animal on land." },
-  { word: "channel",   sentence: "FTS changed the channel on the television." },
-  { word: "chapter",   sentence: "FTS read the next chapter of his book." },
-  { word: "champion",  sentence: "The Adelaide Crows were the champion team." },
-  { word: "challenge", sentence: "FTS was up for the challenge." },
-  { word: "chocolate", sentence: "FTS chose chocolate flavour ice cream." },
-  { word: "children",  sentence: "The children played in the park after school." },
-  { word: "kitchen",   sentence: "Mum was cooking dinner in the kitchen." },
-  { word: "teacher",   sentence: "The teacher wrote the answer on the board." },
-  { word: "crunchy",   sentence: "The apple was cold and crunchy." },
-
-  // ── HARDER sh WORDS ──────────────────────────────────────────────────
-  { word: "shadow",    sentence: "FTS saw his shadow on the ground." },
-  { word: "shepherd",  sentence: "The shepherd looked after his flock of sheep." },
-  { word: "shoulder",  sentence: "FTS hurt his shoulder playing footy." },
-  { word: "rubbish",   sentence: "FTS put the rubbish in the bin." },
-  { word: "sunshine",  sentence: "The sunshine made the day feel warm and bright." },
-  { word: "mushroom",  sentence: "FTS found a mushroom growing in the garden." },
-  { word: "eyelash",   sentence: "An eyelash fell onto FTS's cheek." },
-  { word: "cushion",   sentence: "FTS rested his head on a soft cushion." },
-  { word: "selfish",   sentence: "It is selfish not to share with others." },
-  { word: "shoelace",  sentence: "FTS tied his shoelace before the race." },
-
-  // ── HARDER th WORDS ──────────────────────────────────────────────────
-  { word: "thunder",   sentence: "The thunder boomed loudly during the storm." },
-  { word: "birthday",  sentence: "FTS got lots of presents on his birthday." },
-  { word: "together",  sentence: "FTS and his dad went to the game together." },
-  { word: "feather",   sentence: "The feather floated gently to the ground." },
-  { word: "further",   sentence: "The shop was further away than FTS thought." },
-  { word: "whether",   sentence: "FTS wasn't sure whether to kick or handball." },
-  { word: "leather",   sentence: "A footy is made from leather." },
-  { word: "gathers",   sentence: "FTS gathers his things before school each morning." },
-
-  // ── HARDER b/d CONFUSION WORDS ───────────────────────────────────────
-  { word: "describe",  sentence: "FTS tried to describe what the animal looked like." },
-  { word: "decide",    sentence: "FTS couldn't decide which flavour to pick." },
-  { word: "border",    sentence: "We drove across the border into another state." },
-  { word: "blanket",   sentence: "FTS wrapped himself in a warm blanket." },
-  { word: "balance",   sentence: "FTS tried to balance on one foot." },
-  { word: "rebuild",   sentence: "They had to rebuild the sandcastle after the wave." },
-  { word: "disturb",   sentence: "FTS tried not to disturb his dad during the game." },
-  { word: "depend",    sentence: "You can always depend on a good friend." },
+  // ch words
+  { word: "chin",     sentence: "FTS bumped his chin on the table." },
+  { word: "chip",     sentence: "FTS ate a chip for a snack." },
+  { word: "chess",    sentence: "FTS played a game of chess." },
+  { word: "chest",    sentence: "FTS found a treasure chest." },
+  { word: "chain",    sentence: "The dog was on a long chain." },
+  { word: "cheese",   sentence: "FTS put cheese on his sandwich." },
+  { word: "church",   sentence: "The church bell rang loudly." },
+  { word: "chop",     sentence: "FTS helped to chop the carrots." },
+  // sh words
+  { word: "shed",     sentence: "The tools are kept in the shed." },
+  { word: "ship",     sentence: "The big ship sailed across the sea." },
+  { word: "shop",     sentence: "FTS went to the shop with mum." },
+  { word: "shell",    sentence: "FTS found a pretty shell at the beach." },
+  { word: "fish",     sentence: "FTS caught a fish in the river." },
+  { word: "wish",     sentence: "FTS made a wish on a star." },
+  { word: "rush",     sentence: "FTS had to rush to get ready for school." },
+  { word: "flash",    sentence: "There was a bright flash of lightning." },
+  { word: "brush",    sentence: "FTS used a brush to paint a picture." },
+  { word: "crash",    sentence: "The toy car had a big crash." },
+  // th words
+  { word: "thin",     sentence: "The ice was very thin." },
+  { word: "thick",    sentence: "FTS wore a thick warm jumper." },
+  { word: "bath",     sentence: "FTS had a bath before bed." },
+  { word: "path",     sentence: "We walked along the path through the park." },
+  { word: "teeth",    sentence: "FTS brushed his teeth twice a day." },
+  { word: "cloth",    sentence: "FTS wiped the table with a damp cloth." },
+  { word: "moth",     sentence: "A moth flew around the light at night." },
+  { word: "math",     sentence: "FTS was really good at math." },
+  // b/d confusion words
+  { word: "bed",      sentence: "FTS jumped on his bed." },
+  { word: "bad",      sentence: "FTS had a bad dream last night." },
+  { word: "bid",      sentence: "FTS put in a bid for the toy at the auction." },
+  { word: "bud",      sentence: "A flower bud opened in the garden." },
+  { word: "dab",      sentence: "FTS had to dab the paint carefully." },
+  { word: "dig",      sentence: "FTS loved to dig in the sand." },
+  { word: "dog",      sentence: "The dog wagged its tail." },
+  { word: "drum",     sentence: "FTS banged on the drum." },
+  { word: "drip",     sentence: "The tap had a drip." },
+  { word: "bird",     sentence: "A small bird sat on the branch." },
+  { word: "band",     sentence: "FTS wore a rubber band on his wrist." },
+  { word: "bend",     sentence: "You need to bend your knees." },
+  { word: "bold",     sentence: "The writing was big and bold." },
+  { word: "blend",    sentence: "FTS helped to blend the smoothie." },
+  // 2-3 slightly harder words as a small stretch
+  { word: "shadow",   sentence: "FTS saw his shadow on the ground." },
+  { word: "thunder",  sentence: "The thunder boomed loudly during the storm." },
   { word: "bridge",   sentence: "We crossed the bridge over the river." },
-  { word: "bandage",   sentence: "The nurse put a bandage on FTS's knee." },
 ];
 
 // Remove duplicates
@@ -852,7 +839,12 @@ function speakCurrentWord() {
 
   // Show sentence hint after a beat
   setTimeout(() => {
-    document.getElementById('sentence-hint').textContent = `"${currentWord.sentence}"`;
+    const stars = '*'.repeat(currentWord.word.length);
+    const masked = currentWord.sentence.split(' ').map(w => {
+      const clean = w.replace(/[^a-zA-Z]/g, '').toLowerCase();
+      return clean === currentWord.word.toLowerCase() ? w.replace(/[a-zA-Z]/g, '*') : w;
+    }).join(' ');
+    document.getElementById('sentence-hint').textContent = `"${masked}"`;
   }, 1200);
 }
 
