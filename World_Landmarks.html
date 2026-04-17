@@ -7,15 +7,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0f1729;
-    --card: #1e2d4a;
-    --card2: #243459;
-    --gold: #f59e0b;
-    --text: #f0f4ff;
-    --muted: #94a3b8;
-    --green: #16a34a;
-    --red: #dc2626;
-    --blue: #2563eb;
+    --bg: #0f1729; --card: #1e2d4a; --card2: #243459;
+    --gold: #f59e0b; --text: #f0f4ff; --muted: #94a3b8;
+    --green: #16a34a; --red: #dc2626;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { height: 100%; }
@@ -24,6 +18,7 @@
 
   .wrapper { position: relative; z-index: 1; max-width: 600px; margin: 0 auto; padding: 16px 16px 48px; display: flex; flex-direction: column; gap: 16px; }
 
+  /* HEADER */
   .header { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; }
   .back-btn { background: var(--card); border: none; color: var(--muted); font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 700; padding: 8px 16px; border-radius: 20px; cursor: pointer; text-decoration: none; transition: all 0.2s; }
   .back-btn:hover { background: var(--card2); color: var(--text); }
@@ -63,22 +58,25 @@
   .progress-bar { height: 100%; background: linear-gradient(90deg, var(--gold), #3b82f6); border-radius: 20px; transition: width 0.5s ease; }
   .progress-row { display: flex; align-items: center; justify-content: space-between; }
   .progress-label { font-size: 12px; color: var(--muted); font-weight: 700; }
-  .score-dots { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
-  .score-dot { width: 22px; height: 22px; border-radius: 50%; background: var(--card2); border: 2px solid rgba(255,255,255,0.1); font-size: 11px; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
+  .score-dots { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; max-width: 260px; }
+  .score-dot { width: 20px; height: 20px; border-radius: 50%; background: var(--card2); border: 2px solid rgba(255,255,255,0.1); font-size: 10px; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
   .score-dot.pass { background: var(--green); border-color: var(--green); }
   .score-dot.fail { background: var(--red); border-color: var(--red); }
 
+  /* Landmark card */
   .landmark-card { width: 100%; background: var(--card); border-radius: 24px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.06); }
-  .landmark-photo-wrap { position: relative; width: 100%; height: 220px; overflow: hidden; background: var(--card2); display: flex; align-items: center; justify-content: center; }
+  .landmark-photo-wrap { position: relative; width: 100%; height: 240px; overflow: hidden; background: var(--card2); display: flex; align-items: center; justify-content: center; }
   .landmark-photo-wrap img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; transition: opacity 0.5s; }
-  .photo-placeholder { font-size: 52px; z-index: 1; transition: opacity 0.3s; }
+  .photo-placeholder { font-size: 56px; z-index: 1; transition: opacity 0.4s; }
+  .photo-loading-text { position: absolute; bottom: 10px; font-size: 11px; color: rgba(255,255,255,0.4); font-weight: 700; z-index: 2; }
   .landmark-info { padding: 16px 20px 20px; }
   .landmark-country { font-size: 11px; font-weight: 800; color: var(--gold); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
   .landmark-clue { font-size: 15px; font-weight: 700; color: var(--muted); line-height: 1.5; }
   .landmark-clue span { color: var(--text); }
 
+  /* Choices */
   .choices-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .choice-btn { background: var(--card); border: 2px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 14px 12px; font-family: 'Fredoka One', cursive; font-size: 16px; color: var(--text); cursor: pointer; transition: all 0.2s; text-align: center; line-height: 1.2; }
+  .choice-btn { background: var(--card); border: 2px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 14px 12px; font-family: 'Fredoka One', cursive; font-size: 15px; color: var(--text); cursor: pointer; transition: all 0.2s; text-align: center; line-height: 1.2; }
   .choice-btn:hover:not(:disabled) { background: var(--card2); border-color: var(--gold); transform: scale(1.02); }
   .choice-btn:active:not(:disabled) { transform: scale(0.97); }
   .choice-btn.correct { background: rgba(22,163,74,0.2); border-color: var(--green); color: #4ade80; }
@@ -86,6 +84,7 @@
   .choice-btn.reveal  { background: rgba(22,163,74,0.12); border-color: var(--green); color: #4ade80; }
   .choice-btn:disabled { cursor: default; }
 
+  /* Feedback */
   .feedback-bar { width: 100%; background: var(--card); border-radius: 16px; padding: 16px 20px; display: none; align-items: center; justify-content: space-between; gap: 12px; border: 2px solid transparent; animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1); }
   @keyframes popIn { from{transform:scale(0.85);opacity:0} to{transform:scale(1);opacity:1} }
   .feedback-bar.correct { display: flex; border-color: var(--green); background: rgba(22,163,74,0.1); }
@@ -106,7 +105,7 @@
   .results-title { font-family: 'Fredoka One', cursive; font-size: 30px; color: var(--gold); }
   .results-score { font-family: 'Fredoka One', cursive; font-size: 56px; color: white; line-height: 1; }
   .results-score span { font-size: 26px; color: var(--muted); }
-  .results-msg { font-size: 15px; color: var(--muted); font-weight: 700; line-height: 1.5; }
+  .results-sub { font-size: 15px; color: var(--muted); font-weight: 700; }
   .missed-panel { width: 100%; background: rgba(220,38,38,0.08); border: 1px solid rgba(220,38,38,0.25); border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; }
   .missed-panel h3 { font-size: 11px; font-weight: 900; color: #f87171; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px; }
   .missed-item { font-size: 14px; font-weight: 700; color: var(--text); }
@@ -130,6 +129,7 @@
     <div class="spacer"></div>
   </div>
 
+  <!-- START -->
   <div id="start-screen">
     <div class="start-card">
       <div class="start-globe">🌍</div>
@@ -139,19 +139,21 @@
     </div>
   </div>
 
+  <!-- LOADING -->
   <div id="loading-screen">
     <div class="loading-card">
       <div class="loading-globe">🌍</div>
-      <div class="loading-title">Fetching photos…</div>
-      <div class="loading-sub">Getting pictures of famous landmarks from around the world!</div>
+      <div class="loading-title">Loading photos…</div>
+      <div class="loading-sub">Fetching real photos of famous landmarks!</div>
       <div class="loading-bar-wrap"><div class="loading-bar" id="loading-bar"></div></div>
-      <div class="loading-count" id="loading-count">0 / 15</div>
+      <div class="loading-count" id="loading-count">0 / 30</div>
     </div>
   </div>
 
+  <!-- GAME -->
   <div id="game-screen">
     <div class="progress-row">
-      <div class="progress-label" id="progress-label">1 of 15</div>
+      <div class="progress-label" id="progress-label">1 of 30</div>
       <div class="score-dots" id="score-dots"></div>
     </div>
     <div class="progress-wrap"><div class="progress-bar" id="progress-bar" style="width:0%"></div></div>
@@ -178,13 +180,14 @@
     </div>
   </div>
 
+  <!-- RESULTS -->
   <div id="results-screen">
     <div class="results-card">
       <div class="results-trophy" id="results-trophy">🏆</div>
       <div class="results-title" id="results-title">Amazing, FTS!</div>
-      <div class="results-msg">You identified</div>
-      <div class="results-score" id="results-score">0 <span>/ 15</span></div>
-      <div class="results-msg" id="results-msg"></div>
+      <div class="results-sub">You identified</div>
+      <div class="results-score" id="results-score">0 <span>/ 30</span></div>
+      <div class="results-sub" id="results-msg"></div>
       <div class="missed-panel" id="missed-panel" style="display:none">
         <h3>🗺️ Worth revisiting</h3>
         <div id="missed-list"></div>
@@ -195,43 +198,47 @@
 
 </div>
 <script>
+// ── LANDMARK DATA ──────────────────────────────────────────────────────
+// wiki = exact Wikipedia article title for best photo via action API
 const LANDMARKS = [
-  { name: "Eiffel Tower",          wiki: "Eiffel_Tower",                   country: "🇫🇷 France, Europe",         emoji: "🗼", clue: "This tall iron tower in <span>Paris</span> sparkles with thousands of lights every night!" },
-  { name: "Taj Mahal",             wiki: "Taj_Mahal",                      country: "🇮🇳 India, Asia",            emoji: "🕌", clue: "A <span>white marble palace</span> in India, built as a symbol of love by an emperor for his wife." },
-  { name: "Statue of Liberty",     wiki: "Statue_of_Liberty",              country: "🇺🇸 USA, North America",     emoji: "🗽", clue: "A giant <span>green lady holding a torch</span> high in the air, standing on an island in New York!" },
-  { name: "Big Ben",               wiki: "Big_Ben",                        country: "🇬🇧 United Kingdom, Europe", emoji: "🕐", clue: "A famous <span>clock tower</span> in London that chimes loudly every hour — BONG BONG BONG!" },
-  { name: "Sydney Opera House",    wiki: "Sydney_Opera_House",             country: "🇦🇺 Australia, Oceania",     emoji: "🎭", clue: "A famous building in <span>Sydney</span> with a roof shaped like giant white sails on the harbour!" },
-  { name: "Great Wall of China",   wiki: "Great_Wall_of_China",            country: "🇨🇳 China, Asia",            emoji: "🧱", clue: "The <span>longest wall in the world</span>, stretching thousands of kilometres across Chinese mountains!" },
-  { name: "Colosseum",             wiki: "Colosseum",                      country: "🇮🇹 Italy, Europe",          emoji: "🏟️", clue: "Ancient <span>Romans watched gladiators fight</span> inside this huge oval arena almost 2,000 years ago!" },
-  { name: "Pyramids of Giza",      wiki: "Great_Pyramid_of_Giza",          country: "🇪🇬 Egypt, Africa",          emoji: "🔺", clue: "Giant <span>triangle-shaped tombs</span> built in the Egyptian desert for powerful pharaohs!" },
-  { name: "Machu Picchu",          wiki: "Machu_Picchu",                   country: "🇵🇪 Peru, South America",    emoji: "🏔️", clue: "Ancient ruins high in the <span>mountains of Peru</span> — once a secret city of the Inca people!" },
-  { name: "Leaning Tower of Pisa", wiki: "Leaning_Tower_of_Pisa",          country: "🇮🇹 Italy, Europe",          emoji: "🗼", clue: "A round white tower in Italy famous for <span>leaning to one side</span> — it's been tilting for hundreds of years!" },
-  { name: "Mount Fuji",            wiki: "Mount_Fuji",                     country: "🇯🇵 Japan, Asia",            emoji: "🗻", clue: "Japan's most famous <span>volcano</span>, with a perfect cone shape and a beautiful snowy top!" },
-  { name: "Parthenon",             wiki: "Parthenon",                      country: "🇬🇷 Greece, Europe",         emoji: "🏛️", clue: "An ancient <span>Greek temple</span> on top of a rocky hill in Athens, with rows of tall white columns!" },
-  { name: "Burj Khalifa",          wiki: "Burj_Khalifa",                   country: "🇦🇪 UAE, Asia",              emoji: "🏙️", clue: "The <span>tallest building in the world</span>, rising from the desert city of Dubai like a giant silver spike!" },
-  { name: "Christ the Redeemer",   wiki: "Christ_the_Redeemer_(statue)",   country: "🇧🇷 Brazil, South America",  emoji: "✝️", clue: "A giant white statue with <span>arms spread wide</span>, watching over Rio de Janeiro from a mountain top!" },
-  { name: "Sagrada Família",       wiki: "Sagrada_Família",                country: "🇪🇸 Spain, Europe",          emoji: "⛪", clue: "A stunning church in <span>Barcelona, Spain</span> with towers that look like giant dripping sandcastles!" },
-  { name: "Angkor Wat",            wiki: "Angkor_Wat",                     country: "🇰🇭 Cambodia, Asia",          emoji: "🛕", clue: "The <span>largest religious temple</span> in the world, hidden in the jungles of Cambodia!" },
-  { name: "Chichen Itza",          wiki: "Chichen_Itza",                   country: "🇲🇽 Mexico, North America",   emoji: "🔺", clue: "A giant <span>step pyramid</span> built by the ancient Mayan people in Mexico over 1,000 years ago!" },
-  { name: "Stonehenge",            wiki: "Stonehenge",                     country: "🇬🇧 United Kingdom, Europe",  emoji: "🪨", clue: "A mysterious circle of <span>huge standing stones</span> in England — nobody is quite sure how they got there!" },
-  { name: "Hagia Sophia",          wiki: "Hagia_Sophia",                   country: "🇹🇷 Turkey, Europe/Asia",     emoji: "🕌", clue: "A breathtaking building in <span>Istanbul</span> with an enormous dome — it has been a church and a mosque!" },
-  { name: "Alhambra",              wiki: "Alhambra",                       country: "🇪🇸 Spain, Europe",           emoji: "🏰", clue: "A stunning <span>Moorish palace and fortress</span> sitting on a hilltop in Granada, Spain, with beautiful gardens!" },
-  { name: "Golden Gate Bridge",    wiki: "Golden_Gate_Bridge",             country: "🇺🇸 USA, North America",      emoji: "🌉", clue: "A famous <span>red-orange suspension bridge</span> stretching across the bay in San Francisco!" },
-  { name: "Neuschwanstein Castle", wiki: "Neuschwanstein_Castle",          country: "🇩🇪 Germany, Europe",         emoji: "🏰", clue: "A <span>fairy-tale castle</span> perched high in the Bavarian mountains of Germany — it inspired Disney's Cinderella castle!" },
-  { name: "Uluru",                 wiki: "Uluru",                          country: "🇦🇺 Australia, Oceania",      emoji: "🟫", clue: "A giant <span>red sandstone rock</span> rising from the flat desert in the middle of Australia — sacred to Aboriginal people!" },
-  { name: "St Basil's Cathedral",  wiki: "Saint_Basil's_Cathedral",        country: "🇷🇺 Russia, Europe",          emoji: "⛪", clue: "A colourful cathedral in <span>Moscow's Red Square</span> famous for its onion-shaped domes of many bright colours!" },
-  { name: "Mount Rushmore",        wiki: "Mount_Rushmore",                 country: "🇺🇸 USA, North America",      emoji: "🗿", clue: "The giant <span>faces of four US presidents</span> carved into a mountain in South Dakota!" },
-  { name: "Trevi Fountain",        wiki: "Trevi_Fountain",                 country: "🇮🇹 Italy, Europe",           emoji: "⛲", clue: "The most famous <span>fountain in the world</span>, in Rome — legend says throwing a coin means you'll return to Rome!" },
-  { name: "Notre Dame Cathedral",  wiki: "Notre-Dame_de_Paris",            country: "🇫🇷 France, Europe",          emoji: "⛪", clue: "A stunning <span>Gothic cathedral</span> in Paris, famous for its gargoyles, rose windows and tall spires!" },
-  { name: "Petra",                 wiki: "Petra",                          country: "🇯🇴 Jordan, Asia",            emoji: "🏛️", clue: "An ancient <span>city carved directly into rose-red cliffs</span> in the desert of Jordan — called the Rose City!" },
-  { name: "Table Mountain",        wiki: "Table_Mountain",                 country: "🇿🇦 South Africa, Africa",    emoji: "🏔️", clue: "A famous flat-topped mountain that looks like a <span>giant table</span>, towering over Cape Town in South Africa!" },
-  { name: "Forbidden City",        wiki: "Forbidden_City",                 country: "🇨🇳 China, Asia",             emoji: "🏯", clue: "A vast <span>imperial palace</span> in Beijing, China — home to 24 emperors, ordinary people were forbidden from entering!" },
+  { name: "Eiffel Tower",          wiki: "Eiffel Tower",                  country: "🇫🇷 France, Europe",          emoji: "🗼", clue: "This tall iron tower in <span>Paris</span> sparkles with thousands of lights every night!" },
+  { name: "Taj Mahal",             wiki: "Taj Mahal",                     country: "🇮🇳 India, Asia",             emoji: "🕌", clue: "A <span>white marble palace</span> in India, built as a symbol of love by an emperor for his wife." },
+  { name: "Statue of Liberty",     wiki: "Statue of Liberty",             country: "🇺🇸 USA, North America",      emoji: "🗽", clue: "A giant <span>green lady holding a torch</span> high in the air, standing on an island in New York!" },
+  { name: "Big Ben",               wiki: "Big Ben",                       country: "🇬🇧 United Kingdom, Europe",  emoji: "🕐", clue: "A famous <span>clock tower</span> in London that chimes loudly every hour — BONG BONG BONG!" },
+  { name: "Sydney Opera House",    wiki: "Sydney Opera House",            country: "🇦🇺 Australia, Oceania",      emoji: "🎭", clue: "A famous building in <span>Sydney</span> with a roof shaped like giant white sails on the harbour!" },
+  { name: "Great Wall of China",   wiki: "Great Wall of China",           country: "🇨🇳 China, Asia",             emoji: "🧱", clue: "The <span>longest wall in the world</span>, stretching thousands of kilometres across Chinese mountains!" },
+  { name: "Colosseum",             wiki: "Colosseum",                     country: "🇮🇹 Italy, Europe",           emoji: "🏟️", clue: "Ancient <span>Romans watched gladiators fight</span> inside this huge oval arena almost 2,000 years ago!" },
+  { name: "Pyramids of Giza",      wiki: "Giza pyramid complex",          country: "🇪🇬 Egypt, Africa",           emoji: "🔺", clue: "Giant <span>triangle-shaped tombs</span> built in the Egyptian desert for powerful pharaohs!" },
+  { name: "Machu Picchu",          wiki: "Machu Picchu",                  country: "🇵🇪 Peru, South America",     emoji: "🏔️", clue: "Ancient ruins high in the <span>mountains of Peru</span> — once a secret city of the Inca people!" },
+  { name: "Leaning Tower of Pisa", wiki: "Leaning Tower of Pisa",         country: "🇮🇹 Italy, Europe",           emoji: "🗼", clue: "A round white tower in Italy famous for <span>leaning to one side</span> — it's been tilting for hundreds of years!" },
+  { name: "Mount Fuji",            wiki: "Mount Fuji",                    country: "🇯🇵 Japan, Asia",             emoji: "🗻", clue: "Japan's most famous <span>volcano</span>, with a perfect cone shape and a beautiful snowy top!" },
+  { name: "Parthenon",             wiki: "Parthenon",                     country: "🇬🇷 Greece, Europe",          emoji: "🏛️", clue: "An ancient <span>Greek temple</span> on top of a rocky hill in Athens, with rows of tall white columns!" },
+  { name: "Burj Khalifa",          wiki: "Burj Khalifa",                  country: "🇦🇪 UAE, Asia",               emoji: "🏙️", clue: "The <span>tallest building in the world</span>, rising from the desert city of Dubai like a giant silver spike!" },
+  { name: "Christ the Redeemer",   wiki: "Christ the Redeemer",           country: "🇧🇷 Brazil, South America",   emoji: "✝️", clue: "A giant white statue with <span>arms spread wide</span>, watching over Rio de Janeiro from a mountain top!" },
+  { name: "Sagrada Família",       wiki: "Sagrada Família",               country: "🇪🇸 Spain, Europe",           emoji: "⛪", clue: "A stunning church in <span>Barcelona</span> with towers that look like giant dripping sandcastles!" },
+  { name: "Angkor Wat",            wiki: "Angkor Wat",                    country: "🇰🇭 Cambodia, Asia",          emoji: "🛕", clue: "The <span>largest religious temple</span> in the world, hidden in the jungles of Cambodia!" },
+  { name: "Chichen Itza",          wiki: "Chichen Itza",                  country: "🇲🇽 Mexico, North America",   emoji: "🔺", clue: "A giant <span>step pyramid</span> built by the ancient Mayan people in Mexico over 1,000 years ago!" },
+  { name: "Stonehenge",            wiki: "Stonehenge",                    country: "🇬🇧 United Kingdom, Europe",  emoji: "🪨", clue: "A mysterious circle of <span>huge standing stones</span> in England — nobody is quite sure how they got there!" },
+  { name: "Hagia Sophia",          wiki: "Hagia Sophia",                  country: "🇹🇷 Turkey, Europe/Asia",     emoji: "🕌", clue: "A breathtaking building in <span>Istanbul</span> with an enormous dome — it has been both a church and a mosque!" },
+  { name: "Alhambra",              wiki: "Alhambra",                      country: "🇪🇸 Spain, Europe",           emoji: "🏰", clue: "A stunning <span>Moorish palace and fortress</span> on a hilltop in Granada, Spain, with beautiful tiled gardens!" },
+  { name: "Golden Gate Bridge",    wiki: "Golden Gate Bridge",            country: "🇺🇸 USA, North America",      emoji: "🌉", clue: "A famous <span>red-orange suspension bridge</span> stretching across the bay in San Francisco!" },
+  { name: "Neuschwanstein Castle", wiki: "Neuschwanstein Castle",         country: "🇩🇪 Germany, Europe",         emoji: "🏰", clue: "A <span>fairy-tale castle</span> high in the Bavarian mountains of Germany — it inspired Disney's Cinderella castle!" },
+  { name: "Uluru",                 wiki: "Uluru",                         country: "🇦🇺 Australia, Oceania",      emoji: "🟫", clue: "A giant <span>red sandstone rock</span> rising from flat desert in the middle of Australia, sacred to Aboriginal people!" },
+  { name: "St Basil's Cathedral",  wiki: "Saint Basil's Cathedral",       country: "🇷🇺 Russia, Europe",          emoji: "⛪", clue: "A colourful cathedral in <span>Moscow's Red Square</span> famous for its onion-shaped domes of many bright colours!" },
+  { name: "Mount Rushmore",        wiki: "Mount Rushmore",                country: "🇺🇸 USA, North America",      emoji: "🗿", clue: "The giant <span>faces of four US presidents</span> carved into a granite mountain in South Dakota!" },
+  { name: "Trevi Fountain",        wiki: "Trevi Fountain",                country: "🇮🇹 Italy, Europe",           emoji: "⛲", clue: "The most famous <span>fountain in the world</span> in Rome — throwing a coin means you'll return to Rome!" },
+  { name: "Notre Dame Cathedral",  wiki: "Notre-Dame de Paris",           country: "🇫🇷 France, Europe",          emoji: "⛪", clue: "A stunning <span>Gothic cathedral</span> in Paris, famous for its gargoyles, rose windows and tall spires!" },
+  { name: "Petra",                 wiki: "Petra, Jordan",                 country: "🇯🇴 Jordan, Asia",            emoji: "🏛️", clue: "An ancient <span>city carved directly into rose-red cliffs</span> in the desert of Jordan — called the Rose City!" },
+  { name: "Table Mountain",        wiki: "Table Mountain",                country: "🇿🇦 South Africa, Africa",    emoji: "🏔️", clue: "A famous flat-topped mountain that looks like a <span>giant table</span>, towering over Cape Town!" },
+  { name: "Forbidden City",        wiki: "Forbidden City",                country: "🇨🇳 China, Asia",             emoji: "🏯", clue: "A vast <span>imperial palace</span> in Beijing where 24 emperors lived — ordinary people were forbidden from entering!" },
 ];
 
+// ── STATE ──────────────────────────────────────────────────────────────
 let queue = [], currentIdx = 0, score = 0, results = [], answered = false;
-
 function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
 
+// ── FETCH HIGH-QUALITY PHOTOS via Wikipedia action API ─────────────────
+// Uses prop=pageimages with pithumbsize=800 — returns actual photographs
 async function fetchImages() {
   let loaded = 0;
   const bar   = document.getElementById('loading-bar');
@@ -240,18 +247,25 @@ async function fetchImages() {
 
   await Promise.all(LANDMARKS.map(async lm => {
     try {
-      const res  = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(lm.wiki)}`);
-      const data = await res.json();
-      lm.imageUrl = data.thumbnail?.source
-        ? data.thumbnail.source.replace(/\/\d+px-/, '/600px-')
-        : null;
+      const title = encodeURIComponent(lm.wiki);
+      const url   = `https://en.wikipedia.org/w/api.php?action=query&titles=${title}&prop=pageimages&format=json&pithumbsize=800&piprop=thumbnail&origin=*`;
+      const res   = await fetch(url);
+      const data  = await res.json();
+      const pages = data?.query?.pages;
+      if (pages) {
+        const page = Object.values(pages)[0];
+        lm.imageUrl = page?.thumbnail?.source || null;
+      } else {
+        lm.imageUrl = null;
+      }
     } catch(e) { lm.imageUrl = null; }
     loaded++;
-    bar.style.width    = `${(loaded / total) * 100}%`;
-    count.textContent  = `${loaded} / ${total}`;
+    bar.style.width   = `${(loaded / total) * 100}%`;
+    count.textContent = `${loaded} / ${total}`;
   }));
 }
 
+// ── SESSION ────────────────────────────────────────────────────────────
 function buildSession() {
   queue = shuffle(LANDMARKS);
   currentIdx = 0; score = 0; results = []; answered = false;
@@ -264,6 +278,7 @@ function buildSession() {
   });
 }
 
+// ── LOAD QUESTION ──────────────────────────────────────────────────────
 function loadQuestion(idx) {
   answered = false;
   const lm = queue[idx];
@@ -280,26 +295,27 @@ function loadQuestion(idx) {
   placeholder.style.opacity = '1';
   placeholder.textContent   = lm.emoji;
   if (lm.imageUrl) {
-    img.onload = () => { img.style.opacity = '1'; placeholder.style.opacity = '0'; };
+    img.onload  = () => { img.style.opacity = '1'; placeholder.style.opacity = '0'; };
     img.onerror = () => {};
-    img.src = lm.imageUrl;
+    img.src     = lm.imageUrl;
   }
 
-  // Choices
+  // Choices: 1 correct + 3 random wrong
   const others  = LANDMARKS.filter(l => l.name !== lm.name);
   const choices = shuffle([lm, ...shuffle(others).slice(0, 3)]);
   const grid    = document.getElementById('choices-grid');
   grid.innerHTML = '';
   choices.forEach(c => {
     const btn = document.createElement('button');
-    btn.className = 'choice-btn';
-    btn.textContent = c.name;
+    btn.className    = 'choice-btn';
+    btn.textContent  = c.name;
     btn.dataset.name = c.name;
     btn.addEventListener('click', () => handleAnswer(btn, c.name === lm.name, lm.name));
     grid.appendChild(btn);
   });
 }
 
+// ── HANDLE ANSWER ──────────────────────────────────────────────────────
 function handleAnswer(btn, correct, correctName) {
   if (answered) return;
   answered = true;
@@ -308,9 +324,11 @@ function handleAnswer(btn, correct, correctName) {
     if (b.dataset.name === correctName) b.classList.add('reveal');
   });
   if (correct)  { btn.classList.remove('reveal'); btn.classList.add('correct'); }
-  else          { btn.classList.remove('reveal'); btn.classList.add('wrong'); btn.classList.remove('correct'); }
+  else          { btn.classList.add('wrong'); }
+
   const dot = document.getElementById(`dot-${currentIdx}`);
   const fb  = document.getElementById('feedback-bar');
+
   if (correct) {
     score++;
     if (dot) { dot.classList.add('pass'); dot.textContent = '✓'; }
@@ -333,21 +351,27 @@ document.getElementById('next-btn').addEventListener('click', () => {
   else loadQuestion(currentIdx);
 });
 
+// ── RESULTS ────────────────────────────────────────────────────────────
 function showResults() {
   document.getElementById('progress-bar').style.width = '100%';
   const gs = document.getElementById('game-screen');
   gs.classList.remove('active'); gs.style.display = 'none';
   document.getElementById('results-screen').classList.add('active');
-  const pct = score / queue.length;
-  document.getElementById('results-score').innerHTML = `${score} <span>/ ${queue.length}</span>`;
+
+  const total = queue.length;
+  const pct   = score / total;
+  document.getElementById('results-score').innerHTML = `${score} <span>/ ${total}</span>`;
+
   let title, msg, trophy;
   if (pct === 1)       { title = 'Perfect Explorer! 🌟'; msg = 'You knew every single landmark!'; trophy = '🏆'; confetti(); setTimeout(confetti, 500); }
   else if (pct >= 0.8) { title = 'World Traveller, FTS!'; msg = 'You really know your landmarks!'; trophy = '✈️'; }
   else if (pct >= 0.6) { title = 'Good exploring, FTS!'; msg = 'Keep travelling the world!'; trophy = '🌍'; }
   else                 { title = 'Keep exploring, FTS!'; msg = 'The world has so much to discover!'; trophy = '🗺️'; }
+
   document.getElementById('results-trophy').textContent = trophy;
   document.getElementById('results-title').textContent  = title;
   document.getElementById('results-msg').textContent    = msg;
+
   const missed = results.filter(r => !r.correct);
   const panel  = document.getElementById('missed-panel');
   const list   = document.getElementById('missed-list');
@@ -363,6 +387,7 @@ function showResults() {
   } else { panel.style.display = 'none'; }
 }
 
+// ── CONFETTI ───────────────────────────────────────────────────────────
 function confetti() {
   const colors = ['#f59e0b','#3b82f6','#16a34a','#ec4899','#8b5cf6','#ef4444','#06b6d4'];
   for (let i = 0; i < 36; i++) {
@@ -376,6 +401,7 @@ function confetti() {
   }
 }
 
+// ── FLOW ───────────────────────────────────────────────────────────────
 document.getElementById('start-btn').addEventListener('click', async () => {
   document.getElementById('start-screen').style.display = 'none';
   document.getElementById('loading-screen').classList.add('active');
