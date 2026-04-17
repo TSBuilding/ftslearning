@@ -37,6 +37,7 @@
     overflow-x: hidden;
   }
 
+  /* Honeycomb background pattern */
   body::before {
     content: '';
     position: fixed;
@@ -58,6 +59,7 @@
     gap: 20px;
   }
 
+  /* Header */
   .header {
     width: 100%;
     display: flex;
@@ -115,6 +117,7 @@
   }
   .edit-btn:hover { background: var(--card2); color: var(--text); }
 
+  /* Progress bar */
   .progress-wrap {
     width: 100%;
     background: var(--card);
@@ -136,6 +139,7 @@
     margin-top: -14px;
   }
 
+  /* Main game card */
   .game-card {
     width: 100%;
     background: var(--card);
@@ -166,6 +170,7 @@
     text-align: center;
   }
 
+  /* Speak button */
   .speak-btn {
     background: linear-gradient(135deg, var(--gold), #d97706);
     border: none;
@@ -188,6 +193,7 @@
 
   .speak-icon { font-size: 22px; }
 
+  /* Input */
   .input-wrap {
     width: 100%;
     display: flex;
@@ -234,6 +240,7 @@
   .check-btn:active { transform: scale(0.98); }
   .check-btn:disabled { opacity: 0.4; cursor: default; transform: none; }
 
+  /* Feedback */
   .feedback {
     width: 100%;
     border-radius: 16px;
@@ -256,6 +263,7 @@
   .feedback.correct .feedback-msg { color: #4ade80; }
   .feedback.wrong .feedback-msg { color: #f87171; }
 
+  /* Letter-level display */
   .letter-display {
     display: flex;
     gap: 4px;
@@ -300,6 +308,7 @@
   }
   .next-btn:hover { background: var(--card2); border-color: rgba(255,255,255,0.2); }
 
+  /* Score strip */
   .score-strip {
     display: flex;
     gap: 8px;
@@ -321,6 +330,7 @@
   .score-dot.pass { background: var(--green); border-color: var(--green); }
   .score-dot.fail { background: var(--red); border-color: var(--red); }
 
+  /* Results screen */
   #results-screen {
     display: none;
     width: 100%;
@@ -396,6 +406,7 @@
   }
   .play-again-btn:hover { transform: scale(1.02); }
 
+  /* Edit screen */
   #edit-screen {
     display: none;
     width: 100%;
@@ -501,6 +512,7 @@
   }
   .save-btn:hover { transform: scale(1.02); }
 
+  /* Start screen */
   #start-screen {
     width: 100%;
     display: flex;
@@ -556,6 +568,7 @@
   }
   .word-count-badge span { color: var(--gold); }
 
+  /* Sentence hint */
   .sentence-hint {
     font-size: 14px;
     color: var(--muted);
@@ -567,6 +580,7 @@
     padding: 0 8px;
   }
 
+  /* Confetti */
   .confetti-piece {
     position: fixed;
     width: 10px;
@@ -581,12 +595,14 @@
     100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
   }
 
+  /* Utility */
   .hidden { display: none !important; }
 </style>
 </head>
 <body>
 <div class="wrapper">
 
+  <!-- Header -->
   <div class="header">
     <a href="index.html" class="back-btn">← Home</a>
     <div class="title-block">
@@ -676,41 +692,72 @@
 </div>
 
 <script>
+// ── DEFAULT WORD LIST ──────────────────────────────────────────────────────
 const DEFAULT_WORDS = [
-  { word: "chip",    sentence: "FTS ate a chip for a snack." },
-  { word: "chop",    sentence: "FTS helped to chop the carrots." },
-  { word: "chin",    sentence: "FTS bumped his chin on the table." },
-  { word: "chess",   sentence: "FTS played a game of chess." },
-  { word: "chest",   sentence: "FTS found a treasure chest." },
-  { word: "church",  sentence: "The church bell rang loudly." },
-  { word: "cheese",  sentence: "FTS put cheese on his sandwich." },
-  { word: "chain",   sentence: "The dog was on a long chain." },
-  { word: "ship",    sentence: "The big ship sailed across the sea." },
-  { word: "shop",    sentence: "FTS went to the shop with mum." },
-  { word: "shell",   sentence: "FTS found a pretty shell at the beach." },
-  { word: "shed",    sentence: "The tools are kept in the shed." },
-  { word: "fish",    sentence: "FTS caught a fish in the river." },
-  { word: "wish",    sentence: "FTS made a wish on a star." },
-  { word: "brush",   sentence: "FTS used a brush to paint a picture." },
-  { word: "flash",   sentence: "There was a bright flash of lightning." },
-  { word: "thin",    sentence: "The ice was very thin." },
-  { word: "thick",   sentence: "FTS wore a thick warm jumper." },
-  { word: "bath",    sentence: "FTS had a bath before bed." },
-  { word: "teeth",   sentence: "FTS brushed his teeth twice a day." },
-  { word: "path",    sentence: "We walked along the path through the park." },
-  { word: "bed",     sentence: "FTS jumped on his bed." },
-  { word: "bird",    sentence: "A small bird sat on the branch." },
-  { word: "bend",    sentence: "You need to bend your knees." },
-  { word: "band",    sentence: "FTS wore a rubber band on his wrist." },
-  { word: "dog",     sentence: "The dog wagged its tail." },
-  { word: "dig",     sentence: "FTS loved to dig in the sand." },
-  { word: "drip",    sentence: "The tap had a drip." },
-  { word: "drum",    sentence: "FTS banged on the drum." },
-  { word: "bold",    sentence: "The writing was big and bold." },
-  { word: "dad",     sentence: "FTS went to the park with his dad." },
-  { word: "bid",     sentence: "FTS put in a bid for the toy at the auction." },
+  // ── CONFIDENCE BUILDERS (easier, kept from original) ─────────────────
+  { word: "chess",     sentence: "FTS played a game of chess." },
+  { word: "chest",     sentence: "FTS found a treasure chest." },
+  { word: "cheese",    sentence: "FTS put cheese on his sandwich." },
+  { word: "church",    sentence: "The church bell rang loudly." },
+  { word: "shell",     sentence: "FTS found a pretty shell at the beach." },
+  { word: "ship",      sentence: "The big ship sailed across the sea." },
+  { word: "brush",     sentence: "FTS used a brush to paint a picture." },
+  { word: "fish",      sentence: "FTS caught a fish in the river." },
+  { word: "teeth",     sentence: "FTS brushed his teeth twice a day." },
+  { word: "thick",     sentence: "FTS wore a thick warm jumper." },
+  { word: "drum",      sentence: "FTS banged on the drum." },
+  { word: "dog",       sentence: "The dog wagged its tail." },
+  { word: "bed",       sentence: "FTS jumped on his bed." },
+  { word: "bird",      sentence: "A small bird sat on the branch." },
+
+  // ── HARDER ch WORDS ──────────────────────────────────────────────────
+  { word: "cheetah",   sentence: "The cheetah is the fastest animal on land." },
+  { word: "channel",   sentence: "FTS changed the channel on the television." },
+  { word: "chapter",   sentence: "FTS read the next chapter of his book." },
+  { word: "champion",  sentence: "The Adelaide Crows were the champion team." },
+  { word: "challenge", sentence: "FTS was up for the challenge." },
+  { word: "chocolate", sentence: "FTS chose chocolate flavour ice cream." },
+  { word: "children",  sentence: "The children played in the park after school." },
+  { word: "kitchen",   sentence: "Mum was cooking dinner in the kitchen." },
+  { word: "teacher",   sentence: "The teacher wrote the answer on the board." },
+  { word: "crunchy",   sentence: "The apple was cold and crunchy." },
+
+  // ── HARDER sh WORDS ──────────────────────────────────────────────────
+  { word: "shadow",    sentence: "FTS saw his shadow on the ground." },
+  { word: "shepherd",  sentence: "The shepherd looked after his flock of sheep." },
+  { word: "shoulder",  sentence: "FTS hurt his shoulder playing footy." },
+  { word: "rubbish",   sentence: "FTS put the rubbish in the bin." },
+  { word: "sunshine",  sentence: "The sunshine made the day feel warm and bright." },
+  { word: "mushroom",  sentence: "FTS found a mushroom growing in the garden." },
+  { word: "eyelash",   sentence: "An eyelash fell onto FTS's cheek." },
+  { word: "cushion",   sentence: "FTS rested his head on a soft cushion." },
+  { word: "selfish",   sentence: "It is selfish not to share with others." },
+  { word: "shoelace",  sentence: "FTS tied his shoelace before the race." },
+
+  // ── HARDER th WORDS ──────────────────────────────────────────────────
+  { word: "thunder",   sentence: "The thunder boomed loudly during the storm." },
+  { word: "birthday",  sentence: "FTS got lots of presents on his birthday." },
+  { word: "together",  sentence: "FTS and his dad went to the game together." },
+  { word: "feather",   sentence: "The feather floated gently to the ground." },
+  { word: "further",   sentence: "The shop was further away than FTS thought." },
+  { word: "whether",   sentence: "FTS wasn't sure whether to kick or handball." },
+  { word: "leather",   sentence: "A footy is made from leather." },
+  { word: "gathers",   sentence: "FTS gathers his things before school each morning." },
+
+  // ── HARDER b/d CONFUSION WORDS ───────────────────────────────────────
+  { word: "describe",  sentence: "FTS tried to describe what the animal looked like." },
+  { word: "decide",    sentence: "FTS couldn't decide which flavour to pick." },
+  { word: "border",    sentence: "We drove across the border into another state." },
+  { word: "blanket",   sentence: "FTS wrapped himself in a warm blanket." },
+  { word: "balance",   sentence: "FTS tried to balance on one foot." },
+  { word: "rebuild",   sentence: "They had to rebuild the sandcastle after the wave." },
+  { word: "disturb",   sentence: "FTS tried not to disturb his dad during the game." },
+  { word: "depend",    sentence: "You can always depend on a good friend." },
+  { word: "bridge",   sentence: "We crossed the bridge over the river." },
+  { word: "bandage",   sentence: "The nurse put a bandage on FTS's knee." },
 ];
 
+// Remove duplicates
 const seen = new Set();
 const WORDS = DEFAULT_WORDS.filter(w => {
   if (seen.has(w.word)) return false;
@@ -718,15 +765,17 @@ const WORDS = DEFAULT_WORDS.filter(w => {
   return true;
 });
 
+// ── STATE ──────────────────────────────────────────────────────────────────
 let wordList = [];
 let sessionQueue = [];
-let sessionResults = [];
+let sessionResults = []; // {word, correct}
 let currentIndex = 0;
 let currentWord = null;
 let answered = false;
 let correctThisSession = 0;
 const SESSION_SIZE = 10;
 
+// ── LOAD / SAVE WORDS ──────────────────────────────────────────────────────
 function loadWords() {
   const saved = localStorage.getItem('spelling_bee_words');
   if (saved) {
@@ -742,6 +791,7 @@ function saveWords() {
   document.getElementById('word-count-display').textContent = wordList.length;
 }
 
+// ── SESSION SETUP ──────────────────────────────────────────────────────────
 function buildSession() {
   const shuffled = [...wordList].sort(() => Math.random() - 0.5);
   sessionQueue = shuffled.slice(0, Math.min(SESSION_SIZE, shuffled.length));
@@ -762,6 +812,7 @@ function buildScoreDots() {
   }
 }
 
+// ── SCREEN MANAGEMENT ─────────────────────────────────────────────────────
 function showScreen(name) {
   ['start-screen','game-screen','results-screen','edit-screen'].forEach(id => {
     const el = document.getElementById(id);
@@ -775,38 +826,15 @@ function showScreen(name) {
   });
 }
 
-let cachedVoices = [];
-function loadVoices() {
-  cachedVoices = window.speechSynthesis.getVoices();
-}
-window.speechSynthesis.onvoiceschanged = loadVoices;
-loadVoices();
-
+// ── SPEECH ─────────────────────────────────────────────────────────────────
 function speak(text, onEnd) {
   window.speechSynthesis.cancel();
-
-  const trySpeak = () => {
-    const utt = new SpeechSynthesisUtterance(text);
-    utt.rate = 0.7;
-    utt.pitch = 1.05;
-    utt.lang = 'en-AU';
-
-    const voices = cachedVoices.length ? cachedVoices : window.speechSynthesis.getVoices();
-    const preferred = ['Karen', 'Catherine', 'Samantha', 'Moira', 'Daniel'];
-    for (const name of preferred) {
-      const match = voices.find(v => v.name.includes(name));
-      if (match) { utt.voice = match; break; }
-    }
-
-    if (onEnd) utt.onend = onEnd;
-    window.speechSynthesis.speak(utt);
-  };
-
-  if (cachedVoices.length) {
-    trySpeak();
-  } else {
-    setTimeout(trySpeak, 250);
-  }
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.rate = 0.88;
+  utt.pitch = 1.05;
+  utt.lang = 'en-AU';
+  if (onEnd) utt.onend = onEnd;
+  window.speechSynthesis.speak(utt);
 }
 
 function speakCurrentWord() {
@@ -814,61 +842,76 @@ function speakCurrentWord() {
   const btn = document.getElementById('speak-btn');
   btn.classList.add('speaking');
   btn.querySelector('span:last-child').textContent = 'Listening…';
+
+  // Speak: word, pause, sentence
   const text = `${currentWord.word}. ... ${currentWord.sentence}`;
   speak(text, () => {
     btn.classList.remove('speaking');
     btn.querySelector('span:last-child').textContent = 'Hear the Word';
   });
-setTimeout(() => {
-    const stars = '*'.repeat(currentWord.word.length);
-    const masked = currentWord.sentence.split(' ').map(w => {
-      const clean = w.replace(/[^a-zA-Z]/g, '').toLowerCase();
-      return clean === currentWord.word.toLowerCase() ? w.replace(/[a-zA-Z]/g, '*') : w;
-    }).join(' ');
-    document.getElementById('sentence-hint').textContent = `"${masked}"`;
+
+  // Show sentence hint after a beat
+  setTimeout(() => {
+    document.getElementById('sentence-hint').textContent = `"${currentWord.sentence}"`;
   }, 1200);
 }
 
+// ── LOAD WORD ──────────────────────────────────────────────────────────────
 function loadWord(index) {
   currentWord = sessionQueue[index];
   answered = false;
+
   const total = sessionQueue.length;
   document.getElementById('progress-bar').style.width = `${(index / total) * 100}%`;
   document.getElementById('progress-label').textContent = `Word ${index + 1} of ${total}`;
+
   const input = document.getElementById('spelling-input');
   input.value = '';
   input.className = '';
   input.disabled = false;
   input.focus();
+
   document.getElementById('feedback').className = 'feedback';
   document.getElementById('sentence-hint').textContent = '';
   document.getElementById('prompt-text').textContent = 'Listen carefully, then type the word!';
   document.getElementById('check-btn').disabled = false;
   document.getElementById('bee-anim').style.filter = '';
+
+  // Auto-speak after short delay
   setTimeout(speakCurrentWord, 400);
 }
 
+// ── CHECK ANSWER ───────────────────────────────────────────────────────────
 function checkAnswer() {
   if (answered || !currentWord) return;
   const input = document.getElementById('spelling-input');
   const attempt = input.value.trim().toLowerCase();
   if (!attempt) { input.focus(); return; }
+
   answered = true;
   input.disabled = true;
   document.getElementById('check-btn').disabled = true;
+
   const correct = attempt === currentWord.word.toLowerCase();
+
+  // Mark dot
   const dot = document.getElementById(`dot-${currentIndex}`);
   if (dot) dot.classList.add(correct ? 'pass' : 'fail');
   if (dot) dot.textContent = correct ? '✓' : '✗';
+
   sessionResults.push({ word: currentWord.word, sentence: currentWord.sentence, correct });
   if (correct) correctThisSession++;
+
+  // Show feedback
   const fb = document.getElementById('feedback');
   const emoji = document.getElementById('feedback-emoji');
   const msg = document.getElementById('feedback-msg');
   const letterDiv = document.getElementById('letter-display');
   const hintDiv = document.getElementById('correct-word-hint');
+
   letterDiv.innerHTML = '';
   hintDiv.innerHTML = '';
+
   if (correct) {
     input.classList.add('correct');
     fb.className = 'feedback correct';
@@ -881,6 +924,8 @@ function checkAnswer() {
     fb.className = 'feedback wrong';
     emoji.textContent = '😅';
     msg.textContent = 'Not quite — here\'s how to spell it:';
+
+    // Letter-level comparison
     const target = currentWord.word.toLowerCase();
     const att = attempt.toLowerCase();
     const maxLen = Math.max(target.length, att.length);
@@ -891,9 +936,11 @@ function checkAnswer() {
         box.textContent = target[i].toUpperCase();
         box.classList.add(att[i] === target[i] ? 'match' : 'miss');
       } else if (i < target.length) {
+        // missing letters
         box.textContent = target[i].toUpperCase();
         box.classList.add('miss');
       } else {
+        // extra letters typed
         box.textContent = att[i].toUpperCase();
         box.classList.add('extra');
       }
@@ -904,6 +951,7 @@ function checkAnswer() {
   }
 }
 
+// ── NEXT WORD ──────────────────────────────────────────────────────────────
 function nextWord() {
   currentIndex++;
   if (currentIndex >= sessionQueue.length) {
@@ -913,21 +961,26 @@ function nextWord() {
   }
 }
 
+// ── RESULTS ────────────────────────────────────────────────────────────────
 function showResults() {
   document.getElementById('progress-bar').style.width = '100%';
   showScreen('results-screen');
+
   const total = sessionQueue.length;
   const score = correctThisSession;
   document.getElementById('results-score').innerHTML = `${score} <span>/ ${total}</span>`;
+
   let title, msg, trophy;
   const pct = score / total;
-  if (pct === 1)       { title = 'Perfect Score! 🌟'; msg = 'You spelled every single word correctly!'; trophy = '🏆'; }
-  else if (pct >= 0.8) { title = 'Amazing work, FTS!'; msg = 'You\'re a spelling superstar!'; trophy = '⭐'; }
-  else if (pct >= 0.6) { title = 'Good effort, FTS!'; msg = 'Keep practising — you\'re getting there!'; trophy = '🎯'; }
-  else                 { title = 'Keep going, FTS!'; msg = 'Practise makes perfect. Try again!'; trophy = '💪'; }
+  if (pct === 1)      { title = 'Perfect Score! 🌟'; msg = 'You spelled every single word correctly!'; trophy = '🏆'; }
+  else if (pct >= 0.8){ title = 'Amazing work, FTS!'; msg = 'You\'re a spelling superstar!'; trophy = '⭐'; }
+  else if (pct >= 0.6){ title = 'Good effort, FTS!'; msg = 'Keep practising — you\'re getting there!'; trophy = '🎯'; }
+  else                { title = 'Keep going, FTS!'; msg = 'Practise makes perfect. Try again!'; trophy = '💪'; }
+
   document.getElementById('results-title').textContent = title;
   document.getElementById('results-msg').textContent = msg;
   document.getElementById('results-trophy').textContent = trophy;
+
   const missed = sessionResults.filter(r => !r.correct);
   const missedPanel = document.getElementById('missed-words-panel');
   const missedList = document.getElementById('missed-words-list');
@@ -943,10 +996,13 @@ function showResults() {
   } else {
     missedPanel.style.display = 'none';
   }
+
   if (pct === 1) { setTimeout(triggerConfetti, 200); setTimeout(triggerConfetti, 600); }
+
   speak(title + ' ' + msg);
 }
 
+// ── CONFETTI ───────────────────────────────────────────────────────────────
 function triggerConfetti() {
   const colors = ['#f59e0b','#3b82f6','#16a34a','#ec4899','#8b5cf6','#ef4444'];
   for (let i = 0; i < 40; i++) {
@@ -966,6 +1022,7 @@ function triggerConfetti() {
   }
 }
 
+// ── EDIT SCREEN ────────────────────────────────────────────────────────────
 function openEditScreen() {
   renderWordEditor();
   showScreen('edit-screen');
@@ -1001,6 +1058,7 @@ function collectEdits() {
   return newList;
 }
 
+// ── EVENT LISTENERS ────────────────────────────────────────────────────────
 document.getElementById('start-btn').addEventListener('click', () => {
   buildSession();
   showScreen('game-screen');
@@ -1009,6 +1067,7 @@ document.getElementById('start-btn').addEventListener('click', () => {
 });
 
 document.getElementById('speak-btn').addEventListener('click', speakCurrentWord);
+
 document.getElementById('check-btn').addEventListener('click', checkAnswer);
 
 document.getElementById('spelling-input').addEventListener('keydown', e => {
@@ -1040,8 +1099,10 @@ document.getElementById('add-word-btn').addEventListener('click', () => {
   wordList = collectEdits();
   wordList.push({ word: '', sentence: '' });
   renderWordEditor();
+  // Scroll to bottom
   const c = document.getElementById('word-list-editor');
   c.scrollTop = c.scrollHeight;
+  // Focus new word input
   const inputs = c.querySelectorAll('input[data-field="word"]');
   if (inputs.length) inputs[inputs.length - 1].focus();
 });
@@ -1061,6 +1122,7 @@ document.getElementById('save-btn').addEventListener('click', () => {
   showScreen('start-screen');
 });
 
+// ── INIT ───────────────────────────────────────────────────────────────────
 loadWords();
 showScreen('start-screen');
 </script>
