@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>World Landmarks — FTS Learning HQ</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1729;
+    --card: #1e2d4a;
+    --card2: #243459;
+    --navy: #1a2744;
+    --gold: #f59e0b;
+    --text: #f0f4ff;
+    --muted: #94a3b8;
+    --green: #16a34a;
+    --red: #dc2626;
+    --blue: #2563eb;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { height: 100%; }
+  body {
+    background: var(--bg);
+    font-family: 'Nunito', sans-serif;
+    color: var(--text);
+    min-height: 100%;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background: radial-gradient(ellipse at 20% 20%, rgba(37,99,235,0.08) 0%, transparent 55%),
+                radial-gradient(ellipse at 80% 80%, rgba(245,158,11,0.06) 0%, transparent 55%);
+    pointer-events: none; z-index: 0;
+  }
+
+  .wrapper { position: relative; z-index: 1; max-width: 600px; margin: 0 auto; padding: 16px 16px 48px; display: flex; flex-direction: column; gap: 16px; }
+
+  /* HEADER */
+  .header { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; }
+  .back-btn { background: var(--card); border: none; color: var(--muted); font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 700; padding: 8px 16px; border-radius: 20px; cursor: pointer; text-decoration: none; transition: all 0.2s; }
+  .back-btn:hover { background: var(--card2); color: var(--text); }
+  .title-block { text-align: center; flex: 1; }
+  .title-block h1 { font-family: 'Fredoka One', cursive; font-size: 26px; color: var(--gold); letter-spacing: 1px; line-height: 1; }
+  .title-block p { font-size: 11px; color: var(--muted); font-weight: 700; margin-top: 2px; }
+  .spacer { width: 70px; }
+
+  /* START SCREEN */
+  #start-screen { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+  .start-card { width: 100%; background: var(--card); border-radius: 24px; padding: 36px 24px; display: flex; flex-direction: column; align-items: center; gap: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.06); text-align: center; }
+  .start-globe { font-size: 72px; animation: bob 2.5s ease-in-out infinite; }
+  @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+  .start-title { font-family: 'Fredoka One', cursive; font-size: 26px; color: var(--text); line-height: 1.3; }
+  .start-title span { color: var(--gold); }
+  .start-sub { font-size: 15px; color: var(--muted); font-weight: 600; line-height: 1.5; }
+  .start-btn { width: 100%; background: linear-gradient(135deg, var(--gold), #d97706); border: none; color: #1a1000; font-family: 'Fredoka One', cursive; font-size: 22px; padding: 18px; border-radius: 16px; cursor: pointer; box-shadow: 0 4px 20px rgba(245,158,11,0.35); transition: all 0.2s; }
+  .start-btn:hover { transform: scale(1.02); }
+
+  /* GAME SCREEN */
+  #game-screen { display: none; flex-direction: column; gap: 14px; }
+  #game-screen.active { display: flex; }
+
+  /* Progress */
+  .progress-wrap { width: 100%; background: var(--card); border-radius: 20px; height: 10px; overflow: hidden; }
+  .progress-bar { height: 100%; background: linear-gradient(90deg, var(--gold), #3b82f6); border-radius: 20px; transition: width 0.5s ease; }
+  .progress-row { display: flex; align-items: center; justify-content: space-between; }
+  .progress-label { font-size: 12px; color: var(--muted); font-weight: 700; }
+  .score-dots { display: flex; gap: 6px; }
+  .score-dot { width: 22px; height: 22px; border-radius: 50%; background: var(--card2); border: 2px solid rgba(255,255,255,0.1); font-size: 11px; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
+  .score-dot.pass { background: var(--green); border-color: var(--green); }
+  .score-dot.fail { background: var(--red); border-color: var(--red); }
+
+  /* Illustration card */
+  .landmark-card { width: 100%; background: var(--card); border-radius: 24px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.06); }
+  .landmark-illustration { width: 100%; display: flex; align-items: center; justify-content: center; padding: 8px; background: linear-gradient(180deg, #1a3a6b 0%, #0d2040 100%); }
+  .landmark-illustration svg { width: 100%; max-width: 340px; height: auto; border-radius: 16px; }
+  .landmark-info { padding: 16px 20px 20px; }
+  .landmark-country { font-size: 11px; font-weight: 800; color: var(--gold); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
+  .landmark-clue { font-size: 15px; font-weight: 700; color: var(--muted); line-height: 1.5; }
+  .landmark-clue span { color: var(--text); }
+
+  /* Choices */
+  .choices-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .choice-btn { background: var(--card); border: 2px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 14px 12px; font-family: 'Fredoka One', cursive; font-size: 16px; color: var(--text); cursor: pointer; transition: all 0.2s; text-align: center; line-height: 1.2; }
+  .choice-btn:hover:not(:disabled) { background: var(--card2); border-color: var(--gold); transform: scale(1.02); }
+  .choice-btn:active:not(:disabled) { transform: scale(0.97); }
+  .choice-btn.correct { background: rgba(22,163,74,0.2); border-color: var(--green); color: #4ade80; }
+  .choice-btn.wrong { background: rgba(220,38,38,0.15); border-color: var(--red); color: #f87171; }
+  .choice-btn.reveal { background: rgba(22,163,74,0.12); border-color: var(--green); color: #4ade80; }
+  .choice-btn:disabled { cursor: default; }
+
+  /* Feedback */
+  .feedback-bar { width: 100%; background: var(--card); border-radius: 16px; padding: 16px 20px; display: none; align-items: center; justify-content: space-between; gap: 12px; border: 2px solid transparent; animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+  @keyframes popIn { from{transform:scale(0.85);opacity:0} to{transform:scale(1);opacity:1} }
+  .feedback-bar.correct { display: flex; border-color: var(--green); background: rgba(22,163,74,0.1); }
+  .feedback-bar.wrong { display: flex; border-color: var(--red); background: rgba(220,38,38,0.08); }
+  .feedback-left { display: flex; align-items: center; gap: 10px; }
+  .feedback-emoji { font-size: 28px; }
+  .feedback-msg { font-size: 16px; font-weight: 800; }
+  .feedback-bar.correct .feedback-msg { color: #4ade80; }
+  .feedback-bar.wrong .feedback-msg { color: #f87171; }
+  .next-btn { background: var(--card2); border: 2px solid rgba(255,255,255,0.1); color: var(--text); font-family: 'Fredoka One', cursive; font-size: 15px; padding: 10px 18px; border-radius: 12px; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
+  .next-btn:hover { background: #2d3f60; }
+
+  /* RESULTS */
+  #results-screen { display: none; flex-direction: column; align-items: center; gap: 16px; }
+  #results-screen.active { display: flex; }
+  .results-card { width: 100%; background: var(--card); border-radius: 24px; padding: 36px 24px; display: flex; flex-direction: column; align-items: center; gap: 14px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); text-align: center; }
+  .results-trophy { font-size: 72px; animation: bob 2s ease-in-out infinite; }
+  .results-title { font-family: 'Fredoka One', cursive; font-size: 30px; color: var(--gold); }
+  .results-score { font-family: 'Fredoka One', cursive; font-size: 56px; color: white; line-height: 1; }
+  .results-score span { font-size: 26px; color: var(--muted); }
+  .results-msg { font-size: 15px; color: var(--muted); font-weight: 700; line-height: 1.5; }
+  .missed-panel { width: 100%; background: rgba(220,38,38,0.08); border: 1px solid rgba(220,38,38,0.25); border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; }
+  .missed-panel h3 { font-size: 11px; font-weight: 900; color: #f87171; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px; }
+  .missed-item { font-size: 14px; font-weight: 700; color: var(--text); }
+  .missed-item em { color: var(--muted); font-style: normal; font-size: 12px; }
+  .play-again-btn { width: 100%; background: linear-gradient(135deg, var(--gold), #d97706); border: none; color: #1a1000; font-family: 'Fredoka One', cursive; font-size: 22px; padding: 18px; border-radius: 16px; cursor: pointer; box-shadow: 0 4px 20px rgba(245,158,11,0.35); transition: all 0.2s; }
+  .play-again-btn:hover { transform: scale(1.02); }
+
+  /* Confetti */
+  .confetti-piece { position: fixed; pointer-events: none; z-index: 999; border-radius: 2px; animation: cfall linear forwards; }
+  @keyframes cfall { 0%{transform:translateY(-20px) rotate(0deg);opacity:1} 100%{transform:translateY(100vh) rotate(720deg);opacity:0} }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <div class="header">
+    <a href="index.html" class="back-btn">← Home</a>
+    <div class="title-block">
+      <h1>🌍 World Landmarks</h1>
+      <p>FTS Learning HQ</p>
+    </div>
+    <div class="spacer"></div>
+  </div>
+
+  <!-- START -->
+  <div id="start-screen">
+    <div class="start-card">
+      <div class="start-globe">🌍</div>
+      <div class="start-title">Can you name these<br>famous places, <span>FTS</span>?</div>
+      <div class="start-sub">Look at each landmark, read the clue, and pick the right answer from four choices!</div>
+      <button class="start-btn" id="start-btn">🗺️ Start Exploring!</button>
+    </div>
+  </div>
+
+  <!-- GAME -->
+  <div id="game-screen">
+    <div class="progress-row">
+      <div class="progress-label" id="progress-label">1 of 15</div>
+      <div class="score-dots" id="score-dots"></div>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar" id="progress-bar" style="width:0%"></div></div>
+
+    <div class="landmark-card">
+      <div class="landmark-illustration" id="landmark-svg"></div>
+      <div class="landmark-info">
+        <div class="landmark-country" id="landmark-country"></div>
+        <div class="landmark-clue" id="landmark-clue"></div>
+      </div>
+    </div>
+
+    <div class="choices-grid" id="choices-grid"></div>
+
+    <div class="feedback-bar" id="feedback-bar">
+      <div class="feedback-left">
+        <div class="feedback-emoji" id="feedback-emoji"></div>
+        <div class="feedback-msg" id="feedback-msg"></div>
+      </div>
+      <button class="next-btn" id="next-btn">Next →</button>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results-screen">
+    <div class="results-card">
+      <div class="results-trophy" id="results-trophy">🏆</div>
+      <div class="results-title" id="results-title">Amazing, FTS!</div>
+      <div class="results-msg">You identified</div>
+      <div class="results-score" id="results-score">0 <span>/ 15</span></div>
+      <div class="results-msg" id="results-msg"></div>
+      <div class="missed-panel" id="missed-panel" style="display:none">
+        <h3>🗺️ Worth revisiting</h3>
+        <div id="missed-list"></div>
+      </div>
+    </div>
+    <button class="play-again-btn" id="play-again-btn">🌍 Play Again!</button>
+  </div>
+
+</div>
+<script>
+// ── LANDMARK DATA ──────────────────────────────────────────────────────
+const LANDMARKS = [
+  {
+    name: "Eiffel Tower",
+    country: "🇫🇷 France, Europe",
+    clue: "This tall iron tower in <span>Paris</span> sparkles with thousands of lights every night!",
+    svg: `<svg viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg">
+      <rect width="280" height="200" fill="#87CEEB" rx="14"/>
+      <rect y="165" width="280" height="35" fill="#5a9e6a" rx="0"/>
+      <!-- clouds -->
+      <ellipse cx="50" cy="40" rx="30" ry="16" fill="white" opacity="0.8"/>
+      <ellipse cx="220" cy="60" rx="25" ry="13" fill="white" opacity="0.7"/>
+      <!-- Tower base legs -->
+      <polygon points="100,165 118,110 140,105 162,110 180,165" fill="#8B7355" stroke="#5a3e1a" stroke-width="2.5"/>
+      <!-- arch cutout -->
+      <ellipse cx="140" cy="148" rx="18" ry="14" fill="#87CEEB"/>
+      <!-- cross band low -->
+      <rect x="98" y="138" width="84" height="7" fill="#6B5B3E" rx="2"/>
+      <!-- middle section -->
+      <rect x="122" y="78" width="36" height="34" fill="#8B7355" stroke="#5a3e1a" stroke-width="2"/>
+      <!-- cross band mid -->
+      <rect x="114" y="100" width="52" height="6" fill="#6B5B3E" rx="2"/>
+      <!-- windows mid -->
+      <rect x="128" y="83" width="9" height="9" fill="#87CEEB" rx="1"/>
+      <rect x="143" y="83" width="9" height="9" fill="#87CEEB" rx="1"/>
+      <!-- upper section -->
+      <polygon points="129,78 140,28 151,78" fill="#8B7355" stroke="#5a3e1a" stroke-width="2"/>
+      <!-- antenna -->
+      <line x1="140" y1="28" x2="140" y2="12" stroke="#5a3e1a" stroke-width="2.5"/>
+      <circle cx="140" cy="11" r="3" fill="#FFD700"/>
+      <!-- flag -->
+      <line x1="140" y1="12" x2="140" y2="6" stroke="#5a3e1a" stroke-width="1.5"/>
+      <polygon points="140,6 152,9 140,12" fill="#E63946"/>
+      <!-- stars in sky -->
+      <circle cx="60" cy="80" r="2" fill="white" opacity="0.6"/>
+      <circle cx="210" cy="100" r="2" fill="white" opacity="0.6"/>
+    </svg>`
+  },
+  {
+    name: "Taj Mahal",
+    country: "🇮🇳 India, Asia",
+    clue: "A stunning white marble palace in <span>India</span>, built as a symbol of love by an emperor for his wife.",
+    svg: `<svg viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg">
+      <rect width="280" height="200" fill="#F4A460" rx="14"/>
+      <rect y="155" width="280" height="45" fill="#c8a96e" rx="0"/>
+      <!-- sky gradient -->
+      <rect width="280" height="155" fill="#FFD4A0" rx="14"/>
+      <rect y="60" width="280" height="95" fill="#FDEBD0"/>
+      <!-- clouds -->
+      <ellipse cx="60" cy="35" rx="35" ry="18" fill="white" opacity="0.75"/>
+      <ellipse cx="210" cy="50" rx="30" ry="15" fill="white" opacity="0.7"/>
+      <!-- Platform -->
+      <rect x="40" y="140" width="200" height="18" fill="#e8dcc8" stroke="#bfae90" stroke-width="2"/>
+      <!-- Side minarets -->
+      <rect x="52" y="90" width="18" height="55" fill="#e8dcc8" stroke="#bfae90" stroke-width="2" rx="2"/>
+      <ellipse cx="61" cy="90" rx="9" ry="12" fill="#e8dcc8" stroke="#bfae90" stroke-width="2"/>
+      <line x1="61" y1="78" x2="61" y2="68" stroke="#bfae90" stroke-width="2"/>
+      <ellipse cx="61" cy="67" rx="4" ry="6" fill="#e8dcc8" stroke="#bfae90" stroke-width="1.5"/>
+      <rect x="210" y="90" width="18" height="55" fill="#e8dcc8" stroke="#bfae90" stroke-width="2" rx="2"/>
+      <ellipse cx="219" cy="90" rx="9" ry="12" fill="#e8dcc8" stroke="#bfae90" stroke-width="2"/>
+      <line x1="219" y1="78" x2="219" y2="68" stroke="#bfae90" stroke-width="2"/>
+      <ellipse cx="219" cy="67" rx="4" ry="6" fill="#e8dcc8" stroke="#bfae90" stroke-width="1.5"/>
+      <!-- Main building -->
+      <rect x="90" y="105" width="100" height="40" fill="#f5ede0" stroke="#bfae90" stroke-width="2"/>
+      <!-- Arched door -->
+      <path d="M128,145 L128,125 Q140,112 152,125 L152,145 Z" fill="#c8a96e" stroke="#bfae90" stroke-width="1.5"/>
+      <!-- Side arches -->
+      <path d="M95,145 L95,128 Q103,120 111,128 L111,145 Z" fill="#e0d0b8"/>
+      <path d="M169,145 L169,128 Q177,120 185,128 L185,145 Z" fill="#e0d0b8"/>
+      <!-- Main dome -->
+      <ellipse cx="140" cy="105" rx="30" ry="22" fill="#f5ede0" stroke="#bfae90" stroke-width="2"/>
+      <!-- Dome top -->
+      <ellipse cx="140" cy="84" rx="8" ry="6" fill="#f5ede0" stroke="#bfae90" stroke-width="1.5"/>
+      <line x1="140" y1="78" x2="140" y2="68" stroke="#bfae90" stroke-width="2"/>
+      <circle cx="140" cy="67" r="3" fill="#FFD700"/>
+      <!-- Small domes -->
+      <ellipse cx="108" cy="106" rx="10" ry="7" fill="#f0e6d2" stroke="#bfae90" stroke-width="1.5"/>
+      <ellipse cx="172" cy="106" rx="10" ry="7" fill="#f0e6d2" stroke="#bfae90" stroke-width="1.5"/>
+    </svg>`
+  },
+  {
+    name: "Statue of Liberty",
+    country: "🇺🇸 USA, North America",
+    clue: "A giant green lady holding a <span>torch high</span> in the air, standing on an island in New York!",
+    svg: `<svg viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg">
+      <rect width="280" height="200" fill="#6AAFE6" rx="14"/>
+      <rect y="155" width="280" height="45" fill="#4a90c8" rx="0"/>
+      <!-- water -->
+      <rect y="148" width="280" height="52" fill="#4a90c8"/>
+      <ellipse cx="70" cy="148" rx="50" ry="8" fill="#6AAFE6" opacity="0.5"/>
+      <ellipse cx="210" cy="148" rx="40" ry="6" fill="#6AAFE6" opacity="0.5"/>
+      <!-- clouds -->
+      <ellipse cx="55" cy="35" rx="32" ry="17" fill="white" opacity="0.8"/>
+      <ellipse cx="220" cy="50" rx="28" ry="14" fill="white" opacity="0.75"/>
+      <!-- Pedestal -->
+      <rect x="108" y="128" width="64" height="28" fill="#c8b89a" stroke="#a09070" stroke-width="2" rx="2"/>
+      <rect x="104" y="120" width="72" height="12" fill="#bfae90" stroke="#a09070" stroke-width="2" rx="2"/>
+      <!-- Robe/body -->
+      <polygon points="122,120 125,68 140,62 155,68 158,120" fill="#6AAB8E" stroke="#4a8a6e" stroke-width="2"/>
+      <!-- Drape folds -->
+      <line x1="130" y1="68" x2="127" y2="120" stroke="#4a8a6e" stroke-width="1.5" opacity="0.6"/>
+      <line x1="140" y1="64" x2="140" y2="120" stroke="#4a8a6e" stroke-width="1.5" opacity="0.6"/>
+      <line x1="150" y1="68" x2="153" y2="120" stroke="#4a8a6e" stroke-width="1.5" opacity="0.6"/>
+      <!-- Tablet -->
+      <rect x="118" y="88" width="20" height="28" fill="#5a9a7e" stroke="#4a8a6e" stroke-width="1.5" rx="2" transform="rotate(-10,128,102)"/>
+      <!-- Right arm raised -->
+      <line x1="155" y1="80" x2="170" y2="55" stroke="#6AAB8E" stroke-width="10" stroke-linecap="round"/>
+      <!-- Torch -->
+      <rect x="166" y="42" width="8" height="18" fill="#c8a020" stroke="#a08010" stroke-width="1.5" rx="2"/>
+      <!-- Flame -->
+      <ellipse cx="170" cy="40" rx="7" ry="10" fill="#FF8C00"/>
+      <ellipse cx="170" cy="38" rx="4" ry="7" fill="#FFD700"/>
+      <ellipse cx="170" cy="36" rx="2" ry="4" fill="white" opacity="0.8"/>
+      <!-- Head -->
+      <circle cx="140" cy="56" r="14" fill="#6AAB8E" stroke="#4a8a6e" stroke-width="2"/>
+      <!-- Crown spikes -->
+      <polygon points="133,44 135,34 138,44" fill="#6AAB8E" stroke="#4a8a6e" stroke-width="1.5"/>
+      <polygon points="138,42 140,31 142,42" fill="#6AAB8E" stroke="#4a8a6e" stroke-width="1.5"/>
+      <polygon points="143,44 145,34 147,44" fill="#6AAB8E" stroke="#4a8a6e" stroke-width="1.5"/>
+      <!-- Face -->
+      <circle cx="136" cy="57" r="1.5" fill="#4a8a6e"/>
+      <circle cx="144" cy="57" r="1.5" fill="#4a8a6e"/>
+      <path d="M137,62 Q140,65 143,62" stroke="#4a8a6e" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    </svg>`
+  },
+  {
+    name: "Big Ben",
+    country: "🇬🇧 United Kingdom, Europe",
+    clue: "A famous <span>clock tower</span> in London that chimes every hour — BONG BONG BONG!",
+    svg: `<svg viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg">
+      <rect width="280" height="200" fill="#B0C4DE" rx="14"/>
+      <rect y="158" width="280" height="42" fill="#5a7a3a" rx="0"/>
+      <!-- cloudy sky -->
+      <ellipse cx="70" cy="40" rx="45" ry="22" fill="#d8e4f0"/>
+      <ellipse cx="200" cy="55" rx="40" ry="20" fill="#d8e4f0"/>
+      <ellipse cx="140" cy="30" rx="35" ry="18" fill="#c8d8e8"/>
+      <!-- Parliament building base -->
+      <rect x="30" y="120" width="220" height="42" fill="#c8b890" stroke="#a09060" stroke-width="2"/>
+      <!-- Arched windows on base -->
+      <path d="M55,162 L55,140 Q65,130 75,140 L75,162 Z" fill="#B0C4DE"/>
+      <path d="M85,162 L85,140 Q95,130 105,140 L105,162 Z" fill="#B0C4DE"/>
+      <path d="M175,162 L175,140 Q185,130 195,140 L195,162 Z" fill="#B0C4DE"/>
+      <path d="M205,162 L205,140 Q215,130 225,140 L225,162 Z" fill="#B0C4DE"/>
+      <!-- Tower base -->
+      <rect x="108" y="60" width="64" height="100" fill="#d4c898" stroke="#a09060" stroke-width="2"/>
+      <!-- Tower details/windows -->
+      <rect x="116" y="70" width="14" height="20" fill="#B0C4DE" rx="3"/>
+      <rect x="150" y="70" width="14" height="20" fill="#B0C4DE" rx="3"/>
+      <rect x="116" y="100" width="14" height="18" fill="#B0C4DE" rx="3"/>
+      <rect x="150" y="100" width="14" height="18" fill="#B0C4DE" rx="3"/>
+      <!-- Clock face section -->
+      <rect x="104" y="32" width="72" height="32" fill="#c8b890" stroke="#a09060" stroke-width="2"/>
+      <!-- Clock face -->
+      <circle cx="140" cy="48" r="22" fill="#f5f0e0" stroke="#a09060" stroke-width="2.5"/>
+      <circle cx="140" cy="48" r="18" fill="white" stroke="#8a7848" stroke-width="1"/>
+      <!-- Clock hands -->
+      <line x1="140" y1="48" x2="140" y2="33" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="140" y1="48" x2="152" y2="54" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="140" cy="48" r="2.5" fill="#1a1a1a"/>
+      <!-- Spire -->
+      <polygon points="120,32 140,2 160,32" fill="#c8b890" stroke="#a09060" stroke-width="2"/>
+      <polygon points="132,18 140,4 148,18" fill="#b8a880" stroke="#a09060" stroke-width="1.5"/>
+      <!-- Tip -->
+      <line x1="140" y1="4" x2="140" y2="-4" stroke="#a09060" stroke-width="2"/>
+      <circle cx="140" cy="-4" r="3" fill="#FFD700"/>
+    </svg>`
+  },
+  {
+    name: "Sydney Opera House",
+    country: "🇦🇺 Australia, Oceania",
+    clue: "A famous building in <span>Sydney, Australia</span> with a roof shaped like giant white sails on the water!",
+    svg: `<svg viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg">
+      <rect width="280" height="200" fill="#4BA3D4" rx="14"/>
+      <!-- Harbour water -->
+      <rect y="145" width="280" height="55" fill="#2980B9"/>
+      <!-- water ripples -->
+      <ellipse cx="80" cy="155" rx="40" ry="5" fill="#3a90ca" opacity="0.5"/>
+      <ellipse cx="200" cy="162" rx="35" ry="4" fill="#3a90ca" opacity="0.5"/>
+      <!-- Sydney Harbour Bridge suggestion -->
+      <rect x="200" y="80" width="80" height="8" fill="#7a8a9a" stroke="#5a6a7a" stroke-width="1"/>
+      <rect x="220" y="50" width="6" height="38" fill="#7a8a9a"/>
+      <rect x="260" y="55" width="6" height="33" fill="#7a8a9a"/>
+      <path d="M223,50 Q243,30 263,55" stroke="#7a8a9a" stroke-width="4" fill="none"/>
+      <!-- clouds -->
+      <ellipse cx="60" cy="35" rx="38" ry="18" fill="white" opacity="0.85"/>
+      <ellipse cx="150" cy="45" rx="30" ry="15" fill="white" opacity="0.75"/>
+      <!-- Platform/podium -->
+      <rect x="35" y="132" width="195" height="18" fill="#e8e0d0" stroke="#c8c0b0" stroke-width="2" rx="3"/>
+      <!-- Large sail 1 (leftmost) -->
+      <path d="M55,132 Q60,88 88,72 Q95,88 95,132 Z" fill="white" stroke="#d0c8b8" stroke-width="2"/>
+      <!-- Large sail 2 -->
+      <path d="M90,132 Q95,78 128,58 Q138,80 138,132 Z" fill="white" stroke="#d0c8b8" stroke-width="2"/>
+      <!-- Large sail 3 (main, tallest) -->
+      <path d="M130,132 Q135,65 165,42 Q178,70 178,132 Z" fill="white" stroke="#d0c8b8" stroke-width="2"/>
+      <!-- Smaller rear sail -->
+      <path d="M170,132 Q174,88 196,72 Q202,88 202,132 Z" fill="#f5f0e8" stroke="#d0c8b8" stroke-width="2"/>
+      <!-- Sail ridge lines -->
+      <path d="M88,72 Q92,100 95,132" stroke="#c8c0b0" stroke-width="1" fill="none"/>
+      <path d="M128,58 Q133,95 138,132" stroke="#c8c0b0" stroke-width="1" fill="none"/>
+      <path d="M165,42 Q170,88 178,132" stroke="#c8c0b0" stroke-width="1" fill="none"/>
+      <!-- Reflection in water -->
+      <path d="M90,145 Q95,160 100,175" stroke="rgba(255,255,255,0.3)" stroke-width="3" fill="none"/>
+      <path d="M140,145 Q145,165 148,180" stroke="rgba(255,255,255,0.3)" stroke-width="4" fill="none"/>
+      <path d="M175,145 Q178,158 180,170" stroke="rgba(255,255,255,0.25)" stroke-width="3" fill="none"/>
+    </svg>`
+  },
+  {
+    name: "Great Wall of China",
+    country: "🇨🇳 China, Asia",
+    clue: "The <span>longest wall in the world</span>, stretching thousands of kilometres across mountains in China!",
+    svg: `<svg viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg">
+      <rect width="280" height="200" fill="#87CEEB" rx="14"/>
+      <!-- mountains background -->
+      <polygon points="0,140 40,80 80,120 120,70 160,105 200,60 240,95 280,75 280,200 0,200" fill="#5a8a5a"/>
+      <polygon points="0,150 40,100 80,135 120,85 160,120 200,75 240,110 280,90 280,200 0,200" fill="#4a7a4a"/>
+      <!-- clouds -->
+      <ellipse cx="55" cy="35" rx="35" ry="18" fill="white" opacity="0.8"/>
+      <ellipse cx="210" cy="48" rx="30" ry="15" fill="white" opacity="0.75"/>
+      <!-- Wall path following terrain -->
+      <path d="M0,130 Q30,110 55,115 Q80,100 110,105 Q140,90 165,95 Q195,85 220,90 Q250,82 280,88 L280,108 Q250,102 220,110 Q195,105 165,115 Q140,110 110,125 Q80,120 55,135 Q30,130 0,150 Z" fill="#c8b890" stroke="#a09060" stroke-width="1.5"/>
+      <!-- Wall top battlements -->
+      <rect x="2" y="125" width="10" height="8" fill="#d4c898" rx="1"/>
+      <rect x="20" y="118" width="10" height="8" fill="#d4c898" rx="1"/>
+      <rect x="38" y="112" width="10" height="8" fill="#d4c898" rx="1"/>
+      <rect x="56" y="106" width="10" height="8" fill="#d4c898" rx="1"/>
+      <rect x="74" y="101" width="10" height="8" fill="#d4c898" rx="1"/>
+      <rect x="92" y="98" width="10" height="8" fill="#d4c898" rx="1"/>
+      <rect x="110" y="95" width="10" height="8" fill="#d4c898" rx="1"/>
+      <rect x="128" y="91" width="10" height="8" fill="#d4c898" rx="1"/>
+      <rect x="146" y="88" width="10" height="8" fill="#d4c898" rx="1"/>
+      <rect x="164" y="86" width="10" height="8" fill="#d4c898" rx="1"/>
+      <rect x="182" y="84" width="10" height="8" fill="#d4c898" rx="1"/>
+      <rect x="200" y="82" width="10" height="8" fill="#d4c898" rx="1"/>
+      <rect x="218" y="83" width="10" height="8" fill="#d4c898" rx="1"/>
+      <rect x="236" y="84" width="10" height="8" fill="#d4c898" rx="1"/>
+      <rect x="254" y="85" width="10" height="8" fill="#d4c898" rx="1"/>
+      <!-- Watchtower -->
+      <rect x="105" y="75" width="30" height="38" fill="#d4c898" stroke="#a09060" stroke-width="2"/>
+      <rect x="100" y="68" width="40" height="12" fill="#c8b890" stroke="#a09060" stroke-width="2"/>
+      <rect x="108" y="82" width="8" height="12" fill="#8a9ab0" rx="1"/>
+      <rect x="124" y="82" width="8" height="12" fill="#8a9ab0" rx="1"/>
+    </svg>`
+  },
+  {
+    name: "Colosseum",
+    country: "🇮🇹 Italy, Europe",
+    clue: "Ancient <span>Romans</span> watched gladiators fight inside this huge oval arena almost 2,000 years ago!",
+    svg: `<svg viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg">
+      <rect width="280" height="200" fill="#87CEEB" rx="14"/>
+      <rect y="155" width="280" height="45" fill="#c8a050" rx="0"/>
+      <!-- clouds -->
+      <ellipse cx="55" cy="38" rx="38" ry="18" fill="white" opacity="0.8"/>
+      <ellipse cx="220" cy="52" rx="32" ry="16" fill="white" opacity="0.75"/>
+      <!-- Outer wall curved -->
+      <ellipse cx="140" cy="118" rx="108" ry="50" fill="#d4a84a" stroke="#b08838" stroke-width="3"/>
+      <ellipse cx="140" cy="118" rx="90" ry="40" fill="#8B7355"/>
+      <!-- Interior shadow -->
+      <ellipse cx="140" cy="122" rx="75" ry="32" fill="#5a4020"/>
+      <!-- Arena floor -->
+      <ellipse cx="140" cy="125" rx="60" ry="24" fill="#c8a050"/>
+      <!-- Arched windows row 1 (lower) -->
+      <path d="M50,118 L50,105 Q57,97 64,105 L64,118 Z" fill="#5a4020"/>
+      <path d="M74,112 L74,99 Q81,91 88,99 L88,112 Z" fill="#5a4020"/>
+      <path d="M98,108 L98,95 Q105,87 112,95 L112,108 Z" fill="#5a4020"/>
+      <path d="M122,106 L122,93 Q129,85 136,93 L136,106 Z" fill="#5a4020"/>
+      <path d="M146,106 L146,93 Q153,85 160,93 L160,106 Z" fill="#5a4020"/>
+      <path d="M170,108 L170,95 Q177,87 184,95 L184,108 Z" fill="#5a4020"/>
+      <path d="M194,112 L194,99 Q201,91 208,99 L208,112 Z" fill="#5a4020"/>
+      <path d="M216,118 L216,105 Q223,97 230,105 L230,118 Z" fill="#5a4020"/>
+      <!-- Row 2 (upper) -->
+      <path d="M62,98 L62,87 Q68,80 74,87 L74,98 Z" fill="#c8a050" stroke="#b08838" stroke-width="1"/>
+      <path d="M84,92 L84,81 Q90,74 96,81 L96,92 Z" fill="#c8a050" stroke="#b08838" stroke-width="1"/>
+      <path d="M106,89 L106,78 Q112,71 118,78 L118,89 Z" fill="#c8a050" stroke="#b08838" stroke-width="1"/>
+      <path d="M128,88 L128,77 Q134,70 140,77 L140,88 Z" fill="#c8a050" stroke="#b08838" stroke-width="1"/>
+      <path d="M152,88 L152,77 Q158,70 164,77 L164,88 Z" fill="#c8a050" stroke="#b08838" stroke-width="1"/>
+      <path d="M174,89 L174,78 Q180,71 186,78 L186,89 Z" fill="#c8a050" stroke="#b08838" stroke-width="1"/>
+      <path d="M196,92 L196,81 Q202,74 208,81 L208,92 Z" fill="#c8a050" stroke="#b08838" stroke-width="1"/>
+      <!-- Horizontal lines -->
+      <path d="M44,100 Q140,72 236,100" stroke="#b08838" stroke-width="2" fill="none"/>
+      <path d="M50,118 Q140,92 230,118" stroke="#b08838" stroke-width="2" fill="none"/>
+    </svg>`
+  },
+  {
+    name: "Pyramids of Giza",
+    country: "🇪🇬 Egypt, Africa",
+    clue: "Giant <span>triangle-shaped tombs</span> built in the Egyptian desert for powerful pharaohs over 4,000 years ago!",
+    svg: `<svg viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg">
+      <rect width="280" height="200" fill="#F4A460" rx="14"/>
+      <!-- Sky orange/warm -->
+      <rect width="280" height="130" fill="#E8934A" rx="14"/>
+      <rect y="90" width="280" height="40" fill="#F0A850"/>
+      <!-- Sun -->
+      <circle cx="220" cy="45" r="28" fill="#FFD700" opacity="0.9"/>
+      <circle cx="220" cy="45" r="22" fill="#FFE940"/>
+      <!-- Desert ground -->
+      <rect y="130" width="280" height="70" fill="#D4A855"/>
+      <path d="M0,130 Q70,120 140,135 Q210,120 280,130 L280,145 Q210,138 140,150 Q70,138 0,145 Z" fill="#C89840"/>
+      <!-- Pyramid big center -->
+      <polygon points="95,130 140,40 185,130" fill="#D4A855" stroke="#b08030" stroke-width="2"/>
+      <!-- Shadow on pyramid -->
+      <polygon points="140,40 185,130 162,130" fill="#b08030" opacity="0.4"/>
+      <!-- Pyramid left smaller -->
+      <polygon points="28,130 62,65 96,130" fill="#D4A855" stroke="#b08030" stroke-width="2"/>
+      <polygon points="62,65 96,130 80,130" fill="#b08030" opacity="0.35"/>
+      <!-- Pyramid right smaller -->
+      <polygon points="184,130 218,72 250,130" fill="#C8A040" stroke="#b08030" stroke-width="2"/>
+      <polygon points="218,72 250,130 236,130" fill="#b08030" opacity="0.3"/>
+      <!-- Sphinx suggestion -->
+      <ellipse cx="145" cy="155" rx="25" ry="12" fill="#c89840" stroke="#a07820" stroke-width="1.5"/>
+      <circle cx="165" cy="148" r="10" fill="#c89840" stroke="#a07820" stroke-width="1.5"/>
+      <!-- Camel -->
+      <ellipse cx="230" cy="152" rx="16" ry="10" fill="#c89840"/>
+      <circle cx="240" cy="144" r="7" fill="#c89840"/>
+      <line x1="220" y1="158" x2="218" y2="172" stroke="#b08030" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="228" y1="160" x2="226" y2="174" stroke="#b08030" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="236" y1="160" x2="238" y2="174" stroke="#b08030" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="244" y1="158" x2="246" y2="172" stroke="#b08030" stroke-width="2.5" stroke-linecap="round"/>
+    </svg>`
+  },
+  {
+    name: "Machu Picchu",
+    country: "🇵🇪 Peru, South America",
+    clue: "Ancient stone ruins perched high in the <span>mountains of Peru</span> — once a secret city of the Inca people!",
+    svg: `<svg viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg">
+      <rect width="280" height="200" fill="#87CEEB" rx="14"/>
+      <!-- Misty clouds/sky -->
+      <rect y="60" width="280" height="60" fill="rgba(255,255,255,0.3)"/>
+      <!-- Background mountains -->
+      <polygon points="0,140 60,60 120,100 180,50 240,80 280,60 280,200 0,200" fill="#4a7a3a"/>
+      <polygon points="0,155 50,95 100,125 150,78 200,105 250,85 280,98 280,200 0,200" fill="#5a8a4a"/>
+      <!-- Clouds over mountains -->
+      <ellipse cx="50" cy="85" rx="45" ry="22" fill="white" opacity="0.75"/>
+      <ellipse cx="220" cy="70" rx="40" ry="20" fill="white" opacity="0.7"/>
+      <!-- Mountain peak (Huayna Picchu) -->
+      <polygon points="195,80 220,35 245,80" fill="#3a6030" stroke="#2a4a22" stroke-width="2"/>
+      <!-- Terraces -->
+      <rect x="40" y="130" width="200" height="12" fill="#8B7355" stroke="#6a5535" stroke-width="1.5" rx="2"/>
+      <rect x="50" y="118" width="180" height="12" fill="#9a8265" stroke="#6a5535" stroke-width="1.5" rx="2"/>
+      <rect x="65" y="106" width="150" height="12" fill="#8B7355" stroke="#6a5535" stroke-width="1.5" rx="2"/>
+      <!-- Terrace greenery -->
+      <rect x="42" y="126" width="196" height="6" fill="#5a8a3a" opacity="0.7"/>
+      <rect x="52" y="114" width="176" height="6" fill="#5a8a3a" opacity="0.7"/>
+      <rect x="67" y="102" width="146" height="6" fill="#5a8a3a" opacity="0.7"/>
+      <!-- Stone buildings -->
+      <rect x="80" y="88" width="28" height="22" fill="#a09070" stroke="#808060" stroke-width="1.5"/>
+      <rect x="78" y="83" width="32" height="8" fill="#908060" stroke="#707050" stroke-width="1.5"/>
+      <!-- Roof triangles -->
+      <polygon points="78,83 94,70 110,83" fill="#704a20" stroke="#503010" stroke-width="1.5"/>
+      <rect x="115" y="90" width="24" height="20" fill="#a09070" stroke="#808060" stroke-width="1.5"/>
+      <polygon points="113,90 127,76 141,90" fill="#704a20" stroke="#503010" stroke-width="1.5"/>
+      <rect x="150" y="85" width="32" height="25" fill="#b0a080" stroke="#808060" stroke-width="1.5"/>
+      <polygon points="148,85 166,68 184,85" fill="#804a20" stroke="#503010" stroke-width="1.5"/>
+      <!-- Windows -->
+      <rect x="86" y="94" width="7" height="9" fill="#5a4020" rx="1"/>
+      <rect x="100" y="94" width="7" height="9" fill="#5a4020" rx="1"/>
+      <rect x="120" y="95" width="6" height="8" fill="#5a4020" rx="1"/>
+      <rect x="158" y="92" width="8" height="10" fill="#5a4020" rx="1"/>
+      <rect x="170" y="92" width="8" height="10" fill="#5a4020" rx="1"/>
+    </svg>`
+  },
+  {
+    name: "Leaning Tower of Pisa",
+    country: "🇮🇹 Italy, Europe",
+    clue: "This round white tower in <span>Italy</span> is famous for leaning to one side — it's been tilting for hundreds of years!",
+    svg: `<svg viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg">
+      <rect width="280" height="200" fill="#87CEEB" rx="14"/>
+      <rect y="155" width="280" height="45" fill="#5a9e4a" rx="0"/>
+      <!-- clouds -->
+      <ellipse cx="60" cy="38" rx="40" ry="20" fill="white" opacity="0.85"/>
+      <ellipse cx="220" cy="52" rx="35" ry="17" fill="white" opacity="0.75"/>
+      <!-- Shadow on grass -->
+      <ellipse cx="148" cy="158" rx="30" ry="8" fill="#3a7a2a" opacity="0.5"/>
+      <!-- Tower (tilted ~8 degrees) transform -->
+      <g transform="rotate(6, 140, 158)">
+        <!-- Base platform -->
+        <rect x="108" y="148" width="64" height="12" fill="#f0ece0" stroke="#c0b890" stroke-width="2" rx="3"/>
+        <!-- Main cylindrical body - columns as vertical strips -->
+        <!-- Floor 1 -->
+        <rect x="110" y="112" width="60" height="36" fill="#f5f0e8" stroke="#c0b890" stroke-width="1.5"/>
+        <line x1="120" y1="112" x2="120" y2="148" stroke="#c0b890" stroke-width="2"/>
+        <line x1="130" y1="112" x2="130" y2="148" stroke="#c0b890" stroke-width="2"/>
+        <line x1="140" y1="112" x2="140" y2="148" stroke="#c0b890" stroke-width="2"/>
+        <line x1="150" y1="112" x2="150" y2="148" stroke="#c0b890" stroke-width="2"/>
+        <line x1="160" y1="112" x2="160" y2="148" stroke="#c0b890" stroke-width="2"/>
+        <!-- Floor band 1 -->
+        <rect x="108" y="108" width="64" height="8" fill="#e8e0c8" stroke="#c0b890" stroke-width="1.5" rx="2"/>
+        <!-- Floor 2 -->
+        <rect x="112" y="76" width="56" height="32" fill="#f5f0e8" stroke="#c0b890" stroke-width="1.5"/>
+        <line x1="122" y1="76" x2="122" y2="108" stroke="#c0b890" stroke-width="2"/>
+        <line x1="132" y1="76" x2="132" y2="108" stroke="#c0b890" stroke-width="2"/>
+        <line x1="142" y1="76" x2="142" y2="108" stroke="#c0b890" stroke-width="2"/>
+        <line x1="152" y1="76" x2="152" y2="108" stroke="#c0b890" stroke-width="2"/>
+        <line x1="162" y1="76" x2="162" y2="108" stroke="#c0b890" stroke-width="2"/>
+        <!-- Floor band 2 -->
+        <rect x="110" y="72" width="60" height="8" fill="#e8e0c8" stroke="#c0b890" stroke-width="1.5" rx="2"/>
+        <!-- Floor 3 -->
+        <rect x="114" y="44" width="52" height="28" fill="#f5f0e8" stroke="#c0b890" stroke-width="1.5"/>
+        <line x1="124" y1="44" x2="124" y2="72" stroke="#c0b890" stroke-width="2"/>
+        <line x1="134" y1="44" x2="134" y2="72" stroke="#c0b890" stroke-width="2"/>
+        <line x1="144" y1="44" x2="144" y2="72" stroke="#c0b890" stroke-width="2"/>
+        <line x1="154" y1="44" x2="154" y2="72" stroke="#c0b890" stroke-width="2"/>
+        <!-- Floor band 3 -->
+        <rect x="112" y="40" width="56" height="8" fill="#e8e0c8" stroke="#c0b890" stroke-width="1.5" rx="2"/>
+        <!-- Bell chamber top -->
+        <rect x="118" y="22" width="44" height="22" fill="#f0ece0" stroke="#c0b890" stroke-width="2" rx="3"/>
+        <!-- Bell arches -->
+        <path d="M122,44 L122,34 Q129,27 136,34 L136,44 Z" fill="#87CEEB"/>
+        <path d="M144,44 L144,34 Q151,27 158,34 L158,44 Z" fill="#87CEEB"/>
+        <!-- Top cap -->
+        <ellipse cx="140" cy="22" rx="22" ry="7" fill="#e8e0c8" stroke="#c0b890" stroke-width="2"/>
+        <rect x="130" y="15" width="20" height="8" fill="#e8e0c8" stroke="#c0b890" stroke-width="1.5" rx="2"/>
+      </g>
+    </svg>`
+  },
+  {
+    name: "Mount Fuji",
+    country: "🇯🇵 Japan, Asia",
+    clue: "Japan's most famous <span>volcano mountain</span>, with a perfect cone shape and a snowy white top!",
+    svg: `<svg viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg">
+      <rect width="280" height="200" fill="#B0D4E8" rx="14"/>
+      <!-- Sunrise sky -->
+      <rect width="280" height="120" fill="#E8C4D4" rx="14"/>
+      <rect y="80" width="280" height="40" fill="#F0D4A0" opacity="0.6"/>
+      <!-- Sun -->
+      <circle cx="140" cy="55" r="35" fill="#FF8C69" opacity="0.7"/>
+      <circle cx="140" cy="55" r="26" fill="#FFB080" opacity="0.8"/>
+      <circle cx="140" cy="55" r="18" fill="#FFD4A0"/>
+      <!-- Lake reflection at bottom -->
+      <rect y="160" width="280" height="40" fill="#7ab0c8"/>
+      <!-- Ground -->
+      <rect y="148" width="280" height="20" fill="#4a7a3a"/>
+      <!-- Background smaller mountains -->
+      <polygon points="0,148 50,100 100,130 150,95 200,120 250,90 280,110 280,148" fill="#5a8a5a" opacity="0.6"/>
+      <!-- Main Fuji mountain -->
+      <polygon points="0,148 140,22 280,148" fill="#9090a0" stroke="#707080" stroke-width="2"/>
+      <!-- Mountain dark sides -->
+      <polygon points="50,148 140,22 80,148" fill="#707080"/>
+      <polygon points="200,148 140,22 240,148" fill="#808090"/>
+      <!-- Snow cap -->
+      <polygon points="104,80 140,22 176,80 168,85 158,78 148,82 140,80 132,82 122,78 112,85 Z" fill="white" stroke="#d0d8e8" stroke-width="1.5"/>
+      <!-- Snow detail -->
+      <path d="M118,80 Q130,88 140,84 Q150,88 162,80" stroke="white" stroke-width="2" fill="none" opacity="0.6"/>
+      <!-- Trees at base -->
+      <polygon points="30,148 36,132 42,148" fill="#2a5a2a"/>
+      <polygon points="55,148 62,130 69,148" fill="#2a5a2a"/>
+      <polygon points="210,148 217,131 224,148" fill="#2a5a2a"/>
+      <polygon points="240,148 247,133 254,148" fill="#2a5a2a"/>
+      <!-- Cherry blossom trees -->
+      <line x1="80" y1="148" x2="80" y2="132" stroke="#8B5A2B" stroke-width="2"/>
+      <ellipse cx="80" cy="128" rx="10" ry="8" fill="#FFB7C5"/>
+      <line x1="195" y1="148" x2="195" y2="133" stroke="#8B5A2B" stroke-width="2"/>
+      <ellipse cx="195" cy="129" rx="10" ry="8" fill="#FFB7C5"/>
+      <!-- Fuji reflection in lake -->
+      <polygon points="70,160 140,185 210,160 200,168 140,190 80,168 Z" fill="#6a9ab8" opacity="0.4"/>
+    </svg>`
+  },
+  {
+    name: "Parthenon",
+    country: "🇬🇷 Greece, Europe",
+    clue: "An ancient <span>Greek temple</span> sitting on top of a rocky hill in Athens, with lots of tall white columns!",
+    svg: `<svg viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg">
+      <rect width="280" height="200" fill="#87CEEB" rx="14"/>
+      <!-- Warm sky -->
+      <rect width="280" height="200" fill="#B8D4F0" rx="14"/>
+      <rect y="80" width="280" height="80" fill="#D0E0F8" opacity="0.5"/>
+      <!-- Sun -->
+      <circle cx="230" cy="45" r="28" fill="#FFE080" opacity="0.8"/>
+      <!-- clouds -->
+      <ellipse cx="60" cy="40" rx="42" ry="20" fill="white" opacity="0.8"/>
+      <!-- Rocky hill (Acropolis) -->
+      <polygon points="0,200 0,155 30,140 70,130 100,118 140,112 180,118 210,128 250,138 280,148 280,200" fill="#C8A870"/>
+      <polygon points="0,200 0,165 30,152 60,145 90,135 130,128 165,130 200,138 240,148 280,155 280,200" fill="#B89858"/>
+      <!-- Steps -->
+      <rect x="55" y="112" width="170" height="8" fill="#e8dcc8" stroke="#c0b090" stroke-width="1.5"/>
+      <rect x="48" y="120" width="184" height="8" fill="#ddd0b8" stroke="#c0b090" stroke-width="1.5"/>
+      <!-- Platform/Stylobate -->
+      <rect x="55" y="108" width="170" height="8" fill="#f0e8d0" stroke="#c0b090" stroke-width="2"/>
+      <!-- Main building body -->
+      <rect x="70" y="72" width="140" height="38" fill="#f5f0e0" stroke="#c0b090" stroke-width="1.5"/>
+      <!-- Triangular pediment -->
+      <polygon points="62,72 140,42 218,72" fill="#f0e8d0" stroke="#c0b090" stroke-width="2"/>
+      <!-- Pediment sculpture hint -->
+      <ellipse cx="140" cy="62" rx="20" ry="8" fill="#e8dcc8" stroke="#c0b090" stroke-width="1"/>
+      <!-- Columns -->
+      <rect x="72" y="72" width="10" height="38" fill="#f5f0e0" stroke="#c0b090" stroke-width="1.5" rx="2"/>
+      <rect x="90" y="72" width="10" height="38" fill="#f5f0e0" stroke="#c0b090" stroke-width="1.5" rx="2"/>
+      <rect x="108" y="72" width="10" height="38" fill="#f5f0e0" stroke="#c0b090" stroke-width="1.5" rx="2"/>
+      <rect x="126" y="72" width="10" height="38" fill="#f5f0e0" stroke="#c0b090" stroke-width="1.5" rx="2"/>
+      <rect x="144" y="72" width="10" height="38" fill="#f5f0e0" stroke="#c0b090" stroke-width="1.5" rx="2"/>
+      <rect x="162" y="72" width="10" height="38" fill="#f5f0e0" stroke="#c0b090" stroke-width="1.5" rx="2"/>
+      <rect x="180" y="72" width="10" height="38" fill="#f5f0e0" stroke="#c0b090" stroke-width="1.5" rx="2"/>
+      <rect x="198" y="72" width="10" height="38" fill="#f5f0e0" stroke="#c0b090" stroke-width="1.5" rx="2"/>
+      <!-- Column capitals -->
+      <rect x="70" y="70" width="14" height="5" fill="#e0d8c0" rx="1"/>
+      <rect x="88" y="70" width="14" height="5" fill="#e0d8c0" rx="1"/>
+      <rect x="106" y="70" width="14" height="5" fill="#e0d8c0" rx="1"/>
+      <rect x="124" y="70" width="14" height="5" fill="#e0d8c0" rx="1"/>
+      <rect x="142" y="70" width="14" height="5" fill="#e0d8c0" rx="1"/>
+      <rect x="160" y="70" width="14" height="5" fill="#e0d8c0" rx="1"/>
+      <rect x="178" y="70" width="14" height="5" fill="#e0d8c0" rx="1"/>
+      <rect x="196" y="70" width="14" height="5" fill="#e0d8c0" rx="1"/>
+    </svg>`
+  },
+  {
+    name: "Burj Khalifa",
+    country: "🇦🇪 UAE, Asia",
+    clue: "The <span>tallest building in the world</span>, rising up from the desert city of Dubai like a giant silver spike!",
+    svg: `<svg viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg">
+      <rect width="280" height="200" fill="#0a1a3a" rx="14"/>
+      <!-- Night sky -->
+      <rect width="280" height="200" fill="#0d1f3a" rx="14"/>
+      <!-- Stars -->
+      <circle cx="30" cy="20" r="1.5" fill="white" opacity="0.8"/>
+      <circle cx="55" cy="38" r="1" fill="white" opacity="0.7"/>
+      <circle cx="80" cy="15" r="1.5" fill="white"/>
+      <circle cx="110" cy="45" r="1" fill="white" opacity="0.6"/>
+      <circle cx="185" cy="22" r="1.5" fill="white" opacity="0.8"/>
+      <circle cx="220" cy="40" r="1" fill="white" opacity="0.7"/>
+      <circle cx="245" cy="18" r="1.5" fill="white"/>
+      <circle cx="260" cy="55" r="1" fill="white" opacity="0.6"/>
+      <circle cx="40" cy="65" r="1" fill="white" opacity="0.5"/>
+      <circle cx="250" cy="78" r="1" fill="white" opacity="0.5"/>
+      <!-- Moon -->
+      <circle cx="240" cy="30" r="18" fill="#F4D03F" opacity="0.9"/>
+      <circle cx="248" cy="26" r="14" fill="#0d1f3a"/>
+      <!-- Distant city glow -->
+      <rect y="155" width="280" height="45" fill="#1a2a1a"/>
+      <rect y="148" width="280" height="12" fill="rgba(255,180,50,0.15)"/>
+      <!-- Other buildings silhouette -->
+      <rect x="20" y="128" width="22" height="30" fill="#1a2a3a"/>
+      <rect x="24" y="118" width="14" height="12" fill="#1a2a3a"/>
+      <rect x="38" y="120" width="18" height="38" fill="#1a2a3a"/>
+      <rect x="220" y="115" width="25" height="43" fill="#1a2a3a"/>
+      <rect x="230" y="105" width="16" height="12" fill="#1a2a3a"/>
+      <rect x="245" y="122" width="20" height="36" fill="#1a2a3a"/>
+      <!-- Main Burj Khalifa tower -->
+      <!-- Base section -->
+      <polygon points="104,155 116,100 140,92 164,100 176,155" fill="#4a6080" stroke="#6080a0" stroke-width="1.5"/>
+      <!-- Middle section tapering -->
+      <polygon points="116,100 124,55 140,48 156,55 164,100" fill="#5a7090" stroke="#7090b0" stroke-width="1.5"/>
+      <!-- Upper section -->
+      <polygon points="124,55 132,28 140,22 148,28 156,55" fill="#6a80a0" stroke="#8090b0" stroke-width="1.5"/>
+      <!-- Spire -->
+      <polygon points="134,28 140,4 146,28" fill="#8090b0" stroke="#90a0c0" stroke-width="1.5"/>
+      <line x1="140" y1="4" x2="140" y2="-2" stroke="#90a0c0" stroke-width="2"/>
+      <!-- Setback levels -->
+      <rect x="112" y="99" width="56" height="4" fill="#7090b0" opacity="0.8"/>
+      <rect x="120" y="72" width="40" height="3" fill="#7090b0" opacity="0.7"/>
+      <rect x="127" y="48" width="26" height="3" fill="#7090b0" opacity="0.7"/>
+      <!-- Windows glow -->
+      <rect x="108" y="108" width="4" height="3" fill="#FFE080" opacity="0.8" rx="0.5"/>
+      <rect x="118" y="108" width="4" height="3" fill="#FFE080" opacity="0.7" rx="0.5"/>
+      <rect x="128" y="108" width="4" height="3" fill="#FFE080" opacity="0.8" rx="0.5"/>
+      <rect x="148" y="108" width="4" height="3" fill="#FFE080" opacity="0.7" rx="0.5"/>
+      <rect x="158" y="108" width="4" height="3" fill="#FFE080" opacity="0.8" rx="0.5"/>
+      <rect x="168" y="108" width="4" height="3" fill="#FFE080" opacity="0.7" rx="0.5"/>
+      <rect x="120" y="80" width="4" height="3" fill="#FFE080" opacity="0.7" rx="0.5"/>
+      <rect x="132" y="80" width="4" height="3" fill="#FFE080" opacity="0.8" rx="0.5"/>
+      <rect x="144" y="80" width="4" height="3" fill="#FFE080" opacity="0.7" rx="0.5"/>
+      <rect x="156" y="80" width="4" height="3" fill="#FFE080" opacity="0.8" rx="0.5"/>
+      <!-- Blinking light on top -->
+      <circle cx="140" cy="4" r="3" fill="#ff4444" opacity="0.9"/>
+    </svg>`
+  },
+  {
+    name: "Christ the Redeemer",
+    country: "🇧🇷 Brazil, South America",
+    clue: "A giant white statue with <span>arms spread wide</span>, standing on a mountain top watching over Rio de Janeiro!",
+    svg: `<svg viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg">
+      <rect width="280" height="200" fill="#87CEEB" rx="14"/>
+      <!-- Sky -->
+      <rect width="280" height="200" fill="#6AAFE6" rx="14"/>
+      <!-- Clouds -->
+      <ellipse cx="55" cy="38" rx="45" ry="22" fill="white" opacity="0.85"/>
+      <ellipse cx="220" cy="52" rx="38" ry="18" fill="white" opacity="0.8"/>
+      <ellipse cx="140" cy="30" rx="32" ry="16" fill="white" opacity="0.7"/>
+      <!-- City/ocean suggestion at bottom -->
+      <rect y="158" width="280" height="42" fill="#2a6a9a"/>
+      <rect y="148" width="280" height="14" fill="#3a5a3a"/>
+      <!-- Mountain Corcovado -->
+      <polygon points="60,155 140,72 220,155" fill="#2a4a2a" stroke="#1a3a1a" stroke-width="2"/>
+      <polygon points="90,155 140,72 170,155" fill="#3a5a3a"/>
+      <!-- Trees on mountain -->
+      <polygon points="62,155 68,140 74,155" fill="#1a4a1a"/>
+      <polygon points="72,155 78,142 84,155" fill="#1a4a1a"/>
+      <polygon points="196,155 202,140 208,155" fill="#1a4a1a"/>
+      <polygon points="206,155 212,143 218,155" fill="#1a4a1a"/>
+      <!-- Pedestal -->
+      <rect x="126" y="62" width="28" height="16" fill="#e0d8c8" stroke="#c0b8a0" stroke-width="2" rx="2"/>
+      <!-- Body/Robe -->
+      <polygon points="130,78 134,38 140,32 146,38 150,78" fill="white" stroke="#d0c8b8" stroke-width="1.5"/>
+      <!-- Robe drape folds -->
+      <line x1="135" y1="40" x2="132" y2="78" stroke="#c0b8a8" stroke-width="1.5" opacity="0.7"/>
+      <line x1="140" y1="34" x2="140" y2="78" stroke="#c0b8a8" stroke-width="1.5" opacity="0.7"/>
+      <line x1="145" y1="40" x2="148" y2="78" stroke="#c0b8a8" stroke-width="1.5" opacity="0.7"/>
+      <!-- Head -->
+      <circle cx="140" cy="30" r="10" fill="white" stroke="#d0c8b8" stroke-width="1.5"/>
+      <!-- Face -->
+      <circle cx="137" cy="30" r="1.5" fill="#c0a888"/>
+      <circle cx="143" cy="30" r="1.5" fill="#c0a888"/>
+      <path d="M137,34 Q140,37 143,34" stroke="#c0a888" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <!-- Crown/hair -->
+      <path d="M132,24 Q136,18 140,20 Q144,18 148,24" stroke="#d0c0a0" stroke-width="2" fill="none"/>
+      <!-- Arms outstretched -->
+      <line x1="100" y1="52" x2="140" y2="45" stroke="white" stroke-width="10" stroke-linecap="round"/>
+      <line x1="140" y1="45" x2="180" y2="52" stroke="white" stroke-width="10" stroke-linecap="round"/>
+      <!-- Arm outline -->
+      <line x1="100" y1="52" x2="140" y2="45" stroke="#d0c8b8" stroke-width="2"/>
+      <line x1="140" y1="45" x2="180" y2="52" stroke="#d0c8b8" stroke-width="2"/>
+      <!-- Glow/halo effect -->
+      <circle cx="140" cy="30" r="16" fill="none" stroke="#FFE080" stroke-width="2" opacity="0.4"/>
+      <!-- Sun rays -->
+      <line x1="140" y1="8" x2="140" y2="2" stroke="#FFE080" stroke-width="2" opacity="0.5"/>
+      <line x1="152" y1="12" x2="156" y2="8" stroke="#FFE080" stroke-width="2" opacity="0.5"/>
+      <line x1="128" y1="12" x2="124" y2="8" stroke="#FFE080" stroke-width="2" opacity="0.5"/>
+    </svg>`
+  },
+  {
+    name: "Sagrada Família",
+    country: "🇪🇸 Spain, Europe",
+    clue: "A stunning church in <span>Barcelona, Spain</span> with towers that look like giant dripping sandcastles!",
+    svg: `<svg viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg">
+      <rect width="280" height="200" fill="#87CEEB" rx="14"/>
+      <rect y="158" width="280" height="42" fill="#c8b870" rx="0"/>
+      <!-- Warm sky -->
+      <rect width="280" height="160" fill="#D4E8F8" rx="14"/>
+      <!-- clouds -->
+      <ellipse cx="45" cy="35" rx="35" ry="18" fill="white" opacity="0.8"/>
+      <ellipse cx="230" cy="48" rx="32" ry="16" fill="white" opacity="0.75"/>
+      <!-- Main facade -->
+      <rect x="70" y="100" width="140" height="62" fill="#e8d8a8" stroke="#c0a870" stroke-width="2"/>
+      <!-- Facade windows -->
+      <path d="M90,162 L90,138 Q100,128 110,138 L110,162 Z" fill="#B0C4DE" stroke="#c0a870" stroke-width="1"/>
+      <path d="M128,162 L128,138 Q140,126 152,138 L152,162 Z" fill="#B0C4DE" stroke="#c0a870" stroke-width="1.5"/>
+      <path d="M170,162 L170,138 Q180,128 190,138 L190,162 Z" fill="#B0C4DE" stroke="#c0a870" stroke-width="1"/>
+      <!-- Rose window -->
+      <circle cx="140" cy="118" r="14" fill="#B0C4DE" stroke="#c0a870" stroke-width="2"/>
+      <circle cx="140" cy="118" r="10" fill="#D4E8F8"/>
+      <circle cx="140" cy="118" r="4" fill="#E8A840"/>
+      <!-- Spokes -->
+      <line x1="140" y1="104" x2="140" y2="132" stroke="#c0a870" stroke-width="1.5"/>
+      <line x1="126" y1="118" x2="154" y2="118" stroke="#c0a870" stroke-width="1.5"/>
+      <line x1="130" y1="108" x2="150" y2="128" stroke="#c0a870" stroke-width="1"/>
+      <line x1="150" y1="108" x2="130" y2="128" stroke="#c0a870" stroke-width="1"/>
+      <!-- Left tall tower -->
+      <rect x="80" y="40" width="28" height="64" fill="#e0c890" stroke="#c0a870" stroke-width="2"/>
+      <!-- Tower segments -->
+      <rect x="78" y="72" width="32" height="6" fill="#c8b060" rx="2"/>
+      <rect x="78" y="56" width="32" height="5" fill="#c8b060" rx="2"/>
+      <!-- Left spire -->
+      <polygon points="80,40 94,8 108,40" fill="#d4c080" stroke="#c0a870" stroke-width="2"/>
+      <polygon points="86,26 94,8 102,26" fill="#c8b060"/>
+      <line x1="94" y1="8" x2="94" y2="2" stroke="#c0a870" stroke-width="2"/>
+      <circle cx="94" cy="1" r="3" fill="#FFD700"/>
+      <!-- Center tall tower (tallest) -->
+      <rect x="112" y="28" width="36" height="76" fill="#e8d8a8" stroke="#c0a870" stroke-width="2"/>
+      <rect x="110" y="64" width="40" height="6" fill="#c8b060" rx="2"/>
+      <rect x="110" y="45" width="40" height="5" fill="#c8b060" rx="2"/>
+      <!-- Center spire -->
+      <polygon points="112,28 130,2 148,28" fill="#d8c878" stroke="#c0a870" stroke-width="2"/>
+      <polygon points="120,18 130,2 140,18" fill="#c8b860"/>
+      <line x1="130" y1="2" x2="130" y2="-4" stroke="#c0a870" stroke-width="2"/>
+      <circle cx="130" cy="-5" r="4" fill="#FFD700"/>
+      <!-- Right tall tower -->
+      <rect x="172" y="40" width="28" height="64" fill="#e0c890" stroke="#c0a870" stroke-width="2"/>
+      <rect x="170" y="72" width="32" height="6" fill="#c8b060" rx="2"/>
+      <rect x="170" y="56" width="32" height="5" fill="#c8b060" rx="2"/>
+      <!-- Right spire -->
+      <polygon points="172,40 186,8 200,40" fill="#d4c080" stroke="#c0a870" stroke-width="2"/>
+      <polygon points="178,26 186,8 194,26" fill="#c8b060"/>
+      <line x1="186" y1="8" x2="186" y2="2" stroke="#c0a870" stroke-width="2"/>
+      <circle cx="186" cy="1" r="3" fill="#FFD700"/>
+    </svg>`
+  }
+];
+
+// ── GAME STATE ─────────────────────────────────────────────────────────
+let queue = [];
+let currentIdx = 0;
+let score = 0;
+let results = [];
+let answered = false;
+
+// ── SHUFFLE ────────────────────────────────────────────────────────────
+function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+
+// ── BUILD SESSION ──────────────────────────────────────────────────────
+function buildSession() {
+  queue = shuffle(LANDMARKS);
+  currentIdx = 0;
+  score = 0;
+  results = [];
+  answered = false;
+  buildDots();
+}
+
+function buildDots() {
+  const strip = document.getElementById('score-dots');
+  strip.innerHTML = '';
+  queue.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'score-dot';
+    d.id = `dot-${i}`;
+    strip.appendChild(d);
+  });
+}
+
+// ── LOAD QUESTION ──────────────────────────────────────────────────────
+function loadQuestion(idx) {
+  answered = false;
+  const lm = queue[idx];
+  const total = queue.length;
+
+  document.getElementById('progress-bar').style.width = `${(idx / total) * 100}%`;
+  document.getElementById('progress-label').textContent = `${idx + 1} of ${total}`;
+
+  document.getElementById('landmark-svg').innerHTML = lm.svg;
+  document.getElementById('landmark-country').textContent = lm.country;
+  document.getElementById('landmark-clue').innerHTML = lm.clue;
+
+  // Hide feedback
+  const fb = document.getElementById('feedback-bar');
+  fb.className = 'feedback-bar';
+
+  // Build choices: correct + 3 random others
+  const others = LANDMARKS.filter(l => l.name !== lm.name);
+  const wrong = shuffle(others).slice(0, 3);
+  const choices = shuffle([lm, ...wrong]);
+
+  const grid = document.getElementById('choices-grid');
+  grid.innerHTML = '';
+  choices.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.textContent = c.name;
+    btn.dataset.name = c.name;
+    btn.addEventListener('click', () => handleAnswer(btn, c.name === lm.name, lm.name));
+    grid.appendChild(btn);
+  });
+}
+
+// ── HANDLE ANSWER ──────────────────────────────────────────────────────
+function handleAnswer(btn, correct, correctName) {
+  if (answered) return;
+  answered = true;
+
+  // Disable all buttons
+  document.querySelectorAll('.choice-btn').forEach(b => {
+    b.disabled = true;
+    if (b.dataset.name === correctName) b.classList.add(correct && b === btn ? 'correct' : 'reveal');
+  });
+  if (!correct) btn.classList.remove('reveal');
+  if (!correct) btn.classList.add('wrong');
+
+  const dot = document.getElementById(`dot-${currentIdx}`);
+
+  const fb = document.getElementById('feedback-bar');
+  const emoji = document.getElementById('feedback-emoji');
+  const msg = document.getElementById('feedback-msg');
+
+  if (correct) {
+    score++;
+    dot?.classList.add('pass');
+    dot && (dot.textContent = '✓');
+    btn.classList.add('correct');
+    fb.className = 'feedback-bar correct';
+    emoji.textContent = ['🌟','🎉','⭐','🏆','✨'][Math.floor(Math.random()*5)];
+    msg.textContent = ['Brilliant!','You got it!','Amazing!','Nailed it!','Perfect!'][Math.floor(Math.random()*5)];
+    confetti();
+  } else {
+    dot?.classList.add('fail');
+    dot && (dot.textContent = '✗');
+    fb.className = 'feedback-bar wrong';
+    emoji.textContent = '😅';
+    msg.textContent = `It was the ${correctName}!`;
+  }
+
+  results.push({ name: queue[currentIdx].name, country: queue[currentIdx].country, correct });
+}
+
+// ── NEXT ───────────────────────────────────────────────────────────────
+document.getElementById('next-btn').addEventListener('click', () => {
+  currentIdx++;
+  if (currentIdx >= queue.length) showResults();
+  else loadQuestion(currentIdx);
+});
+
+// ── RESULTS ────────────────────────────────────────────────────────────
+function showResults() {
+  document.getElementById('progress-bar').style.width = '100%';
+  document.getElementById('game-screen').classList.remove('active');
+  const rs = document.getElementById('results-screen');
+  rs.classList.add('active');
+
+  const total = queue.length;
+  const pct = score / total;
+  document.getElementById('results-score').innerHTML = `${score} <span>/ ${total}</span>`;
+
+  let title, msg, trophy;
+  if (pct === 1)       { title = 'Perfect Explorer! 🌟'; msg = 'You knew every single landmark!'; trophy = '🏆'; confetti(); setTimeout(confetti, 500); }
+  else if (pct >= 0.8) { title = 'World Traveller, FTS!'; msg = 'You really know your landmarks!'; trophy = '✈️'; }
+  else if (pct >= 0.6) { title = 'Good exploring, FTS!'; msg = 'Keep travelling the world!'; trophy = '🌍'; }
+  else                 { title = 'Keep exploring, FTS!'; msg = 'The world has so much to discover!'; trophy = '🗺️'; }
+
+  document.getElementById('results-trophy').textContent = trophy;
+  document.getElementById('results-title').textContent = title;
+  document.getElementById('results-msg').textContent = msg;
+
+  const missed = results.filter(r => !r.correct);
+  const panel = document.getElementById('missed-panel');
+  const list = document.getElementById('missed-list');
+  list.innerHTML = '';
+  if (missed.length > 0) {
+    panel.style.display = 'flex';
+    missed.forEach(r => {
+      const div = document.createElement('div');
+      div.className = 'missed-item';
+      div.innerHTML = `${r.name} <em>— ${r.country}</em>`;
+      list.appendChild(div);
+    });
+  } else {
+    panel.style.display = 'none';
+  }
+}
+
+// ── CONFETTI ───────────────────────────────────────────────────────────
+function confetti() {
+  const colors = ['#f59e0b','#3b82f6','#16a34a','#ec4899','#8b5cf6','#ef4444','#06b6d4'];
+  for (let i = 0; i < 36; i++) {
+    setTimeout(() => {
+      const p = document.createElement('div');
+      p.className = 'confetti-piece';
+      p.style.cssText = `left:${Math.random()*100}vw;top:-10px;width:${8+Math.random()*8}px;height:${8+Math.random()*8}px;background:${colors[Math.floor(Math.random()*colors.length)]};border-radius:${Math.random()>0.5?'50%':'2px'};animation-duration:${1.5+Math.random()*2}s;transform:rotate(${Math.random()*360}deg)`;
+      document.body.appendChild(p);
+      setTimeout(() => p.remove(), 4000);
+    }, i * 45);
+  }
+}
+
+// ── SCREENS ────────────────────────────────────────────────────────────
+document.getElementById('start-btn').addEventListener('click', () => {
+  buildSession();
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('game-screen').classList.add('active');
+  loadQuestion(0);
+});
+
+document.getElementById('play-again-btn').addEventListener('click', () => {
+  document.getElementById('results-screen').classList.remove('active');
+  buildSession();
+  document.getElementById('game-screen').classList.add('active');
+  loadQuestion(0);
+});
+</script>
+</body>
+</html>
