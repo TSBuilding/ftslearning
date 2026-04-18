@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Clock Master — FTS Learning HQ</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1729;
+    --card: #1e2d4a;
+    --card2: #243459;
+    --gold: #f59e0b;
+    --text: #f0f4ff;
+    --muted: #94a3b8;
+    --green: #16a34a;
+    --red: #dc2626;
+    --blue: #2563eb;
+    --teal: #0d9488;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { height: 100%; }
+  body { background: var(--bg); font-family: 'Nunito', sans-serif; color: var(--text); min-height: 100%; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; background: radial-gradient(ellipse at 15% 15%, rgba(37,99,235,0.08) 0%, transparent 55%), radial-gradient(ellipse at 85% 85%, rgba(245,158,11,0.06) 0%, transparent 55%); pointer-events: none; z-index: 0; }
+
+  .wrapper { position: relative; z-index: 1; max-width: 600px; margin: 0 auto; padding: 16px 16px 48px; display: flex; flex-direction: column; gap: 16px; }
+
+  /* HEADER */
+  .header { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; }
+  .back-btn { background: var(--card); border: none; color: var(--muted); font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 700; padding: 8px 16px; border-radius: 20px; cursor: pointer; text-decoration: none; transition: all 0.2s; }
+  .back-btn:hover { background: var(--card2); color: var(--text); }
+  .title-block { text-align: center; flex: 1; }
+  .title-block h1 { font-family: 'Fredoka One', cursive; font-size: 26px; color: var(--gold); letter-spacing: 1px; line-height: 1; }
+  .title-block p { font-size: 11px; color: var(--muted); font-weight: 700; margin-top: 2px; }
+  .spacer { width: 70px; }
+
+  /* SCREENS */
+  .screen { display: none; flex-direction: column; gap: 16px; }
+  .screen.active { display: flex; }
+
+  /* ── START SCREEN ── */
+  .start-card { width: 100%; background: var(--card); border-radius: 24px; padding: 36px 24px; display: flex; flex-direction: column; align-items: center; gap: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.06); text-align: center; }
+  .start-icon { font-size: 72px; animation: bob 2.5s ease-in-out infinite; }
+  @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+  .start-title { font-family: 'Fredoka One', cursive; font-size: 26px; color: var(--text); line-height: 1.3; }
+  .start-title span { color: var(--gold); }
+  .start-sub { font-size: 15px; color: var(--muted); font-weight: 600; line-height: 1.5; }
+  .btn-gold { width: 100%; background: linear-gradient(135deg, var(--gold), #d97706); border: none; color: #1a1000; font-family: 'Fredoka One', cursive; font-size: 22px; padding: 18px; border-radius: 16px; cursor: pointer; box-shadow: 0 4px 20px rgba(245,158,11,0.35); transition: all 0.2s; }
+  .btn-gold:hover { transform: scale(1.02); }
+  .btn-secondary { width: 100%; background: var(--card2); border: 2px solid rgba(255,255,255,0.1); color: var(--text); font-family: 'Fredoka One', cursive; font-size: 18px; padding: 14px; border-radius: 14px; cursor: pointer; transition: all 0.2s; }
+  .btn-secondary:hover { background: #2d3f60; }
+
+  /* ── CLOCK SVG ── */
+  .clock-wrap { display: flex; align-items: center; justify-content: center; padding: 8px 0; }
+  .clock-svg { filter: drop-shadow(0 8px 24px rgba(0,0,0,0.5)); }
+
+  /* ── LEARN SCREEN ── */
+  .learn-card { background: var(--card); border-radius: 24px; padding: 24px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.06); display: flex; flex-direction: column; align-items: center; gap: 16px; }
+  .learn-step-label { font-size: 11px; font-weight: 800; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; }
+  .learn-title { font-family: 'Fredoka One', cursive; font-size: 28px; color: var(--text); text-align: center; line-height: 1.2; }
+  .learn-title span { color: var(--gold); }
+  .learn-explanation { font-size: 15px; font-weight: 700; color: var(--muted); text-align: center; line-height: 1.6; padding: 0 4px; }
+  .learn-explanation span { color: var(--text); }
+  .hand-hint { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+  .hand-row { display: flex; align-items: center; gap: 10px; background: var(--card2); border-radius: 12px; padding: 10px 14px; }
+  .hand-dot { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
+  .hand-dot.short { background: #f43f5e; }
+  .hand-dot.long  { background: #3b82f6; }
+  .hand-label { font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.3; }
+  .learn-nav { display: flex; gap: 10px; width: 100%; }
+  .learn-nav button { flex: 1; background: var(--card2); border: 2px solid rgba(255,255,255,0.1); color: var(--text); font-family: 'Fredoka One', cursive; font-size: 16px; padding: 12px; border-radius: 12px; cursor: pointer; transition: all 0.2s; }
+  .learn-nav button:hover { background: #2d3f60; }
+  .learn-nav button.primary { background: linear-gradient(135deg, var(--teal), #0f766e); border-color: var(--teal); }
+  .learn-nav button:disabled { opacity: 0.3; cursor: default; }
+  .learn-dots { display: flex; gap: 8px; }
+  .learn-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--card2); border: 2px solid rgba(255,255,255,0.2); transition: all 0.3s; }
+  .learn-dot.active { background: var(--gold); border-color: var(--gold); }
+  .learn-dot.done   { background: var(--teal); border-color: var(--teal); }
+
+  /* ── QUIZ SCREEN ── */
+  .progress-row { display: flex; align-items: center; justify-content: space-between; }
+  .progress-label { font-size: 12px; color: var(--muted); font-weight: 700; }
+  .score-dots { display: flex; gap: 5px; flex-wrap: wrap; justify-content: flex-end; max-width: 240px; }
+  .score-dot { width: 20px; height: 20px; border-radius: 50%; background: var(--card2); border: 2px solid rgba(255,255,255,0.1); font-size: 10px; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
+  .score-dot.pass { background: var(--green); border-color: var(--green); }
+  .score-dot.fail { background: var(--red); border-color: var(--red); }
+  .progress-wrap { width: 100%; background: var(--card); border-radius: 20px; height: 10px; overflow: hidden; }
+  .progress-bar { height: 100%; background: linear-gradient(90deg, var(--gold), #3b82f6); border-radius: 20px; transition: width 0.5s ease; }
+
+  .quiz-card { background: var(--card); border-radius: 24px; padding: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.06); display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .quiz-prompt { font-size: 16px; font-weight: 800; color: var(--muted); text-align: center; }
+
+  .choices-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .choice-btn { background: var(--card); border: 2px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 16px 12px; font-family: 'Fredoka One', cursive; font-size: 18px; color: var(--text); cursor: pointer; transition: all 0.2s; text-align: center; line-height: 1.2; }
+  .choice-btn:hover:not(:disabled) { background: var(--card2); border-color: var(--gold); transform: scale(1.02); }
+  .choice-btn:active:not(:disabled) { transform: scale(0.97); }
+  .choice-btn.correct { background: rgba(22,163,74,0.2); border-color: var(--green); color: #4ade80; }
+  .choice-btn.wrong   { background: rgba(220,38,38,0.15); border-color: var(--red); color: #f87171; }
+  .choice-btn.reveal  { background: rgba(22,163,74,0.12); border-color: var(--green); color: #4ade80; }
+  .choice-btn:disabled { cursor: default; }
+
+  /* Feedback */
+  .feedback-bar { width: 100%; background: var(--card); border-radius: 16px; padding: 14px 18px; display: none; flex-direction: column; gap: 8px; border: 2px solid transparent; animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+  @keyframes popIn { from{transform:scale(0.85);opacity:0} to{transform:scale(1);opacity:1} }
+  .feedback-bar.correct { display: flex; border-color: var(--green); background: rgba(22,163,74,0.1); }
+  .feedback-bar.wrong   { display: flex; border-color: var(--red);   background: rgba(220,38,38,0.08); }
+  .feedback-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .feedback-left { display: flex; align-items: center; gap: 10px; }
+  .feedback-emoji { font-size: 26px; }
+  .feedback-msg { font-size: 16px; font-weight: 800; }
+  .feedback-bar.correct .feedback-msg { color: #4ade80; }
+  .feedback-bar.wrong   .feedback-msg { color: #f87171; }
+  .feedback-hint { font-size: 13px; font-weight: 700; color: var(--muted); line-height: 1.5; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 8px; }
+  .feedback-hint span { color: var(--text); }
+  .next-btn { background: var(--card2); border: 2px solid rgba(255,255,255,0.1); color: var(--text); font-family: 'Fredoka One', cursive; font-size: 14px; padding: 9px 16px; border-radius: 10px; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
+  .next-btn:hover { background: #2d3f60; }
+
+  /* RESULTS */
+  .results-card { width: 100%; background: var(--card); border-radius: 24px; padding: 36px 24px; display: flex; flex-direction: column; align-items: center; gap: 14px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); text-align: center; }
+  .results-trophy { font-size: 72px; animation: bob 2s ease-in-out infinite; }
+  .results-title { font-family: 'Fredoka One', cursive; font-size: 30px; color: var(--gold); }
+  .results-score { font-family: 'Fredoka One', cursive; font-size: 56px; color: white; line-height: 1; }
+  .results-score span { font-size: 26px; color: var(--muted); }
+  .results-msg { font-size: 15px; color: var(--muted); font-weight: 700; }
+
+  /* Confetti */
+  .confetti-piece { position: fixed; pointer-events: none; z-index: 999; border-radius: 2px; animation: cfall linear forwards; }
+  @keyframes cfall { 0%{transform:translateY(-20px) rotate(0deg);opacity:1} 100%{transform:translateY(100vh) rotate(720deg);opacity:0} }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <div class="header">
+    <a href="index.html" class="back-btn" id="back-link">← Home</a>
+    <div class="title-block">
+      <h1>🕐 Clock Master</h1>
+      <p>FTS Learning HQ</p>
+    </div>
+    <div class="spacer"></div>
+  </div>
+
+  <!-- ══ START SCREEN ══ -->
+  <div id="start-screen" class="screen active">
+    <div class="start-card">
+      <div class="start-icon">🕐</div>
+      <div class="start-title">Learn to read the clock,<br><span>FTS</span>!</div>
+      <div class="start-sub">We'll learn what the hands mean first, then you can practise reading the time!</div>
+      <button class="btn-gold" id="learn-btn">📖 Learn First!</button>
+      <button class="btn-secondary" id="quiz-direct-btn">⚡ Jump to Quiz</button>
+    </div>
+  </div>
+
+  <!-- ══ LEARN SCREEN ══ -->
+  <div id="learn-screen" class="screen">
+    <div class="learn-card">
+      <div class="learn-step-label" id="learn-step-label">Step 1 of 4</div>
+      <div class="learn-dots" id="learn-dots"></div>
+      <div class="learn-title" id="learn-title">O'clock</div>
+      <div class="clock-wrap">
+        <svg class="clock-svg" id="learn-clock" width="200" height="200" viewBox="0 0 200 200"></svg>
+      </div>
+      <div class="learn-explanation" id="learn-explanation"></div>
+      <div class="hand-hint" id="hand-hint"></div>
+      <div class="learn-nav">
+        <button id="learn-prev">← Back</button>
+        <button id="learn-next" class="primary">Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ QUIZ SCREEN ══ -->
+  <div id="quiz-screen" class="screen">
+    <div class="progress-row">
+      <div class="progress-label" id="progress-label">1 of 15</div>
+      <div class="score-dots" id="score-dots"></div>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar" id="progress-bar" style="width:0%"></div></div>
+
+    <div class="quiz-card">
+      <div class="quiz-prompt">What time does this clock show?</div>
+      <div class="clock-wrap">
+        <svg class="clock-svg" id="quiz-clock" width="210" height="210" viewBox="0 0 200 200"></svg>
+      </div>
+    </div>
+
+    <div class="choices-grid" id="choices-grid"></div>
+
+    <div class="feedback-bar" id="feedback-bar">
+      <div class="feedback-top">
+        <div class="feedback-left">
+          <div class="feedback-emoji" id="feedback-emoji"></div>
+          <div class="feedback-msg"  id="feedback-msg"></div>
+        </div>
+        <button class="next-btn" id="next-btn">Next →</button>
+      </div>
+      <div class="feedback-hint" id="feedback-hint"></div>
+    </div>
+  </div>
+
+  <!-- ══ RESULTS SCREEN ══ -->
+  <div id="results-screen" class="screen">
+    <div class="results-card">
+      <div class="results-trophy" id="results-trophy">🏆</div>
+      <div class="results-title"  id="results-title">Great work, FTS!</div>
+      <div class="results-msg">You got</div>
+      <div class="results-score"  id="results-score">0 <span>/ 15</span></div>
+      <div class="results-msg"    id="results-msg"></div>
+    </div>
+    <button class="btn-gold"      id="play-again-btn">🕐 Play Again!</button>
+    <button class="btn-secondary" id="back-to-learn-btn">📖 Review the lesson</button>
+  </div>
+
+</div>
+<script>
+// ══════════════════════════════════════════════════════════════
+// CLOCK DRAWING
+// ══════════════════════════════════════════════════════════════
+function drawClock(svgEl, hours, minutes, opts = {}) {
+  const cx = 100, cy = 100, r = 90;
+  const shortColor = opts.shortColor || '#f43f5e';
+  const longColor  = opts.longColor  || '#3b82f6';
+  const highlight  = opts.highlight  || null; // 'short' | 'long' | 'both'
+
+  svgEl.innerHTML = '';
+
+  // Face
+  circle(svgEl, cx, cy, r,       { fill: '#1e3a5f', stroke: '#3b5a8a', sw: 3 });
+  circle(svgEl, cx, cy, r - 4,   { fill: 'none',    stroke: 'rgba(255,255,255,0.05)', sw: 1 });
+
+  // Hour ticks + numbers
+  for (let i = 1; i <= 12; i++) {
+    const ang  = (i / 12) * Math.PI * 2 - Math.PI / 2;
+    const tx   = cx + Math.cos(ang) * (r - 14);
+    const ty   = cy + Math.sin(ang) * (r - 14);
+    const tick1x = cx + Math.cos(ang) * (r - 6);
+    const tick1y = cy + Math.sin(ang) * (r - 6);
+    const tick2x = cx + Math.cos(ang) * (r - 14);
+    const tick2y = cy + Math.sin(ang) * (r - 14);
+    line(svgEl, tick1x, tick1y, tick2x, tick2y, { stroke: 'rgba(255,255,255,0.3)', sw: 2 });
+    text(svgEl, tx, ty + 5, i.toString(), {
+      fill: 'rgba(255,255,255,0.85)',
+      fontSize: 13,
+      fontFamily: 'Fredoka One, cursive',
+      textAnchor: 'middle'
+    });
+  }
+
+  // Minute ticks
+  for (let i = 0; i < 60; i++) {
+    if (i % 5 === 0) continue;
+    const ang = (i / 60) * Math.PI * 2 - Math.PI / 2;
+    line(svgEl,
+      cx + Math.cos(ang) * (r - 4),  cy + Math.sin(ang) * (r - 4),
+      cx + Math.cos(ang) * (r - 8),  cy + Math.sin(ang) * (r - 8),
+      { stroke: 'rgba(255,255,255,0.15)', sw: 1 }
+    );
+  }
+
+  // Hour hand
+  const hAng  = ((hours % 12 + minutes / 60) / 12) * Math.PI * 2 - Math.PI / 2;
+  const hLen  = r * 0.5;
+  const hGlow = highlight === 'short' || highlight === 'both';
+  if (hGlow) circle(svgEl, cx + Math.cos(hAng) * hLen * 0.5, cy + Math.sin(hAng) * hLen * 0.5, 18, { fill: shortColor, opacity: 0.15 });
+  line(svgEl, cx, cy, cx + Math.cos(hAng) * hLen, cy + Math.sin(hAng) * hLen,
+    { stroke: shortColor, sw: hGlow ? 9 : 7, linecap: 'round' });
+
+  // Minute hand
+  const mAng  = (minutes / 60) * Math.PI * 2 - Math.PI / 2;
+  const mLen  = r * 0.72;
+  const mGlow = highlight === 'long' || highlight === 'both';
+  if (mGlow) circle(svgEl, cx + Math.cos(mAng) * mLen * 0.5, cy + Math.sin(mAng) * mLen * 0.5, 22, { fill: longColor, opacity: 0.12 });
+  line(svgEl, cx, cy, cx + Math.cos(mAng) * mLen, cy + Math.sin(mAng) * mLen,
+    { stroke: longColor, sw: mGlow ? 6 : 5, linecap: 'round' });
+
+  // Centre dot
+  circle(svgEl, cx, cy, 6, { fill: '#f0f4ff' });
+  circle(svgEl, cx, cy, 3, { fill: '#0f1729' });
+}
+
+function circle(svg, cx, cy, r, opts = {}) {
+  const el = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  el.setAttribute('cx', cx); el.setAttribute('cy', cy); el.setAttribute('r', r);
+  if (opts.fill)    el.setAttribute('fill',   opts.fill);
+  if (opts.stroke)  el.setAttribute('stroke', opts.stroke);
+  if (opts.sw)      el.setAttribute('stroke-width', opts.sw);
+  if (opts.opacity) el.setAttribute('opacity', opts.opacity);
+  svg.appendChild(el); return el;
+}
+function line(svg, x1, y1, x2, y2, opts = {}) {
+  const el = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  el.setAttribute('x1', x1); el.setAttribute('y1', y1);
+  el.setAttribute('x2', x2); el.setAttribute('y2', y2);
+  if (opts.stroke)   el.setAttribute('stroke', opts.stroke);
+  if (opts.sw)       el.setAttribute('stroke-width', opts.sw);
+  if (opts.linecap)  el.setAttribute('stroke-linecap', opts.linecap);
+  svg.appendChild(el); return el;
+}
+function text(svg, x, y, content, opts = {}) {
+  const el = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  el.setAttribute('x', x); el.setAttribute('y', y);
+  el.setAttribute('fill', opts.fill || 'white');
+  el.setAttribute('font-size', opts.fontSize || 14);
+  el.setAttribute('font-family', opts.fontFamily || 'sans-serif');
+  el.setAttribute('text-anchor', opts.textAnchor || 'middle');
+  el.setAttribute('dominant-baseline', 'middle');
+  el.textContent = content;
+  svg.appendChild(el); return el;
+}
+
+// ══════════════════════════════════════════════════════════════
+// LEARN STEPS
+// ══════════════════════════════════════════════════════════════
+const LEARN_STEPS = [
+  {
+    title: "O'clock",
+    hours: 3, minutes: 0,
+    highlight: 'both',
+    explanation: `When the <span>long blue hand</span> points straight up to 12, it's o'clock! The <span>short red hand</span> tells you which hour it is.`,
+    short: "Short red hand → points to the hour number. Here it points to 3.",
+    long:  "Long blue hand → points straight UP to 12. That means o'clock!"
+  },
+  {
+    title: "Half past",
+    hours: 7, minutes: 30,
+    highlight: 'both',
+    explanation: `When the <span>long blue hand</span> points straight down to 6, it's half past! The <span>short red hand</span> is between two numbers — use the one it just passed.`,
+    short: "Short red hand → halfway between 7 and 8. It just passed 7.",
+    long:  "Long blue hand → points DOWN to 6. That means half past!"
+  },
+  {
+    title: "Quarter past",
+    hours: 10, minutes: 15,
+    highlight: 'both',
+    explanation: `When the <span>long blue hand</span> points to 3, it's quarter past! The <span>short red hand</span> has just moved past an hour number.`,
+    short: "Short red hand → just past 10. So the hour is 10.",
+    long:  "Long blue hand → points to 3 on the right. That means quarter past!"
+  },
+  {
+    title: "Quarter to",
+    hours: 4, minutes: 45,
+    highlight: 'both',
+    explanation: `When the <span>long blue hand</span> points to 9, it's quarter to! This one's tricky — the <span>short red hand</span> is nearly at the next hour.`,
+    short: "Short red hand → nearly at 5, but not there yet. So it's quarter to 5.",
+    long:  "Long blue hand → points to 9 on the left. That means quarter to!"
+  }
+];
+
+let learnStep = 0;
+
+function renderLearnStep() {
+  const step = LEARN_STEPS[learnStep];
+  document.getElementById('learn-step-label').textContent = `Step ${learnStep + 1} of ${LEARN_STEPS.length}`;
+  document.getElementById('learn-title').innerHTML = step.title;
+  document.getElementById('learn-explanation').innerHTML = step.explanation;
+
+  // Hand hint rows
+  const hint = document.getElementById('hand-hint');
+  hint.innerHTML = `
+    <div class="hand-row">
+      <div class="hand-dot short"></div>
+      <div class="hand-label">${step.short}</div>
+    </div>
+    <div class="hand-row">
+      <div class="hand-dot long"></div>
+      <div class="hand-label">${step.long}</div>
+    </div>
+  `;
+
+  // Dots
+  const dots = document.getElementById('learn-dots');
+  dots.innerHTML = '';
+  LEARN_STEPS.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'learn-dot' + (i < learnStep ? ' done' : i === learnStep ? ' active' : '');
+    dots.appendChild(d);
+  });
+
+  // Clock
+  drawClock(document.getElementById('learn-clock'), step.hours, step.minutes, { highlight: step.highlight });
+
+  // Nav buttons
+  document.getElementById('learn-prev').disabled = learnStep === 0;
+  const nextBtn = document.getElementById('learn-next');
+  nextBtn.textContent = learnStep === LEARN_STEPS.length - 1 ? '🎯 Start Quiz!' : 'Next →';
+  nextBtn.className = 'primary';
+}
+
+document.getElementById('learn-prev').addEventListener('click', () => {
+  if (learnStep > 0) { learnStep--; renderLearnStep(); }
+});
+document.getElementById('learn-next').addEventListener('click', () => {
+  if (learnStep < LEARN_STEPS.length - 1) {
+    learnStep++;
+    renderLearnStep();
+  } else {
+    startQuiz();
+  }
+});
+
+// ══════════════════════════════════════════════════════════════
+// QUIZ DATA — o'clock, half past, quarter past, quarter to
+// ══════════════════════════════════════════════════════════════
+function buildQuizTimes() {
+  const times = [];
+  const hours = [1,2,3,4,5,6,7,8,9,10,11,12];
+  const types = ['oclock', 'half', 'qpast', 'qto'];
+
+  types.forEach(type => {
+    hours.forEach(h => {
+      let mins, label;
+      if (type === 'oclock') { mins = 0;  label = `${h} o'clock`; }
+      if (type === 'half')   { mins = 30; label = `half past ${h}`; }
+      if (type === 'qpast')  { mins = 15; label = `quarter past ${h}`; }
+      if (type === 'qto')    {
+        mins = 45;
+        const next = h === 12 ? 1 : h + 1;
+        label = `quarter to ${next}`;
+      }
+      times.push({ hours: h, minutes: mins, label, type });
+    });
+  });
+  return times;
+}
+
+const ALL_TIMES = buildQuizTimes();
+
+function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+
+function buildWrongOptions(correct) {
+  // Generate plausible wrong answers — same type or adjacent hours
+  const candidates = ALL_TIMES.filter(t => t.label !== correct.label);
+
+  // Prefer same type, nearby hours
+  const sameType = candidates.filter(t => t.type === correct.type);
+  const otherType = candidates.filter(t => t.type !== correct.type);
+
+  const pool = shuffle([...sameType.slice(0, 6), ...otherType.slice(0, 4)]);
+  return pool.slice(0, 3);
+}
+
+// ══════════════════════════════════════════════════════════════
+// QUIZ STATE
+// ══════════════════════════════════════════════════════════════
+let quizQueue = [], quizIdx = 0, quizScore = 0, quizAnswered = false;
+const SESSION_SIZE = 15;
+
+function startQuiz() {
+  quizQueue   = shuffle(ALL_TIMES).slice(0, SESSION_SIZE);
+  quizIdx     = 0;
+  quizScore   = 0;
+  quizAnswered = false;
+  buildScoreDots();
+  showScreen('quiz-screen');
+  loadQuizQuestion(0);
+}
+
+function buildScoreDots() {
+  const strip = document.getElementById('score-dots');
+  strip.innerHTML = '';
+  quizQueue.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'score-dot'; d.id = `dot-${i}`;
+    strip.appendChild(d);
+  });
+}
+
+function loadQuizQuestion(idx) {
+  quizAnswered = false;
+  const q     = quizQueue[idx];
+  const total = quizQueue.length;
+
+  document.getElementById('progress-bar').style.width   = `${(idx / total) * 100}%`;
+  document.getElementById('progress-label').textContent = `${idx + 1} of ${total}`;
+  document.getElementById('feedback-bar').className     = 'feedback-bar';
+
+  drawClock(document.getElementById('quiz-clock'), q.hours, q.minutes);
+
+  // Build choices
+  const wrongs  = buildWrongOptions(q);
+  const choices = shuffle([q, ...wrongs]);
+  const grid    = document.getElementById('choices-grid');
+  grid.innerHTML = '';
+  choices.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className    = 'choice-btn';
+    btn.textContent  = c.label;
+    btn.dataset.label = c.label;
+    btn.addEventListener('click', () => handleQuizAnswer(btn, c.label === q.label, q));
+    grid.appendChild(btn);
+  });
+}
+
+function handleQuizAnswer(btn, correct, q) {
+  if (quizAnswered) return;
+  quizAnswered = true;
+
+  document.querySelectorAll('.choice-btn').forEach(b => {
+    b.disabled = true;
+    if (b.dataset.label === q.label) b.classList.add('reveal');
+  });
+  if (correct)  { btn.classList.remove('reveal'); btn.classList.add('correct'); }
+  else          { btn.classList.add('wrong'); }
+
+  const dot = document.getElementById(`dot-${quizIdx}`);
+  const fb  = document.getElementById('feedback-bar');
+
+  // Build teaching hint
+  const hint = buildHint(q);
+
+  if (correct) {
+    quizScore++;
+    if (dot) { dot.classList.add('pass'); dot.textContent = '✓'; }
+    fb.className = 'feedback-bar correct';
+    document.getElementById('feedback-emoji').textContent = ['🌟','🎉','⭐','🏆','✨'][Math.floor(Math.random()*5)];
+    document.getElementById('feedback-msg').textContent   = ['Brilliant!','You got it!','Spot on!','Perfect!','Amazing!'][Math.floor(Math.random()*5)];
+    document.getElementById('feedback-hint').innerHTML    = hint;
+    confetti();
+  } else {
+    if (dot) { dot.classList.add('fail'); dot.textContent = '✗'; }
+    fb.className = 'feedback-bar wrong';
+    document.getElementById('feedback-emoji').textContent = '😅';
+    document.getElementById('feedback-msg').textContent   = `It's ${q.label}`;
+    document.getElementById('feedback-hint').innerHTML    = hint;
+  }
+}
+
+function buildHint(q) {
+  const hourWord = q.hours;
+  const next     = q.hours === 12 ? 1 : q.hours + 1;
+  if (q.type === 'oclock')
+    return `<span>Short red hand</span> points to ${hourWord} → <span>Long blue hand</span> points up to 12 → ${q.label}`;
+  if (q.type === 'half')
+    return `<span>Short red hand</span> is past ${hourWord} → <span>Long blue hand</span> points down to 6 → ${q.label}`;
+  if (q.type === 'qpast')
+    return `<span>Short red hand</span> just past ${hourWord} → <span>Long blue hand</span> points to 3 → ${q.label}`;
+  if (q.type === 'qto')
+    return `<span>Short red hand</span> nearly at ${next} → <span>Long blue hand</span> points to 9 → ${q.label}`;
+  return '';
+}
+
+document.getElementById('next-btn').addEventListener('click', () => {
+  quizIdx++;
+  if (quizIdx >= quizQueue.length) showResults();
+  else loadQuizQuestion(quizIdx);
+});
+
+// ══════════════════════════════════════════════════════════════
+// RESULTS
+// ══════════════════════════════════════════════════════════════
+function showResults() {
+  document.getElementById('progress-bar').style.width = '100%';
+  showScreen('results-screen');
+  const total = quizQueue.length;
+  const pct   = quizScore / total;
+  document.getElementById('results-score').innerHTML = `${quizScore} <span>/ ${total}</span>`;
+  let title, msg, trophy;
+  if (pct === 1)       { title = 'Perfect Time Keeper! 🌟'; msg = 'You read every clock correctly!'; trophy = '🏆'; confetti(); setTimeout(confetti, 500); }
+  else if (pct >= 0.8) { title = 'Clock Master, FTS!'; msg = 'You\'re really getting it!'; trophy = '⭐'; }
+  else if (pct >= 0.6) { title = 'Good effort, FTS!'; msg = 'Keep practising — you\'re getting there!'; trophy = '🕐'; }
+  else                 { title = 'Keep going, FTS!'; msg = 'Try the lesson again and then have another go!'; trophy = '💪'; }
+  document.getElementById('results-trophy').textContent = trophy;
+  document.getElementById('results-title').textContent  = title;
+  document.getElementById('results-msg').textContent    = msg;
+}
+
+// ══════════════════════════════════════════════════════════════
+// SCREEN MANAGEMENT
+// ══════════════════════════════════════════════════════════════
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(name).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// ══════════════════════════════════════════════════════════════
+// CONFETTI
+// ══════════════════════════════════════════════════════════════
+function confetti() {
+  const colors = ['#f59e0b','#3b82f6','#16a34a','#ec4899','#8b5cf6','#ef4444','#06b6d4'];
+  for (let i = 0; i < 36; i++) {
+    setTimeout(() => {
+      const p = document.createElement('div');
+      p.className = 'confetti-piece';
+      p.style.cssText = `left:${Math.random()*100}vw;top:-10px;width:${8+Math.random()*8}px;height:${8+Math.random()*8}px;background:${colors[Math.floor(Math.random()*colors.length)]};border-radius:${Math.random()>.5?'50%':'2px'};animation-duration:${1.5+Math.random()*2}s;transform:rotate(${Math.random()*360}deg)`;
+      document.body.appendChild(p);
+      setTimeout(() => p.remove(), 4000);
+    }, i * 45);
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+// WIRING
+// ══════════════════════════════════════════════════════════════
+document.getElementById('learn-btn').addEventListener('click', () => {
+  learnStep = 0;
+  renderLearnStep();
+  showScreen('learn-screen');
+});
+
+document.getElementById('quiz-direct-btn').addEventListener('click', startQuiz);
+
+document.getElementById('play-again-btn').addEventListener('click', startQuiz);
+
+document.getElementById('back-to-learn-btn').addEventListener('click', () => {
+  learnStep = 0;
+  renderLearnStep();
+  showScreen('learn-screen');
+});
+
+// Back button — if in learn or quiz, go back to start, not home
+document.getElementById('back-link').addEventListener('click', e => {
+  const active = document.querySelector('.screen.active').id;
+  if (active !== 'start-screen') {
+    e.preventDefault();
+    showScreen('start-screen');
+  }
+});
+</script>
+</body>
+</html>
