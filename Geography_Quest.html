@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Geography Quest — FTS Learning HQ</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1729; --card: #1e2d4a; --card2: #243459;
+    --gold: #f59e0b; --text: #f0f4ff; --muted: #94a3b8;
+    --green: #16a34a; --red: #dc2626; --blue: #3b82f6;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html { height: 100%; }
+  body { background: var(--bg); font-family: 'Nunito', sans-serif; color: var(--text); min-height: 100%; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; background: radial-gradient(ellipse at 20% 20%, rgba(37,99,235,0.08) 0%, transparent 55%), radial-gradient(ellipse at 80% 80%, rgba(245,158,11,0.06) 0%, transparent 55%); pointer-events: none; z-index: 0; }
+
+  .wrapper { position: relative; z-index: 1; max-width: 600px; margin: 0 auto; padding: 16px 16px 48px; display: flex; flex-direction: column; gap: 14px; }
+
+  /* HEADER */
+  .header { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; }
+  .back-btn { background: var(--card); border: none; color: var(--muted); font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 700; padding: 8px 16px; border-radius: 20px; cursor: pointer; text-decoration: none; transition: all 0.2s; }
+  .back-btn:hover { background: var(--card2); color: var(--text); }
+  .title-block { text-align: center; flex: 1; }
+  .title-block h1 { font-family: 'Fredoka One', cursive; font-size: 24px; color: var(--gold); letter-spacing: 1px; line-height: 1; }
+  .title-block p { font-size: 11px; color: var(--muted); font-weight: 700; margin-top: 2px; }
+  .spacer { width: 70px; }
+
+  /* START */
+  #start-screen { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+  .start-card { width: 100%; background: var(--card); border-radius: 24px; padding: 36px 24px; display: flex; flex-direction: column; align-items: center; gap: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.06); text-align: center; }
+  .start-globe { font-size: 72px; animation: bob 2.5s ease-in-out infinite; }
+  @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+  .start-title { font-family: 'Fredoka One', cursive; font-size: 24px; color: var(--text); line-height: 1.3; }
+  .start-title span { color: var(--gold); }
+  .start-sub { font-size: 14px; color: var(--muted); font-weight: 600; line-height: 1.5; }
+  .start-rules { width: 100%; background: var(--card2); border-radius: 14px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; text-align: left; }
+  .rule { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; font-weight: 600; color: var(--text); }
+  .rule-num { background: var(--gold); color: #1a1000; font-family: 'Fredoka One', cursive; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; }
+  .start-btn { width: 100%; background: linear-gradient(135deg, var(--gold), #d97706); border: none; color: #1a1000; font-family: 'Fredoka One', cursive; font-size: 22px; padding: 18px; border-radius: 16px; cursor: pointer; box-shadow: 0 4px 20px rgba(245,158,11,0.35); transition: all 0.2s; }
+  .start-btn:hover { transform: scale(1.02); }
+
+  /* LOADING */
+  #loading-screen { display: none; flex-direction: column; align-items: center; gap: 20px; }
+  #loading-screen.active { display: flex; }
+  .loading-card { width: 100%; background: var(--card); border-radius: 24px; padding: 40px 28px; display: flex; flex-direction: column; align-items: center; gap: 18px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.06); text-align: center; }
+  .loading-globe { font-size: 64px; animation: spin 3s linear infinite; }
+  @keyframes spin { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
+  .loading-title { font-family: 'Fredoka One', cursive; font-size: 22px; color: var(--text); }
+  .loading-sub { font-size: 14px; color: var(--muted); font-weight: 700; }
+  .loading-bar-wrap { width: 100%; background: var(--card2); border-radius: 20px; height: 12px; overflow: hidden; }
+  .loading-bar { height: 100%; background: linear-gradient(90deg, var(--gold), var(--blue)); border-radius: 20px; transition: width 0.3s ease; width: 0%; }
+  .loading-count { font-family: 'Fredoka One', cursive; font-size: 18px; color: var(--gold); }
+
+  /* GAME */
+  #game-screen { display: none; flex-direction: column; gap: 12px; }
+  #game-screen.active { display: flex; }
+
+  .progress-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .progress-label { font-size: 12px; color: var(--muted); font-weight: 800; letter-spacing: 0.5px; }
+  .score-pill { background: var(--card); border: 1px solid rgba(245,158,11,0.3); border-radius: 14px; padding: 5px 12px; font-family: 'Fredoka One', cursive; font-size: 14px; color: var(--gold); }
+  .progress-wrap { width: 100%; background: var(--card); border-radius: 20px; height: 8px; overflow: hidden; }
+  .progress-bar { height: 100%; background: linear-gradient(90deg, var(--gold), var(--blue)); border-radius: 20px; transition: width 0.5s ease; }
+
+  /* Question prompt */
+  .q-prompt { background: var(--card2); border-radius: 14px; padding: 12px 16px; display: flex; align-items: center; gap: 12px; }
+  .q-badge { background: var(--gold); color: #1a1000; font-family: 'Fredoka One', cursive; font-size: 13px; padding: 4px 10px; border-radius: 10px; flex-shrink: 0; }
+  .q-text { font-size: 15px; font-weight: 800; color: var(--text); line-height: 1.3; }
+
+  /* Landmark card (full size for Q1, compact for Q2/Q3) */
+  .landmark-card { width: 100%; background: var(--card); border-radius: 20px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.06); transition: all 0.3s; }
+  .landmark-photo-wrap { position: relative; width: 100%; height: 240px; overflow: hidden; background: var(--card2); display: flex; align-items: center; justify-content: center; transition: height 0.3s; }
+  .landmark-card.compact .landmark-photo-wrap { height: 130px; }
+  .landmark-photo-wrap img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; transition: opacity 0.5s; }
+  .photo-placeholder { font-size: 56px; z-index: 1; transition: opacity 0.4s; }
+  .landmark-info { padding: 12px 18px 14px; display: flex; align-items: center; gap: 12px; }
+  .landmark-card.compact .landmark-info { padding: 10px 16px; }
+  .landmark-name-tag { font-family: 'Fredoka One', cursive; font-size: 17px; color: var(--gold); flex: 1; }
+  .landmark-clue { font-size: 14px; font-weight: 700; color: var(--muted); line-height: 1.5; padding: 0 18px 14px; }
+  .landmark-clue span { color: var(--text); }
+  .landmark-card.compact .landmark-clue { display: none; }
+
+  /* Map */
+  .map-card { width: 100%; background: var(--card); border-radius: 20px; padding: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.06); display: none; }
+  .map-card.show { display: block; }
+  .map-card svg { width: 100%; height: 220px; display: block; }
+  .country { fill: #2d3f60; stroke: #0f1729; stroke-width: 0.4; transition: fill 0.4s; }
+  .country.highlight { fill: var(--gold); }
+
+  /* Choices */
+  .choices-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .choices-grid.three-col { grid-template-columns: 1fr 1fr 1fr; }
+  .choice-btn { background: var(--card); border: 2px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 14px 10px; font-family: 'Fredoka One', cursive; font-size: 14px; color: var(--text); cursor: pointer; transition: all 0.2s; text-align: center; line-height: 1.2; min-height: 56px; display: flex; align-items: center; justify-content: center; }
+  .choice-btn:hover:not(:disabled) { background: var(--card2); border-color: var(--gold); transform: scale(1.02); }
+  .choice-btn:active:not(:disabled) { transform: scale(0.97); }
+  .choice-btn.correct { background: rgba(22,163,74,0.2); border-color: var(--green); color: #4ade80; }
+  .choice-btn.wrong   { background: rgba(220,38,38,0.15); border-color: var(--red); color: #f87171; }
+  .choice-btn.reveal  { background: rgba(22,163,74,0.12); border-color: var(--green); color: #4ade80; }
+  .choice-btn:disabled { cursor: default; }
+
+  /* Feedback */
+  .feedback-bar { width: 100%; background: var(--card); border-radius: 16px; padding: 14px 18px; display: none; align-items: center; justify-content: space-between; gap: 12px; border: 2px solid transparent; animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+  @keyframes popIn { from{transform:scale(0.85);opacity:0} to{transform:scale(1);opacity:1} }
+  .feedback-bar.correct { display: flex; border-color: var(--green); background: rgba(22,163,74,0.1); }
+  .feedback-bar.wrong   { display: flex; border-color: var(--red);   background: rgba(220,38,38,0.08); }
+  .feedback-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+  .feedback-emoji { font-size: 26px; flex-shrink: 0; }
+  .feedback-msg { font-size: 14px; font-weight: 800; line-height: 1.3; }
+  .feedback-bar.correct .feedback-msg { color: #4ade80; }
+  .feedback-bar.wrong   .feedback-msg { color: #f87171; }
+  .next-btn { background: var(--card2); border: 2px solid rgba(255,255,255,0.1); color: var(--text); font-family: 'Fredoka One', cursive; font-size: 14px; padding: 10px 16px; border-radius: 12px; cursor: pointer; white-space: nowrap; transition: all 0.2s; flex-shrink: 0; }
+  .next-btn:hover { background: #2d3f60; }
+
+  /* RESULTS */
+  #results-screen { display: none; flex-direction: column; align-items: center; gap: 14px; }
+  #results-screen.active { display: flex; }
+  .results-card { width: 100%; background: var(--card); border-radius: 24px; padding: 32px 22px; display: flex; flex-direction: column; align-items: center; gap: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); text-align: center; }
+  .results-trophy { font-size: 68px; animation: bob 2s ease-in-out infinite; }
+  .results-title { font-family: 'Fredoka One', cursive; font-size: 26px; color: var(--gold); }
+  .results-score { font-family: 'Fredoka One', cursive; font-size: 50px; color: white; line-height: 1; }
+  .results-score span { font-size: 22px; color: var(--muted); }
+  .results-sub { font-size: 14px; color: var(--muted); font-weight: 700; }
+  .breakdown-grid { width: 100%; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 4px; }
+  .breakdown-item { background: var(--card2); border-radius: 12px; padding: 10px 6px; }
+  .breakdown-label { font-size: 10px; color: var(--muted); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+  .breakdown-val { font-family: 'Fredoka One', cursive; font-size: 18px; color: var(--gold); margin-top: 2px; }
+
+  .recap-panel { width: 100%; background: var(--card); border-radius: 20px; padding: 16px 18px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+  .recap-title { font-family: 'Fredoka One', cursive; font-size: 16px; color: var(--gold); margin-bottom: 10px; }
+  .recap-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06); align-items: center; }
+  .recap-row:last-child { border-bottom: none; }
+  .recap-name { font-size: 13px; font-weight: 800; color: var(--text); }
+  .recap-loc { font-size: 11px; color: var(--muted); font-weight: 700; }
+  .recap-pills { display: flex; gap: 4px; }
+  .recap-pill { width: 22px; height: 22px; border-radius: 50%; background: var(--card2); border: 1.5px solid rgba(255,255,255,0.1); font-size: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; }
+  .recap-pill.pass { background: rgba(22,163,74,0.25); border-color: var(--green); color: #4ade80; }
+  .recap-pill.fail { background: rgba(220,38,38,0.18); border-color: var(--red); color: #f87171; }
+
+  .play-again-btn { width: 100%; background: linear-gradient(135deg, var(--gold), #d97706); border: none; color: #1a1000; font-family: 'Fredoka One', cursive; font-size: 22px; padding: 18px; border-radius: 16px; cursor: pointer; box-shadow: 0 4px 20px rgba(245,158,11,0.35); transition: all 0.2s; }
+  .play-again-btn:hover { transform: scale(1.02); }
+
+  .confetti-piece { position: fixed; pointer-events: none; z-index: 999; border-radius: 2px; animation: cfall linear forwards; }
+  @keyframes cfall { 0%{transform:translateY(-20px) rotate(0deg);opacity:1} 100%{transform:translateY(100vh) rotate(720deg);opacity:0} }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <div class="header">
+    <a href="index.html" class="back-btn">← Home</a>
+    <div class="title-block">
+      <h1>🧭 Geography Quest</h1>
+      <p>FTS Learning HQ</p>
+    </div>
+    <div class="spacer"></div>
+  </div>
+
+  <!-- START -->
+  <div id="start-screen">
+    <div class="start-card">
+      <div class="start-globe">🧭</div>
+      <div class="start-title">Three questions per<br>landmark, <span>FTS</span>!</div>
+      <div class="start-sub">15 famous landmarks. Each one has 3 questions. That's 45 points up for grabs!</div>
+      <div class="start-rules">
+        <div class="rule"><div class="rule-num">1</div><div>Name the <strong>landmark</strong> from the photo</div></div>
+        <div class="rule"><div class="rule-num">2</div><div>Pick the right <strong>continent</strong> (map will help!)</div></div>
+        <div class="rule"><div class="rule-num">3</div><div>Choose the correct <strong>country</strong></div></div>
+      </div>
+      <button class="start-btn" id="start-btn">🚀 Start the Quest!</button>
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  <div id="loading-screen">
+    <div class="loading-card">
+      <div class="loading-globe">🌍</div>
+      <div class="loading-title">Loading the world…</div>
+      <div class="loading-sub">Fetching photos and the world map!</div>
+      <div class="loading-bar-wrap"><div class="loading-bar" id="loading-bar"></div></div>
+      <div class="loading-count" id="loading-count">0 / 30</div>
+    </div>
+  </div>
+
+  <!-- GAME -->
+  <div id="game-screen">
+    <div class="progress-row">
+      <div class="progress-label" id="progress-label">Landmark 1 of 15 · Q1 of 3</div>
+      <div class="score-pill" id="score-pill">⭐ 0 / 45</div>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar" id="progress-bar" style="width:0%"></div></div>
+
+    <div class="q-prompt"><div class="q-badge" id="q-badge">Q1</div><div class="q-text" id="q-text">Which landmark is this?</div></div>
+
+    <div class="landmark-card" id="landmark-card">
+      <div class="landmark-photo-wrap">
+        <div class="photo-placeholder" id="photo-placeholder">🏛️</div>
+        <img id="landmark-img" src="" alt="Landmark"/>
+      </div>
+      <div class="landmark-info" id="landmark-info" style="display:none">
+        <div class="landmark-name-tag" id="landmark-name-tag"></div>
+      </div>
+      <div class="landmark-clue" id="landmark-clue"></div>
+    </div>
+
+    <div class="map-card" id="map-card">
+      <svg id="world-map" viewBox="0 0 800 400"></svg>
+    </div>
+
+    <div class="choices-grid" id="choices-grid"></div>
+
+    <div class="feedback-bar" id="feedback-bar">
+      <div class="feedback-left">
+        <div class="feedback-emoji" id="feedback-emoji"></div>
+        <div class="feedback-msg" id="feedback-msg"></div>
+      </div>
+      <button class="next-btn" id="next-btn">Next →</button>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results-screen">
+    <div class="results-card">
+      <div class="results-trophy" id="results-trophy">🏆</div>
+      <div class="results-title" id="results-title">Quest Complete!</div>
+      <div class="results-sub">You scored</div>
+      <div class="results-score" id="results-score">0 <span>/ 45</span></div>
+      <div class="results-sub" id="results-msg"></div>
+      <div class="breakdown-grid">
+        <div class="breakdown-item"><div class="breakdown-label">Landmarks</div><div class="breakdown-val" id="bd-landmark">0/15</div></div>
+        <div class="breakdown-item"><div class="breakdown-label">Continents</div><div class="breakdown-val" id="bd-continent">0/15</div></div>
+        <div class="breakdown-item"><div class="breakdown-label">Countries</div><div class="breakdown-val" id="bd-country">0/15</div></div>
+      </div>
+    </div>
+
+    <div class="recap-panel" id="recap-panel">
+      <div class="recap-title">📋 Your round, landmark by landmark</div>
+      <div id="recap-list"></div>
+    </div>
+
+    <button class="play-again-btn" id="play-again-btn">🧭 Play Again!</button>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+<script>
+
+// ── LANDMARK DATA (duplicated from World_Landmarks.html + continent/country) ──
+// Continent classifications use the most defensible school-curriculum answer:
+// - Hagia Sophia: Asia (Turkey commonly classed as Western Asia)
+// - St Basil's:   Europe (Moscow is in European Russia)
+// - Pyramids:     Africa (Egypt is in Africa, despite Middle East cultural ties)
+const LANDMARKS = [
+  { name: "Eiffel Tower",          wiki: "Eiffel Tower",            continent: "Europe",        country: "France",          emoji: "🗼", clue: "This tall iron tower in <span>Paris</span> sparkles with thousands of lights every night!" },
+  { name: "Taj Mahal",             wiki: "Taj Mahal",               continent: "Asia",          country: "India",           emoji: "🕌", clue: "A <span>white marble palace</span> in India, built as a symbol of love by an emperor for his wife." },
+  { name: "Statue of Liberty",     wiki: "Statue of Liberty",       continent: "North America", country: "USA",             emoji: "🗽", clue: "A giant <span>green lady holding a torch</span> high in the air, standing on an island in New York!" },
+  { name: "Big Ben",               wiki: "Big Ben",                 continent: "Europe",        country: "United Kingdom",  emoji: "🕐", clue: "A famous <span>clock tower</span> in London that chimes loudly every hour — BONG BONG BONG!" },
+  { name: "Sydney Opera House",    wiki: "Sydney Opera House",      continent: "Australia",     country: "Australia",       emoji: "🎭", clue: "A famous building in <span>Sydney</span> with a roof shaped like giant white sails on the harbour!" },
+  { name: "Great Wall of China",   wiki: "Great Wall of China",     continent: "Asia",          country: "China",           emoji: "🧱", clue: "The <span>longest wall in the world</span>, stretching thousands of kilometres across Chinese mountains!" },
+  { name: "Colosseum",             wiki: "Colosseum",               continent: "Europe",        country: "Italy",           emoji: "🏟️", clue: "Ancient <span>Romans watched gladiators fight</span> inside this huge oval arena almost 2,000 years ago!" },
+  { name: "Pyramids of Giza",      wiki: "Giza pyramid complex",    continent: "Africa",        country: "Egypt",           emoji: "🔺", clue: "Giant <span>triangle-shaped tombs</span> built in the Egyptian desert for powerful pharaohs!" },
+  { name: "Machu Picchu",          wiki: "Machu Picchu",            continent: "South America", country: "Peru",            emoji: "🏔️", clue: "Ancient ruins high in the <span>mountains of Peru</span> — once a secret city of the Inca people!" },
+  { name: "Leaning Tower of Pisa", wiki: "Leaning Tower of Pisa",   continent: "Europe",        country: "Italy",           emoji: "🗼", clue: "A round white tower in Italy famous for <span>leaning to one side</span> — it's been tilting for hundreds of years!" },
+  { name: "Mount Fuji",            wiki: "Mount Fuji",              continent: "Asia",          country: "Japan",           emoji: "🗻", clue: "Japan's most famous <span>volcano</span>, with a perfect cone shape and a beautiful snowy top!" },
+  { name: "Parthenon",             wiki: "Parthenon",               continent: "Europe",        country: "Greece",          emoji: "🏛️", clue: "An ancient <span>Greek temple</span> on top of a rocky hill in Athens, with rows of tall white columns!" },
+  { name: "Burj Khalifa",          wiki: "Burj Khalifa",            continent: "Asia",          country: "UAE",             emoji: "🏙️", clue: "The <span>tallest building in the world</span>, rising from the desert city of Dubai like a giant silver spike!" },
+  { name: "Christ the Redeemer",   wiki: "Christ the Redeemer",     continent: "South America", country: "Brazil",          emoji: "✝️", clue: "A giant white statue with <span>arms spread wide</span>, watching over Rio de Janeiro from a mountain top!" },
+  { name: "Sagrada Família",       wiki: "Sagrada Família",         continent: "Europe",        country: "Spain",           emoji: "⛪", clue: "A stunning church in <span>Barcelona</span> with towers that look like giant dripping sandcastles!" },
+  { name: "Angkor Wat",            wiki: "Angkor Wat",              continent: "Asia",          country: "Cambodia",        emoji: "🛕", clue: "The <span>largest religious temple</span> in the world, hidden in the jungles of Cambodia!" },
+  { name: "Chichen Itza",          wiki: "Chichen Itza",            continent: "North America", country: "Mexico",          emoji: "🔺", clue: "A giant <span>step pyramid</span> built by the ancient Mayan people in Mexico over 1,000 years ago!" },
+  { name: "Stonehenge",            wiki: "Stonehenge",              continent: "Europe",        country: "United Kingdom",  emoji: "🪨", clue: "A mysterious circle of <span>huge standing stones</span> in England — nobody is quite sure how they got there!" },
+  { name: "Hagia Sophia",          wiki: "Hagia Sophia",            continent: "Asia",          country: "Turkey",          emoji: "🕌", clue: "A breathtaking building in <span>Istanbul</span> with an enormous dome — it has been both a church and a mosque!" },
+  { name: "Alhambra",              wiki: "Alhambra",                continent: "Europe",        country: "Spain",           emoji: "🏰", clue: "A stunning <span>Moorish palace and fortress</span> on a hilltop in Granada, Spain, with beautiful tiled gardens!" },
+  { name: "Golden Gate Bridge",    wiki: "Golden Gate Bridge",      continent: "North America", country: "USA",             emoji: "🌉", clue: "A famous <span>red-orange suspension bridge</span> stretching across the bay in San Francisco!" },
+  { name: "Neuschwanstein Castle", wiki: "Neuschwanstein Castle",   continent: "Europe",        country: "Germany",         emoji: "🏰", clue: "A <span>fairy-tale castle</span> high in the Bavarian mountains of Germany — it inspired Disney's Cinderella castle!" },
+  { name: "Uluru",                 wiki: "Uluru",                   continent: "Australia",     country: "Australia",       emoji: "🟫", clue: "A giant <span>red sandstone rock</span> rising from flat desert in the middle of Australia, sacred to Aboriginal people!" },
+  { name: "St Basil's Cathedral",  wiki: "Saint Basil's Cathedral", continent: "Europe",        country: "Russia",          emoji: "⛪", clue: "A colourful cathedral in <span>Moscow's Red Square</span> famous for its onion-shaped domes of many bright colours!" },
+  { name: "Mount Rushmore",        wiki: "Mount Rushmore",          continent: "North America", country: "USA",             emoji: "🗿", clue: "The giant <span>faces of four US presidents</span> carved into a granite mountain in South Dakota!" },
+  { name: "Trevi Fountain",        wiki: "Trevi Fountain",          continent: "Europe",        country: "Italy",           emoji: "⛲", clue: "The most famous <span>fountain in the world</span> in Rome — throwing a coin means you'll return to Rome!" },
+  { name: "Notre Dame Cathedral",  wiki: "Notre-Dame de Paris",     continent: "Europe",        country: "France",          emoji: "⛪", clue: "A stunning <span>Gothic cathedral</span> in Paris, famous for its gargoyles, rose windows and tall spires!" },
+  { name: "Petra",                 wiki: "Petra, Jordan",           continent: "Asia",          country: "Jordan",          emoji: "🏛️", clue: "An ancient <span>city carved directly into rose-red cliffs</span> in the desert of Jordan — called the Rose City!" },
+  { name: "Table Mountain",        wiki: "Table Mountain",          continent: "Africa",        country: "South Africa",    emoji: "🏔️", clue: "A famous flat-topped mountain that looks like a <span>giant table</span>, towering over Cape Town!" },
+  { name: "Forbidden City",        wiki: "Forbidden City",          continent: "Asia",          country: "China",           emoji: "🏯", clue: "A vast <span>imperial palace</span> in Beijing where 24 emperors lived — ordinary people were forbidden from entering!" },
+];
+
+// ── CONTINENTS ────────────────────────────────────────────────────────
+const CONTINENTS = ["North America", "South America", "Europe", "Africa", "Asia", "Australia"];
+const CONT_KEY = { "North America":"na", "South America":"sa", "Europe":"eu", "Africa":"af", "Asia":"as", "Australia":"oc" };
+
+// Country lists per continent for the country-question distractors
+const COUNTRIES_BY_CONTINENT = {
+  "North America": ["USA", "Mexico", "Canada", "Cuba", "Jamaica", "Costa Rica", "Panama", "Guatemala", "Honduras"],
+  "South America": ["Brazil", "Peru", "Argentina", "Chile", "Colombia", "Venezuela", "Ecuador", "Bolivia", "Uruguay"],
+  "Europe":        ["France", "Italy", "United Kingdom", "Greece", "Spain", "Germany", "Russia", "Portugal", "Netherlands", "Switzerland", "Austria", "Poland", "Sweden", "Norway", "Ireland", "Belgium"],
+  "Africa":        ["Egypt", "South Africa", "Kenya", "Nigeria", "Morocco", "Ethiopia", "Tanzania", "Ghana", "Algeria"],
+  "Asia":          ["India", "China", "Japan", "UAE", "Cambodia", "Turkey", "Jordan", "Thailand", "Vietnam", "South Korea", "Indonesia", "Malaysia", "Philippines", "Singapore"],
+  "Australia":     ["Australia", "New Zealand", "Fiji", "Papua New Guinea", "Samoa"]
+};
+
+// Country numeric IDs grouped by continent (for map highlighting)
+const CONT_IDS = {
+  na: [840,124,484,320,340,188,222,558,591,192,332,214,388,28,44,52,84,136,659,662,670,780,308,312,474,500,630,92,534,535,660,666,850],
+  sa: [76,32,152,170,218,604,862,858,600,68,740,328,254,238],
+  eu: [276,250,380,724,752,578,208,246,372,620,40,756,442,528,56,616,203,703,705,348,191,642,100,8,807,688,499,70,20,492,336,674,438,470,352,51,268,498,804,112,428,440,233],
+  af: [566,231,818,834,404,716,466,454,508,120,504,12,800,686,288,646,706,426,710,24,516,748,562,148,694,204,768,854,266,270,624,174,175,178,180,226,232,262,678,728,729],
+  as: [156,356,360,392,704,586,50,104,116,144,608,764,524,682,792,364,368,760,400,422,376,784,634,512,887,496,398,417,762,795,860,4,64,96,418,458,462,410,408],
+  oc: [36,554,598,242,90,548,520,316,540,570,580,583,584,585,882,776,798,184,574]
+};
+const ID_TO_CONT = {};
+Object.entries(CONT_IDS).forEach(([k, ids]) => ids.forEach(id => { ID_TO_CONT[id] = k; }));
+
+// ── STATE ─────────────────────────────────────────────────────────────
+const SESSION_LENGTH = 15;
+let session = [];        // 15 landmarks
+let landmarkIdx = 0;     // 0..14
+let questionIdx = 0;     // 0=landmark, 1=continent, 2=country
+let score = 0;           // 0..45
+let answered = false;
+let perLandmark = [];    // [{name, continent, country, results: [bool,bool,bool]}, ...]
+let worldData = null;    // TopoJSON
+
+function shuffle(a) { return [...a].sort(() => Math.random() - 0.5); }
+
+// ── FETCH IMAGES ──────────────────────────────────────────────────────
+async function fetchImages() {
+  let loaded = 0;
+  const bar   = document.getElementById('loading-bar');
+  const count = document.getElementById('loading-count');
+  const total = LANDMARKS.length + 1; // +1 for the world map
+
+  await Promise.all(LANDMARKS.map(async lm => {
+    try {
+      const title = encodeURIComponent(lm.wiki);
+      const url   = `https://en.wikipedia.org/w/api.php?action=query&titles=${title}&prop=pageimages&format=json&pithumbsize=800&piprop=thumbnail&origin=*`;
+      const res   = await fetch(url);
+      const data  = await res.json();
+      const pages = data?.query?.pages;
+      if (pages) {
+        const page = Object.values(pages)[0];
+        lm.imageUrl = page?.thumbnail?.source || null;
+      } else lm.imageUrl = null;
+    } catch(e) { lm.imageUrl = null; }
+    loaded++;
+    bar.style.width   = `${(loaded / total) * 100}%`;
+    count.textContent = `${loaded} / ${total}`;
+  }));
+
+  // Now fetch world map TopoJSON
+  try {
+    const mapRes = await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json');
+    worldData = await mapRes.json();
+  } catch(e) { console.error('Map fetch failed', e); }
+  loaded++;
+  bar.style.width   = `${(loaded / total) * 100}%`;
+  count.textContent = `${loaded} / ${total}`;
+
+  drawWorldMap();
+}
+
+// ── MAP ───────────────────────────────────────────────────────────────
+function drawWorldMap() {
+  if (!worldData) return;
+  const svg = d3.select('#world-map');
+  svg.selectAll('*').remove();
+
+  const width = 800, height = 400;
+  const projection = d3.geoNaturalEarth1().fitSize([width, height], topojson.feature(worldData, worldData.objects.countries));
+  const path = d3.geoPath().projection(projection);
+
+  const countries = topojson.feature(worldData, worldData.objects.countries).features;
+  svg.append('g').selectAll('path')
+    .data(countries)
+    .enter().append('path')
+    .attr('d', path)
+    .attr('class', d => `country country-id-${d.id}`)
+    .attr('data-cont', d => ID_TO_CONT[+d.id] || '');
+}
+
+function highlightContinent(continentName) {
+  const key = CONT_KEY[continentName];
+  d3.selectAll('.country').classed('highlight', false);
+  if (key) d3.selectAll(`.country[data-cont="${key}"]`).classed('highlight', true);
+}
+
+function clearMapHighlight() {
+  d3.selectAll('.country').classed('highlight', false);
+}
+
+// ── SESSION BUILD ─────────────────────────────────────────────────────
+function buildSession() {
+  session = shuffle(LANDMARKS).slice(0, SESSION_LENGTH);
+  landmarkIdx = 0; questionIdx = 0; score = 0;
+  perLandmark = session.map(lm => ({
+    name: lm.name, continent: lm.continent, country: lm.country, results: [null, null, null]
+  }));
+  updateHud();
+}
+
+// ── HUD ───────────────────────────────────────────────────────────────
+function updateHud() {
+  const totalQ = SESSION_LENGTH * 3;
+  const doneQ  = landmarkIdx * 3 + questionIdx;
+  document.getElementById('progress-label').textContent = `Landmark ${landmarkIdx + 1} of ${SESSION_LENGTH} · Q${questionIdx + 1} of 3`;
+  document.getElementById('progress-bar').style.width   = `${(doneQ / totalQ) * 100}%`;
+  document.getElementById('score-pill').textContent     = `⭐ ${score} / ${totalQ}`;
+}
+
+// ── LOAD QUESTION ─────────────────────────────────────────────────────
+function loadQuestion() {
+  answered = false;
+  updateHud();
+  const lm = session[landmarkIdx];
+  const card = document.getElementById('landmark-card');
+  const grid = document.getElementById('choices-grid');
+  const fb   = document.getElementById('feedback-bar');
+  const mapCard = document.getElementById('map-card');
+  const qBadge  = document.getElementById('q-badge');
+  const qText   = document.getElementById('q-text');
+  const nameTag = document.getElementById('landmark-name-tag');
+  const nameInfo = document.getElementById('landmark-info');
+  const clue    = document.getElementById('landmark-clue');
+
+  fb.className = 'feedback-bar';
+  grid.className = 'choices-grid';
+  grid.innerHTML = '';
+
+  // Always set photo (re-shows on Q1 of new landmark; photo persists across Q2/Q3)
+  if (questionIdx === 0) {
+    const img = document.getElementById('landmark-img');
+    const placeholder = document.getElementById('photo-placeholder');
+    img.style.opacity = '0';
+    placeholder.style.opacity = '1';
+    placeholder.textContent = lm.emoji;
+    if (lm.imageUrl) {
+      img.onload = () => { img.style.opacity = '1'; placeholder.style.opacity = '0'; };
+      img.src = lm.imageUrl;
+    }
+  }
+
+  if (questionIdx === 0) {
+    // ─── Q1: Landmark identification ───
+    card.classList.remove('compact');
+    nameInfo.style.display = 'none';
+    clue.style.display = 'block';
+    clue.innerHTML = lm.clue;
+    mapCard.classList.remove('show');
+    clearMapHighlight();
+    qBadge.textContent = 'Q1';
+    qText.textContent  = 'Which landmark is this?';
+
+    const others = LANDMARKS.filter(l => l.name !== lm.name);
+    const choices = shuffle([lm, ...shuffle(others).slice(0, 3)]);
+    choices.forEach(c => {
+      const btn = document.createElement('button');
+      btn.className = 'choice-btn';
+      btn.textContent = c.name;
+      btn.dataset.value = c.name;
+      btn.addEventListener('click', () => handleAnswer(btn, c.name === lm.name, lm.name));
+      grid.appendChild(btn);
+    });
+  }
+  else if (questionIdx === 1) {
+    // ─── Q2: Continent ───
+    card.classList.add('compact');
+    nameInfo.style.display = 'flex';
+    nameTag.textContent = lm.name;
+    clue.style.display = 'none';
+    mapCard.classList.add('show');
+    clearMapHighlight();
+    qBadge.textContent = 'Q2';
+    qText.textContent  = `Which continent is the ${lm.name} in?`;
+    grid.className = 'choices-grid three-col';
+
+    const choices = shuffle(CONTINENTS);
+    choices.forEach(c => {
+      const btn = document.createElement('button');
+      btn.className = 'choice-btn';
+      btn.textContent = c;
+      btn.dataset.value = c;
+      btn.addEventListener('click', () => handleAnswer(btn, c === lm.continent, lm.continent));
+      grid.appendChild(btn);
+    });
+  }
+  else {
+    // ─── Q3: Country ───
+    card.classList.add('compact');
+    nameInfo.style.display = 'flex';
+    nameTag.textContent = lm.name;
+    clue.style.display = 'none';
+    mapCard.classList.add('show');
+    highlightContinent(lm.continent);
+    qBadge.textContent = 'Q3';
+    qText.textContent  = `Which country in ${lm.continent}?`;
+
+    const pool = COUNTRIES_BY_CONTINENT[lm.continent].filter(c => c !== lm.country);
+    const distractors = shuffle(pool).slice(0, 3);
+    const choices = shuffle([lm.country, ...distractors]);
+    choices.forEach(c => {
+      const btn = document.createElement('button');
+      btn.className = 'choice-btn';
+      btn.textContent = c;
+      btn.dataset.value = c;
+      btn.addEventListener('click', () => handleAnswer(btn, c === lm.country, lm.country));
+      grid.appendChild(btn);
+    });
+  }
+}
+
+// ── HANDLE ANSWER ─────────────────────────────────────────────────────
+function handleAnswer(btn, correct, correctValue) {
+  if (answered) return;
+  answered = true;
+
+  document.querySelectorAll('.choice-btn').forEach(b => {
+    b.disabled = true;
+    if (b.dataset.value === correctValue) b.classList.add('reveal');
+  });
+  if (correct) { btn.classList.remove('reveal'); btn.classList.add('correct'); }
+  else         { btn.classList.add('wrong'); }
+
+  // If Q2 wrong, still highlight the correct continent so they SEE it
+  if (questionIdx === 1 && !correct) {
+    highlightContinent(correctValue);
+  }
+
+  perLandmark[landmarkIdx].results[questionIdx] = correct;
+
+  const fb = document.getElementById('feedback-bar');
+  if (correct) {
+    score++;
+    fb.className = 'feedback-bar correct';
+    document.getElementById('feedback-emoji').textContent = ['🌟','🎉','⭐','🏆','✨'][Math.floor(Math.random()*5)];
+    document.getElementById('feedback-msg').textContent   = ['Brilliant!','You got it!','Amazing!','Nailed it!','Perfect!'][Math.floor(Math.random()*5)];
+    confetti();
+  } else {
+    fb.className = 'feedback-bar wrong';
+    document.getElementById('feedback-emoji').textContent = '😅';
+    let msg;
+    if (questionIdx === 0)      msg = `That's the ${correctValue}!`;
+    else if (questionIdx === 1) msg = `It's in ${correctValue} — see the map!`;
+    else                        msg = `It's in ${correctValue}!`;
+    document.getElementById('feedback-msg').textContent = msg;
+  }
+  updateHud();
+}
+
+document.getElementById('next-btn').addEventListener('click', () => {
+  if (!answered) return;
+  questionIdx++;
+  if (questionIdx > 2) {
+    questionIdx = 0;
+    landmarkIdx++;
+  }
+  if (landmarkIdx >= SESSION_LENGTH) showResults();
+  else loadQuestion();
+});
+
+// ── RESULTS ───────────────────────────────────────────────────────────
+function showResults() {
+  document.getElementById('progress-bar').style.width = '100%';
+  const gs = document.getElementById('game-screen');
+  gs.classList.remove('active'); gs.style.display = 'none';
+  document.getElementById('results-screen').classList.add('active');
+
+  const totalQ = SESSION_LENGTH * 3;
+  const pct = score / totalQ;
+  document.getElementById('results-score').innerHTML = `${score} <span>/ ${totalQ}</span>`;
+
+  let title, msg, trophy;
+  if (pct === 1)        { title = 'Perfect Quest! 🌟'; msg = 'Every single answer correct!'; trophy = '🏆'; confetti(); setTimeout(confetti, 500); }
+  else if (pct >= 0.85) { title = 'Geography Master, FTS!'; msg = 'You know your world!'; trophy = '🌟'; }
+  else if (pct >= 0.7)  { title = 'World Traveller, FTS!'; msg = 'Really strong work!'; trophy = '✈️'; }
+  else if (pct >= 0.5)  { title = 'Good exploring, FTS!'; msg = 'Plenty more to discover!'; trophy = '🌍'; }
+  else                  { title = 'Keep exploring, FTS!'; msg = 'The world has so much to see!'; trophy = '🗺️'; }
+
+  document.getElementById('results-trophy').textContent = trophy;
+  document.getElementById('results-title').textContent  = title;
+  document.getElementById('results-msg').textContent    = msg;
+
+  // Breakdown
+  let lmCount = 0, ctCount = 0, coCount = 0;
+  perLandmark.forEach(p => {
+    if (p.results[0]) lmCount++;
+    if (p.results[1]) ctCount++;
+    if (p.results[2]) coCount++;
+  });
+  document.getElementById('bd-landmark').textContent  = `${lmCount}/${SESSION_LENGTH}`;
+  document.getElementById('bd-continent').textContent = `${ctCount}/${SESSION_LENGTH}`;
+  document.getElementById('bd-country').textContent   = `${coCount}/${SESSION_LENGTH}`;
+
+  // Recap
+  const list = document.getElementById('recap-list');
+  list.innerHTML = '';
+  perLandmark.forEach(p => {
+    const row = document.createElement('div');
+    row.className = 'recap-row';
+    const labels = ['L', 'C', 'Co']; // landmark, continent, country
+    const pillsHtml = p.results.map((r, i) => {
+      const cls = r === true ? 'pass' : (r === false ? 'fail' : '');
+      const mark = r === true ? '✓' : (r === false ? '✗' : '·');
+      return `<div class="recap-pill ${cls}" title="${labels[i]}">${mark}</div>`;
+    }).join('');
+    row.innerHTML = `
+      <div>
+        <div class="recap-name">${p.name}</div>
+        <div class="recap-loc">${p.country}, ${p.continent}</div>
+      </div>
+      <div class="recap-pills">${pillsHtml}</div>
+    `;
+    list.appendChild(row);
+  });
+}
+
+// ── CONFETTI ──────────────────────────────────────────────────────────
+function confetti() {
+  const colors = ['#f59e0b','#3b82f6','#16a34a','#ec4899','#8b5cf6','#ef4444','#06b6d4'];
+  for (let i = 0; i < 28; i++) {
+    setTimeout(() => {
+      const p = document.createElement('div');
+      p.className = 'confetti-piece';
+      p.style.cssText = `left:${Math.random()*100}vw;top:-10px;width:${8+Math.random()*8}px;height:${8+Math.random()*8}px;background:${colors[Math.floor(Math.random()*colors.length)]};border-radius:${Math.random()>.5?'50%':'2px'};animation-duration:${1.5+Math.random()*2}s;transform:rotate(${Math.random()*360}deg)`;
+      document.body.appendChild(p);
+      setTimeout(() => p.remove(), 4000);
+    }, i * 45);
+  }
+}
+
+// ── FLOW ──────────────────────────────────────────────────────────────
+document.getElementById('start-btn').addEventListener('click', async () => {
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('loading-screen').classList.add('active');
+  await fetchImages();
+  document.getElementById('loading-screen').classList.remove('active');
+  buildSession();
+  const gs = document.getElementById('game-screen');
+  gs.classList.add('active'); gs.style.display = 'flex';
+  loadQuestion();
+});
+
+document.getElementById('play-again-btn').addEventListener('click', () => {
+  document.getElementById('results-screen').classList.remove('active');
+  buildSession();
+  const gs = document.getElementById('game-screen');
+  gs.classList.add('active'); gs.style.display = 'flex';
+  loadQuestion();
+});
+</script>
+</body>
+</html>
