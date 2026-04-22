@@ -1127,31 +1127,48 @@ function startTest() {
 
   buildTestTable();
   updateTestHud();
+  updateActiveAnswerDisplay();
   document.getElementById('test-feedback').className = 'feedback-bar';
 }
 
 function buildTestTable() {
   const list = document.getElementById('test-table-list');
   list.innerHTML = '';
+
+  // Build a lookup of answered blanks by step so they retain their state
+  // across rebuilds — the table fills in progressively as he answers.
+  const answeredByStep = {};
+  testResults.forEach(r => { answeredByStep[r.step] = r; });
+
   for (let s = 1; s <= 10; s++) {
     const isBlank = testBlanks.includes(s);
-    const isActive = isBlank && (testBlanks[testIdx] === s);
+    const answered = answeredByStep[s];
+    const isActive = isBlank && !answered && (testBlanks[testIdx] === s);
+
     const row = document.createElement('div');
     row.className = 'test-row';
     row.dataset.step = s;
-    if (isActive) {
+
+    if (answered) {
+      row.classList.add(answered.correct ? 'correct' : 'wrong');
+    } else if (isActive) {
       row.classList.add('active');
     } else if (isBlank) {
       row.classList.add('pending');
     } else {
       row.classList.add('given');
     }
+
     const eqSpan = document.createElement('span');
     eqSpan.className = 'tr-eq';
     eqSpan.textContent = `${currentTable} × ${s} =`;
+
     const ansSpan = document.createElement('span');
     ansSpan.className = 'tr-ans';
-    if (isActive) {
+
+    if (answered) {
+      ansSpan.textContent = answered.correctAnswer;
+    } else if (isActive) {
       ansSpan.classList.add('empty');
       ansSpan.textContent = '';
     } else if (isBlank) {
@@ -1159,10 +1176,12 @@ function buildTestTable() {
     } else {
       ansSpan.textContent = currentTable * s;
     }
+
     row.appendChild(eqSpan);
     row.appendChild(ansSpan);
     list.appendChild(row);
   }
+
   // scroll active into view (helps when keyboard area is scrolled)
   const activeEl = list.querySelector('.test-row.active');
   if (activeEl) activeEl.scrollIntoView({ block: 'center', behavior: 'smooth' });
@@ -1264,7 +1283,7 @@ function submitTestAnswer() {
     if (testIdx >= testBlanks.length) {
       showTestResults();
     } else {
-      // move active highlight to next blank
+      // rebuild — answered blanks persist (see buildTestTable)
       buildTestTable();
       document.getElementById('test-feedback').className = 'feedback-bar';
       updateActiveAnswerDisplay();
