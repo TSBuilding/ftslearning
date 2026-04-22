@@ -19,9 +19,10 @@
     --coral:   #fb7185;
     --purple:  #a78bfa;
     --green:   #4ade80;
+    --red:     #f87171;
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   html { height: 100%; }
   body {
     background: var(--bg);
@@ -46,74 +47,88 @@
     display: flex; align-items: center; justify-content: space-between;
     padding: 16px 20px 0;
     max-width: 700px; margin: 0 auto;
+    gap: 12px;
   }
   .back-btn {
     background: var(--card2); border: none; color: var(--muted);
     font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 700;
     padding: 8px 16px; border-radius: 20px; cursor: pointer;
     text-decoration: none; transition: all 0.2s;
+    flex-shrink: 0;
   }
   .back-btn:hover { color: var(--text); background: #253552; }
-  .header-title { font-family: 'Fredoka One', cursive; font-size: 24px; color: var(--gold); letter-spacing: 1px; }
-  .header-sub { font-size: 11px; color: var(--muted); font-weight: 700; text-align: right; }
+  .header-center { text-align: center; flex: 1; }
+  .header-title { font-family: 'Fredoka One', cursive; font-size: 22px; color: var(--gold); letter-spacing: 1px; line-height: 1; }
+  .header-sub { font-size: 11px; color: var(--muted); font-weight: 700; margin-top: 3px; }
+
+  .mute-btn {
+    background: var(--card2); border: none; color: var(--text);
+    width: 40px; height: 40px;
+    border-radius: 50%; cursor: pointer;
+    font-size: 18px;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .mute-btn:hover { background: #253552; }
+  .mute-btn.muted { color: var(--muted); }
 
   /* ── SCREENS ── */
   .screen { position: relative; z-index: 1; display: none; }
   .screen.active { display: block; }
 
-  /* ══════════════════════════════════════
-     PICK SCREEN
-  ══════════════════════════════════════ */
+  /* ══════════════════════════════════════ PICK SCREEN ══════════════════════════════════════ */
   #pick-screen {
     max-width: 700px; margin: 0 auto;
-    padding: 24px 20px 48px;
+    padding: 20px 20px 48px;
   }
 
   .pick-intro {
     text-align: center;
-    padding: 20px 0 28px;
+    padding: 16px 0 24px;
   }
   .pick-intro .big-icon { font-size: 56px; display: block; margin-bottom: 12px; animation: bob 2.5s ease-in-out infinite; }
   @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
-  .pick-intro h2 { font-family: 'Fredoka One', cursive; font-size: 26px; color: var(--text); line-height: 1.2; }
+  .pick-intro h2 { font-family: 'Fredoka One', cursive; font-size: 24px; color: var(--text); line-height: 1.2; }
   .pick-intro h2 span { color: var(--gold); }
-  .pick-intro p { font-size: 15px; color: var(--muted); font-weight: 600; margin-top: 8px; }
+  .pick-intro p { font-size: 14px; color: var(--muted); font-weight: 600; margin-top: 8px; }
+
+  .diff-section { margin-bottom: 22px; }
+  .diff-label {
+    font-size: 13px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase;
+    margin-bottom: 12px; padding: 0 4px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .diff-section.easy   .diff-label { color: var(--green); }
+  .diff-section.medium .diff-label { color: var(--gold); }
+  .diff-section.hard   .diff-label { color: var(--coral); }
+  .diff-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .diff-section.easy   .diff-dot { background: var(--green); }
+  .diff-section.medium .diff-dot { background: var(--gold); }
+  .diff-section.hard   .diff-dot { background: var(--coral); }
 
   .table-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
   }
   .table-btn {
     background: var(--card);
     border: 2px solid var(--border);
     border-radius: 18px;
-    padding: 18px 8px 14px;
+    padding: 16px 8px 12px;
     display: flex; flex-direction: column; align-items: center; gap: 4px;
     cursor: pointer; transition: all 0.2s;
+    width: 78px;
     animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
   }
-  .table-btn:nth-child(1)  { animation-delay: 0.04s; }
-  .table-btn:nth-child(2)  { animation-delay: 0.08s; }
-  .table-btn:nth-child(3)  { animation-delay: 0.12s; }
-  .table-btn:nth-child(4)  { animation-delay: 0.16s; }
-  .table-btn:nth-child(5)  { animation-delay: 0.20s; }
-  .table-btn:nth-child(6)  { animation-delay: 0.24s; }
-  .table-btn:nth-child(7)  { animation-delay: 0.28s; }
-  .table-btn:nth-child(8)  { animation-delay: 0.32s; }
-  .table-btn:nth-child(9)  { animation-delay: 0.36s; }
-  .table-btn:nth-child(10) { animation-delay: 0.40s; }
-  .table-btn:nth-child(11) { animation-delay: 0.44s; }
-  .table-btn:nth-child(12) { animation-delay: 0.48s; }
   @keyframes popIn { from{transform:scale(0.7) translateY(20px);opacity:0} to{transform:scale(1) translateY(0);opacity:1} }
-
   .table-btn:active { transform: scale(0.94); }
 
-  .table-btn .num {
-    font-family: 'Fredoka One', cursive;
-    font-size: 28px; line-height: 1;
-  }
+  .table-btn .num { font-family: 'Fredoka One', cursive; font-size: 28px; line-height: 1; }
   .table-btn .label { font-size: 11px; font-weight: 800; color: var(--muted); letter-spacing: 0.5px; }
+  .table-best { font-size: 9px; font-weight: 800; color: var(--gold); letter-spacing: 0.5px; min-height: 11px; margin-top: 2px; }
 
   /* colour per table */
   .table-btn[data-n="2"]  { --c:#f472b6; } .table-btn[data-n="2"]:hover  { background:#2a1a2e; border-color:#f472b6; }
@@ -131,24 +146,43 @@
 
   .table-btn .num { color: var(--c, var(--teal)); }
 
-  /* ══════════════════════════════════════
-     LEARN SCREEN
-  ══════════════════════════════════════ */
-  #learn-screen {
+  /* ══════════════════════════════════════ MODE SCREEN ══════════════════════════════════════ */
+  #mode-screen {
     max-width: 700px; margin: 0 auto;
-    padding: 16px 16px 48px;
-    display: none;
-    flex-direction: column;
-    gap: 16px;
+    padding: 12px 16px 48px;
   }
-  #learn-screen.active { display: flex; }
 
-  /* Equation bar */
+  .mode-tabs {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 6px; padding: 5px;
+    background: var(--card);
+    border-radius: 16px;
+    margin-bottom: 14px;
+  }
+  .mode-tab {
+    background: transparent; border: none;
+    padding: 12px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 16px; color: var(--muted);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+  }
+  .mode-tab.active {
+    background: var(--accent, var(--teal));
+    color: #0a1a18;
+  }
+
+  .mode-content { display: none; flex-direction: column; gap: 14px; }
+  .mode-content.active { display: flex; }
+
+  /* ── LEARN MODE (existing styling preserved) ── */
   .equation-bar {
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: 20px;
-    padding: 20px 24px;
+    padding: 18px 22px;
     display: flex; align-items: center; justify-content: space-between;
     gap: 12px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.3);
@@ -161,76 +195,46 @@
     transition: all 0.2s; flex-shrink: 0;
     display: flex; align-items: center; justify-content: center;
   }
-  .eq-nav:hover { background: #253552; color: var(--text); }
+  .eq-nav:hover:not(:disabled) { background: #253552; color: var(--text); }
   .eq-nav:disabled { opacity: 0.25; cursor: default; }
 
-  .eq-display {
-    flex: 1; text-align: center;
-  }
-  .eq-counter {
-    font-size: 11px; font-weight: 800; color: var(--muted);
-    letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px;
-  }
+  .eq-display { flex: 1; text-align: center; }
+  .eq-counter { font-size: 11px; font-weight: 800; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
   .eq-main {
     font-family: 'Fredoka One', cursive;
-    font-size: clamp(28px, 7vw, 42px);
+    font-size: clamp(26px, 6.5vw, 38px);
     line-height: 1;
     color: var(--text);
     display: flex; align-items: center; justify-content: center; gap: 10px;
   }
   .eq-main .eq-a { color: var(--accent, var(--teal)); }
   .eq-main .eq-op { color: var(--muted); }
-  .eq-main .eq-b { color: var(--text); }
-  .eq-main .eq-eq { color: var(--muted); }
-  .eq-main .eq-result {
-    color: var(--gold);
-    min-width: 40px;
-    transition: opacity 0.3s;
-  }
+  .eq-main .eq-result { color: var(--gold); min-width: 40px; transition: opacity 0.3s; }
   .eq-main .eq-result.hidden { opacity: 0; }
 
-  /* Array section */
   .array-card {
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: 20px;
-    padding: 20px;
+    padding: 18px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-    min-height: 180px;
-    display: flex; flex-direction: column; gap: 14px;
+    min-height: 160px;
+    display: flex; flex-direction: column; gap: 12px;
   }
   .array-label {
     font-size: 13px; font-weight: 800; color: var(--muted);
     letter-spacing: 1px; text-transform: uppercase;
     display: flex; align-items: center; justify-content: space-between;
   }
-  .array-running {
-    font-family: 'Fredoka One', cursive;
-    font-size: 18px; color: var(--gold);
-    transition: all 0.3s;
-  }
+  .array-running { font-family: 'Fredoka One', cursive; font-size: 18px; color: var(--gold); transition: all 0.3s; }
 
-  .array-groups {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    min-height: 80px;
-  }
-
-  .array-row {
-    display: flex; gap: 6px; align-items: center;
-    opacity: 0; transform: translateX(-16px);
-    transition: opacity 0.35s ease, transform 0.35s ease;
-  }
+  .array-groups { display: flex; flex-direction: column; gap: 8px; min-height: 70px; }
+  .array-row { display: flex; gap: 6px; align-items: center; opacity: 0; transform: translateX(-16px); transition: opacity 0.35s ease, transform 0.35s ease; }
   .array-row.visible { opacity: 1; transform: translateX(0); }
-
-  .array-row .row-label {
-    font-size: 12px; font-weight: 800; color: var(--muted);
-    width: 24px; text-align: right; flex-shrink: 0;
-  }
+  .array-row .row-label { font-size: 12px; font-weight: 800; color: var(--muted); width: 22px; text-align: right; flex-shrink: 0; }
 
   .dot {
-    width: 28px; height: 28px;
+    width: 26px; height: 26px;
     border-radius: 50%;
     background: var(--accent, var(--teal));
     box-shadow: 0 2px 8px rgba(0,0,0,0.3);
@@ -239,40 +243,24 @@
     flex-shrink: 0;
   }
   .dot.show { opacity: 1; transform: scale(1); }
+  .dots-small .dot { width: 20px; height: 20px; }
+  .dots-tiny  .dot { width: 14px; height: 14px; }
 
-  /* dot size adapts to count */
-  .dots-small .dot { width: 22px; height: 22px; }
-  .dots-tiny  .dot { width: 16px; height: 16px; }
-
-  .array-summary {
-    font-size: 14px; font-weight: 700; color: var(--muted);
-    text-align: center; padding-top: 4px;
-    min-height: 20px;
-    transition: opacity 0.3s;
-  }
+  .array-summary { font-size: 14px; font-weight: 700; color: var(--muted); text-align: center; padding-top: 4px; min-height: 18px; transition: opacity 0.3s; }
   .array-summary.shown { color: var(--green); }
 
-  /* Grid section */
   .grid-card {
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: 20px;
-    padding: 16px;
+    padding: 14px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.3);
   }
-  .grid-header {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 12px;
-  }
+  .grid-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
   .grid-title { font-size: 13px; font-weight: 800; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
   .grid-hint { font-size: 12px; font-weight: 700; color: var(--muted); font-style: italic; }
 
-  .times-grid {
-    display: grid;
-    grid-template-columns: 28px repeat(10, 1fr);
-    gap: 3px;
-  }
-
+  .times-grid { display: grid; grid-template-columns: 24px repeat(10, 1fr); gap: 3px; }
   .tg-cell {
     aspect-ratio: 1;
     display: flex; align-items: center; justify-content: center;
@@ -282,57 +270,21 @@
     transition: all 0.25s;
     position: relative;
   }
-
-  /* header row/col */
-  .tg-cell.hdr {
-    background: var(--card2);
-    color: var(--muted);
-    font-size: clamp(9px, 2vw, 12px);
-  }
-  .tg-cell.hdr.active-hdr {
-    background: var(--accent, var(--teal));
-    color: #0a1a18;
-  }
-
-  /* regular cells */
-  .tg-cell.val {
-    background: rgba(255,255,255,0.03);
-    color: rgba(255,255,255,0.25);
-  }
-
-  /* cells in the active table row/col */
-  .tg-cell.val.in-table {
-    background: rgba(45,212,191,0.08);
-    color: rgba(255,255,255,0.5);
-  }
-
-  /* the specific current fact */
-  .tg-cell.val.current-fact {
-    background: var(--gold) !important;
-    color: #1a1200 !important;
-    transform: scale(1.15);
-    box-shadow: 0 0 12px rgba(246,201,14,0.5);
-    z-index: 2;
-  }
-
-  /* previously visited facts */
-  .tg-cell.val.visited {
-    background: rgba(45,212,191,0.18);
-    color: var(--teal);
-  }
-
+  .tg-cell.hdr { background: var(--card2); color: var(--muted); font-size: clamp(8px, 2vw, 12px); }
+  .tg-cell.hdr.active-hdr { background: var(--accent, var(--teal)); color: #0a1a18; }
+  .tg-cell.val { background: rgba(255,255,255,0.03); color: rgba(255,255,255,0.25); }
+  .tg-cell.val.in-table { background: rgba(45,212,191,0.08); color: rgba(255,255,255,0.5); }
+  .tg-cell.val.current-fact { background: var(--gold) !important; color: #1a1200 !important; transform: scale(1.15); box-shadow: 0 0 12px rgba(246,201,14,0.5); z-index: 2; }
+  .tg-cell.val.visited { background: rgba(45,212,191,0.18); color: var(--teal); }
   .corner { background: transparent !important; }
 
-  /* pattern hint strip */
   .pattern-strip {
     margin-top: 10px;
     background: rgba(246,201,14,0.06);
     border: 1px solid rgba(246,201,14,0.15);
     border-radius: 12px;
     padding: 10px 14px;
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--gold);
+    font-size: 13px; font-weight: 700; color: var(--gold);
     min-height: 36px;
     transition: opacity 0.4s;
     display: flex; align-items: center; gap: 8px;
@@ -340,101 +292,504 @@
   .pattern-strip.hidden { opacity: 0; }
   .pattern-icon { font-size: 16px; flex-shrink: 0; }
 
-  /* ── RESPONSIVE ── */
+  .ready-test-btn {
+    margin-top: 6px;
+    background: linear-gradient(135deg, var(--gold), #d97706);
+    border: none; color: #1a1000;
+    font-family: 'Fredoka One', cursive; font-size: 18px;
+    padding: 14px; border-radius: 16px;
+    cursor: pointer; transition: all 0.2s;
+    box-shadow: 0 4px 20px rgba(246,201,14,0.3);
+  }
+  .ready-test-btn:hover { transform: scale(1.02); }
+
+  /* ── TEST MODE ── */
+  .test-state { display: none; flex-direction: column; gap: 14px; }
+  .test-state.active { display: flex; }
+
+  /* Test intro card */
+  .test-intro-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px 22px;
+    text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  }
+  .test-intro-icon { font-size: 56px; animation: bob 2.5s ease-in-out infinite; }
+  .test-intro-title { font-family: 'Fredoka One', cursive; font-size: 24px; color: var(--text); line-height: 1.2; }
+  .test-intro-title span { color: var(--accent, var(--teal)); }
+  .test-intro-sub { font-size: 14px; color: var(--muted); font-weight: 600; line-height: 1.5; }
+  .test-intro-stats {
+    width: 100%;
+    background: var(--card2);
+    border-radius: 14px;
+    padding: 14px 16px;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .stat-block { text-align: left; }
+  .stat-label { font-size: 10px; font-weight: 800; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+  .stat-val { font-family: 'Fredoka One', cursive; font-size: 18px; color: var(--gold); margin-top: 2px; }
+  .start-test-btn {
+    width: 100%;
+    background: linear-gradient(135deg, var(--gold), #d97706);
+    border: none; color: #1a1000;
+    font-family: 'Fredoka One', cursive; font-size: 22px;
+    padding: 18px; border-radius: 16px;
+    cursor: pointer; box-shadow: 0 4px 20px rgba(246,201,14,0.35);
+    transition: all 0.2s;
+  }
+  .start-test-btn:hover { transform: scale(1.02); }
+
+  /* Test active */
+  .test-hud {
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .test-progress-row { display: flex; align-items: center; justify-content: space-between; }
+  .test-progress-label { font-size: 12px; font-weight: 800; color: var(--muted); letter-spacing: 0.5px; }
+  .score-pill {
+    background: var(--card);
+    border: 1px solid rgba(246,201,14,0.3);
+    border-radius: 14px;
+    padding: 5px 12px;
+    font-family: 'Fredoka One', cursive; font-size: 14px; color: var(--gold);
+  }
+  .test-progress-bar {
+    width: 100%;
+    background: var(--card);
+    border-radius: 20px;
+    height: 8px;
+    overflow: hidden;
+  }
+  .test-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--accent, var(--teal)));
+    border-radius: 20px;
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+
+  .test-table-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 12px 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  }
+
+  .test-row {
+    display: grid; grid-template-columns: 1fr auto;
+    align-items: center;
+    padding: 4px 8px;
+    border-radius: 8px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 16px;
+    color: var(--muted);
+    min-height: 32px;
+    margin-bottom: 2px;
+    transition: all 0.25s;
+  }
+  .test-row .tr-eq { letter-spacing: 1px; }
+  .test-row .tr-ans { font-size: 18px; min-width: 36px; text-align: right; padding-left: 12px; }
+
+  .test-row.given { color: var(--text); background: transparent; }
+  .test-row.given .tr-ans { color: var(--text); }
+
+  .test-row.pending { color: rgba(255,255,255,0.35); }
+  .test-row.pending .tr-ans { color: var(--muted); }
+
+  .test-row.active {
+    background: rgba(246,201,14,0.1);
+    color: var(--gold);
+    font-size: 22px;
+    min-height: 50px;
+    padding: 8px 12px;
+    box-shadow: inset 0 0 0 2px rgba(246,201,14,0.4);
+    animation: activePulse 1.5s ease-in-out infinite;
+  }
+  .test-row.active .tr-ans { color: var(--gold); font-size: 26px; min-width: 60px; }
+  .test-row.active .tr-ans.empty::after { content: '_'; opacity: 0.4; animation: blink 1s steps(2) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  @keyframes activePulse {
+    0%, 100% { box-shadow: inset 0 0 0 2px rgba(246,201,14,0.4); }
+    50%      { box-shadow: inset 0 0 0 2px rgba(246,201,14,0.8); }
+  }
+
+  .test-row.correct {
+    background: rgba(74,222,128,0.12);
+    color: var(--green);
+  }
+  .test-row.correct .tr-ans { color: var(--green); }
+  .test-row.correct .tr-ans::after { content: ' ✓'; font-size: 0.9em; }
+
+  .test-row.wrong {
+    background: rgba(248,113,113,0.12);
+    color: var(--red);
+  }
+  .test-row.wrong .tr-ans { color: var(--red); }
+  .test-row.wrong .tr-ans::after { content: ' ✗'; font-size: 0.9em; }
+
+  /* Numpad */
+  .numpad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .np-btn {
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 0;
+    font-family: 'Fredoka One', cursive;
+    font-size: 26px;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.12s;
+    user-select: none;
+  }
+  .np-btn:active:not(:disabled) { transform: scale(0.94); background: var(--card2); }
+  .np-btn:disabled { opacity: 0.35; cursor: default; }
+  .np-btn.back { color: var(--coral); font-size: 28px; }
+  .np-btn.submit {
+    background: linear-gradient(135deg, var(--gold), #d97706);
+    color: #1a1000;
+    border-color: var(--gold);
+    font-size: 28px;
+  }
+  .np-btn.submit:disabled { opacity: 0.4; }
+
+  /* Feedback */
+  .feedback-bar {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 12px 16px;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    border: 2px solid transparent;
+    animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .feedback-bar.correct { display: flex; border-color: var(--green); background: rgba(74,222,128,0.08); }
+  .feedback-bar.wrong   { display: flex; border-color: var(--red);   background: rgba(248,113,113,0.08); }
+  .feedback-emoji { font-size: 24px; }
+  .feedback-msg { font-size: 14px; font-weight: 800; flex: 1; line-height: 1.3; }
+  .feedback-bar.correct .feedback-msg { color: var(--green); }
+  .feedback-bar.wrong   .feedback-msg { color: var(--red); }
+
+  /* Test results */
+  .results-card {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 32px 22px;
+    text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  }
+  .results-trophy { font-size: 64px; animation: bob 2s ease-in-out infinite; }
+  .results-title { font-family: 'Fredoka One', cursive; font-size: 24px; color: var(--gold); }
+  .results-score { font-family: 'Fredoka One', cursive; font-size: 50px; color: white; line-height: 1; }
+  .results-score span { font-size: 22px; color: var(--muted); }
+  .results-msg { font-size: 14px; color: var(--muted); font-weight: 700; }
+  .results-best {
+    background: var(--card2); border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 13px; font-weight: 700; color: var(--gold);
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .results-recap {
+    width: 100%;
+    background: var(--card);
+    border-radius: 16px;
+    padding: 14px 16px;
+  }
+  .recap-title { font-family: 'Fredoka One', cursive; font-size: 14px; color: var(--gold); margin-bottom: 8px; }
+  .recap-row {
+    display: grid; grid-template-columns: 1fr auto;
+    padding: 6px 0;
+    font-family: 'Fredoka One', cursive;
+    font-size: 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .recap-row:last-child { border-bottom: none; }
+  .recap-row .r-eq { color: var(--text); }
+  .recap-row.r-correct .r-result { color: var(--green); }
+  .recap-row.r-wrong   .r-result { color: var(--red); }
+
+  .results-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .results-btn {
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 14px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 15px;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .results-btn:hover { background: var(--card2); border-color: var(--accent, var(--teal)); }
+  .results-btn.primary {
+    background: linear-gradient(135deg, var(--gold), #d97706);
+    color: #1a1000;
+    border-color: var(--gold);
+  }
+
+  .confetti-piece { position: fixed; pointer-events: none; z-index: 999; border-radius: 2px; animation: cfall linear forwards; }
+  @keyframes cfall { 0%{transform:translateY(-20px) rotate(0deg);opacity:1} 100%{transform:translateY(100vh) rotate(720deg);opacity:0} }
+
   @media (max-width: 380px) {
     .times-grid { gap: 2px; }
     .tg-cell { border-radius: 4px; }
     .dot { width: 22px; height: 22px; }
+    .np-btn { padding: 14px 0; font-size: 22px; }
+    .test-row { font-size: 14px; }
+    .test-row.active { font-size: 18px; }
   }
 </style>
 </head>
 <body>
 
 <div class="header">
-  <a href="index.html" class="back-btn">← Home</a>
-  <div>
+  <a href="index.html" class="back-btn" id="back-btn">← Home</a>
+  <div class="header-center">
     <div class="header-title">✖️ Times Tables</div>
     <div class="header-sub">FTS Learning HQ</div>
   </div>
+  <button class="mute-btn" id="mute-btn" title="Toggle sound">🔊</button>
 </div>
 
 <!-- ══ PICK SCREEN ══ -->
 <div id="pick-screen" class="screen active">
   <div class="pick-intro">
     <span class="big-icon">🔢</span>
-    <h2>Which table do you want<br>to explore, <span>FTS</span>?</h2>
-    <p>Pick any number and see how it multiplies!</p>
+    <h2>Which table do you want<br>to work on, <span>FTS</span>?</h2>
+    <p>Pick a table to learn it or test yourself!</p>
   </div>
 
-  <div class="table-grid">
-    <div class="table-btn" data-n="1"><span class="num">1</span><span class="label">× table</span></div>
-    <div class="table-btn" data-n="2"><span class="num">2</span><span class="label">× table</span></div>
-    <div class="table-btn" data-n="3"><span class="num">3</span><span class="label">× table</span></div>
-    <div class="table-btn" data-n="4"><span class="num">4</span><span class="label">× table</span></div>
-    <div class="table-btn" data-n="5"><span class="num">5</span><span class="label">× table</span></div>
-    <div class="table-btn" data-n="6"><span class="num">6</span><span class="label">× table</span></div>
-    <div class="table-btn" data-n="7"><span class="num">7</span><span class="label">× table</span></div>
-    <div class="table-btn" data-n="8"><span class="num">8</span><span class="label">× table</span></div>
-    <div class="table-btn" data-n="9"><span class="num">9</span><span class="label">× table</span></div>
-    <div class="table-btn" data-n="10"><span class="num">10</span><span class="label">× table</span></div>
-    <div class="table-btn" data-n="11"><span class="num">11</span><span class="label">× table</span></div>
-    <div class="table-btn" data-n="12"><span class="num">12</span><span class="label">× table</span></div>
+  <div class="diff-section easy">
+    <div class="diff-label"><span class="diff-dot"></span>Easy</div>
+    <div class="table-grid">
+      <div class="table-btn" data-n="1"><span class="num">1</span><span class="label">× table</span><span class="table-best" id="best-1"></span></div>
+      <div class="table-btn" data-n="2"><span class="num">2</span><span class="label">× table</span><span class="table-best" id="best-2"></span></div>
+      <div class="table-btn" data-n="5"><span class="num">5</span><span class="label">× table</span><span class="table-best" id="best-5"></span></div>
+      <div class="table-btn" data-n="10"><span class="num">10</span><span class="label">× table</span><span class="table-best" id="best-10"></span></div>
+    </div>
+  </div>
+
+  <div class="diff-section medium">
+    <div class="diff-label"><span class="diff-dot"></span>Medium</div>
+    <div class="table-grid">
+      <div class="table-btn" data-n="3"><span class="num">3</span><span class="label">× table</span><span class="table-best" id="best-3"></span></div>
+      <div class="table-btn" data-n="4"><span class="num">4</span><span class="label">× table</span><span class="table-best" id="best-4"></span></div>
+      <div class="table-btn" data-n="11"><span class="num">11</span><span class="label">× table</span><span class="table-best" id="best-11"></span></div>
+    </div>
+  </div>
+
+  <div class="diff-section hard">
+    <div class="diff-label"><span class="diff-dot"></span>Hard</div>
+    <div class="table-grid">
+      <div class="table-btn" data-n="6"><span class="num">6</span><span class="label">× table</span><span class="table-best" id="best-6"></span></div>
+      <div class="table-btn" data-n="7"><span class="num">7</span><span class="label">× table</span><span class="table-best" id="best-7"></span></div>
+      <div class="table-btn" data-n="8"><span class="num">8</span><span class="label">× table</span><span class="table-best" id="best-8"></span></div>
+      <div class="table-btn" data-n="9"><span class="num">9</span><span class="label">× table</span><span class="table-best" id="best-9"></span></div>
+      <div class="table-btn" data-n="12"><span class="num">12</span><span class="label">× table</span><span class="table-best" id="best-12"></span></div>
+    </div>
   </div>
 </div>
 
-<!-- ══ LEARN SCREEN ══ -->
-<div id="learn-screen" class="screen">
+<!-- ══ MODE SCREEN ══ -->
+<div id="mode-screen" class="screen">
+  <div class="mode-tabs">
+    <button class="mode-tab active" data-mode="learn">📚 Learn</button>
+    <button class="mode-tab" data-mode="test">⭐ Test</button>
+  </div>
 
-  <!-- Equation + nav -->
-  <div class="equation-bar">
-    <button class="eq-nav" id="prev-btn">‹</button>
-    <div class="eq-display">
-      <div class="eq-counter" id="eq-counter">1 of 10</div>
-      <div class="eq-main">
-        <span class="eq-a" id="eq-a">3</span>
-        <span class="eq-op">×</span>
-        <span class="eq-b" id="eq-b">1</span>
-        <span class="eq-eq">=</span>
-        <span class="eq-result hidden" id="eq-result">3</span>
+  <!-- LEARN MODE -->
+  <div id="learn-mode" class="mode-content active">
+    <div class="equation-bar">
+      <button class="eq-nav" id="prev-btn">‹</button>
+      <div class="eq-display">
+        <div class="eq-counter" id="eq-counter">1 of 10</div>
+        <div class="eq-main">
+          <span class="eq-a" id="eq-a">3</span>
+          <span class="eq-op">×</span>
+          <span class="eq-b" id="eq-b">1</span>
+          <span class="eq-op">=</span>
+          <span class="eq-result hidden" id="eq-result">3</span>
+        </div>
+      </div>
+      <button class="eq-nav" id="next-btn">›</button>
+    </div>
+
+    <div class="array-card">
+      <div class="array-label">
+        <span id="array-label-text">Building the groups…</span>
+        <span class="array-running" id="array-running"></span>
+      </div>
+      <div class="array-groups" id="array-groups"></div>
+      <div class="array-summary" id="array-summary"></div>
+    </div>
+
+    <div class="grid-card">
+      <div class="grid-header">
+        <div class="grid-title">📊 The full times table</div>
+        <div class="grid-hint">You are here 👆</div>
+      </div>
+      <div class="times-grid" id="times-grid"></div>
+      <div class="pattern-strip hidden" id="pattern-strip">
+        <span class="pattern-icon">💡</span>
+        <span id="pattern-text"></span>
       </div>
     </div>
-    <button class="eq-nav" id="next-btn">›</button>
+
+    <button class="ready-test-btn" id="ready-test-btn">⭐ Ready to Test Myself!</button>
   </div>
 
-  <!-- Array visualisation -->
-  <div class="array-card">
-    <div class="array-label">
-      <span id="array-label-text">Building the groups…</span>
-      <span class="array-running" id="array-running"></span>
-    </div>
-    <div class="array-groups" id="array-groups"></div>
-    <div class="array-summary" id="array-summary"></div>
-  </div>
+  <!-- TEST MODE -->
+  <div id="test-mode" class="mode-content">
 
-  <!-- Times table grid -->
-  <div class="grid-card">
-    <div class="grid-header">
-      <div class="grid-title">📊 The full times table</div>
-      <div class="grid-hint">You are here 👆</div>
+    <!-- Test intro -->
+    <div id="test-intro" class="test-state active">
+      <div class="test-intro-card">
+        <div class="test-intro-icon">⭐</div>
+        <div class="test-intro-title">Test the <span id="test-intro-table">5</span>× table!</div>
+        <div class="test-intro-sub">Five blanks to fill in. The other answers stay visible to help you spot the pattern.</div>
+        <div class="test-intro-stats">
+          <div class="stat-block">
+            <div class="stat-label">Questions</div>
+            <div class="stat-val">5</div>
+          </div>
+          <div class="stat-block">
+            <div class="stat-label">Best score</div>
+            <div class="stat-val" id="test-intro-best">— / 5</div>
+          </div>
+        </div>
+        <button class="start-test-btn" id="start-test-btn">🚀 Start Test!</button>
+      </div>
     </div>
-    <div class="times-grid" id="times-grid"></div>
-    <div class="pattern-strip hidden" id="pattern-strip">
-      <span class="pattern-icon">💡</span>
-      <span id="pattern-text"></span>
-    </div>
-  </div>
 
+    <!-- Test active -->
+    <div id="test-active" class="test-state">
+      <div class="test-hud">
+        <div class="test-progress-row">
+          <div class="test-progress-label" id="test-prog-label">Question 1 of 5</div>
+          <div class="score-pill" id="test-score-pill">⭐ 0 / 5</div>
+        </div>
+        <div class="test-progress-bar"><div class="test-progress-fill" id="test-prog-fill"></div></div>
+      </div>
+
+      <div class="test-table-card">
+        <div id="test-table-list"></div>
+      </div>
+
+      <div class="feedback-bar" id="test-feedback">
+        <div class="feedback-emoji" id="test-fb-emoji"></div>
+        <div class="feedback-msg" id="test-fb-msg"></div>
+      </div>
+
+      <div class="numpad">
+        <button class="np-btn" data-d="1">1</button>
+        <button class="np-btn" data-d="2">2</button>
+        <button class="np-btn" data-d="3">3</button>
+        <button class="np-btn" data-d="4">4</button>
+        <button class="np-btn" data-d="5">5</button>
+        <button class="np-btn" data-d="6">6</button>
+        <button class="np-btn" data-d="7">7</button>
+        <button class="np-btn" data-d="8">8</button>
+        <button class="np-btn" data-d="9">9</button>
+        <button class="np-btn back" data-action="back">←</button>
+        <button class="np-btn" data-d="0">0</button>
+        <button class="np-btn submit" data-action="submit" id="np-submit">✓</button>
+      </div>
+    </div>
+
+    <!-- Test results -->
+    <div id="test-results" class="test-state">
+      <div class="results-card">
+        <div class="results-trophy" id="res-trophy">🏆</div>
+        <div class="results-title" id="res-title">Nice work, FTS!</div>
+        <div class="results-msg">You scored</div>
+        <div class="results-score" id="res-score">0 <span>/ 5</span></div>
+        <div class="results-msg" id="res-msg"></div>
+        <div class="results-best" id="res-best" style="display:none">⭐ <span id="res-best-text"></span></div>
+      </div>
+
+      <div class="results-recap" id="res-recap-wrap">
+        <div class="recap-title">📋 Question by question</div>
+        <div id="res-recap"></div>
+      </div>
+
+      <div class="results-actions">
+        <button class="results-btn" id="res-back-learn">📚 Back to Learn</button>
+        <button class="results-btn primary" id="res-test-again">⭐ Test Again</button>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 <script>
-// ── COLOURS PER TABLE ──────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────
+// VOICE / AUDIO
+// ─────────────────────────────────────────────────────────────────────────
+let voiceCache = null;
+let isMuted = localStorage.getItem('times_tables_mute') === 'true';
+
+function loadVoices() {
+  if (typeof speechSynthesis === 'undefined') return;
+  const voices = speechSynthesis.getVoices();
+  voiceCache = voices.find(v => v.name === 'Karen')
+            || voices.find(v => v.lang === 'en-AU')
+            || voices.find(v => v.lang && v.lang.startsWith('en'))
+            || voices[0]
+            || null;
+}
+if (typeof speechSynthesis !== 'undefined') {
+  speechSynthesis.onvoiceschanged = loadVoices;
+  loadVoices();
+}
+
+function speak(text) {
+  if (isMuted || !text || typeof speechSynthesis === 'undefined') return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  if (voiceCache) u.voice = voiceCache;
+  u.rate = 0.75;
+  u.pitch = 1.05;
+  u.lang = 'en-AU';
+  speechSynthesis.speak(u);
+}
+
+function chantEquation(a, b, result, prefix) {
+  const text = (prefix ? prefix + ' ' : '') + `${a} times ${b} is ${result}`;
+  speak(text);
+}
+
+const muteBtn = document.getElementById('mute-btn');
+function refreshMuteUI() {
+  muteBtn.textContent = isMuted ? '🔇' : '🔊';
+  muteBtn.classList.toggle('muted', isMuted);
+}
+muteBtn.addEventListener('click', () => {
+  isMuted = !isMuted;
+  localStorage.setItem('times_tables_mute', isMuted);
+  if (isMuted && typeof speechSynthesis !== 'undefined') speechSynthesis.cancel();
+  refreshMuteUI();
+});
+refreshMuteUI();
+
+// ─────────────────────────────────────────────────────────────────────────
+// COLOURS / PATTERNS
+// ─────────────────────────────────────────────────────────────────────────
 const TABLE_COLORS = {
   1:'#94a3b8', 2:'#f472b6', 3:'#fb923c', 4:'#facc15',
   5:'#4ade80', 6:'#2dd4bf', 7:'#60a5fa', 8:'#a78bfa',
   9:'#f87171', 10:'#34d399', 11:'#e879f9', 12:'#f6c90e'
 };
 
-// ── PATTERN HINTS ──────────────────────────────────────────────────────
 const PATTERNS = {
   1:  n => `Anything × 1 is always itself — ${n} × 1 = ${n}. The 1 table never changes!`,
   2:  n => `The 2s are just counting in 2s: 2, 4, 6, 8… the answers are always even!`,
@@ -444,52 +799,112 @@ const PATTERNS = {
   4:  n => `The 4s are just the 2s doubled — ${n} × 2 = ${n*2}, so ${n} × 4 = ${n*4}`,
   9:  n => {
     const ans = n * 9;
-    const d = ans.toString().split('').reduce((a,b) => a + parseInt(b), 0);
-    return `The 9s are magic — the digits of the answer always add up to 9! ${ans} → ${d === 9 ? d : ans.toString().replace('',' + ')}.`;
+    return `The 9s are magic — the digits of the answer always add up to 9! Look at ${ans}.`;
   }
 };
 
-// ── STATE ──────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────────────────────────────────
 let currentTable = 2;
-let currentStep  = 1; // 1–10
+let currentMode  = 'learn'; // 'learn' | 'test'
+
+// Learn state
+let currentStep  = 1;
 let visitedSteps = new Set();
 let animTimer    = null;
+let revealTimer  = null;
 
-// ── PICK SCREEN ────────────────────────────────────────────────────────
+// Test state
+let testBlanks   = [];     // sorted ascending step numbers (1-10) that are blanks
+let testIdx      = 0;       // index into testBlanks
+let testInput    = '';
+let testScore    = 0;
+let testResults  = [];      // [{step, correct, userAnswer, correctAnswer}]
+let testLocked   = false;   // prevents input during feedback
+
+// ─────────────────────────────────────────────────────────────────────────
+// PERSONAL BEST
+// ─────────────────────────────────────────────────────────────────────────
+function bestKey(n) { return `times_tables_best_${n}`; }
+function getBest(n) {
+  const v = localStorage.getItem(bestKey(n));
+  return v ? parseInt(v, 10) : null;
+}
+function setBest(n, score) {
+  const cur = getBest(n);
+  if (cur === null || score > cur) {
+    localStorage.setItem(bestKey(n), score);
+    return true;
+  }
+  return false;
+}
+function refreshAllBests() {
+  for (let n = 1; n <= 12; n++) {
+    const el = document.getElementById(`best-${n}`);
+    const b = getBest(n);
+    if (el) el.textContent = b !== null ? `🏆 ${b}/5` : '';
+  }
+}
+refreshAllBests();
+
+// ─────────────────────────────────────────────────────────────────────────
+// PICKER
+// ─────────────────────────────────────────────────────────────────────────
 document.querySelectorAll('.table-btn').forEach(btn => {
   btn.addEventListener('click', () => {
-    currentTable = parseInt(btn.dataset.n);
-    currentStep  = 1;
-    visitedSteps = new Set();
-    startLearn();
+    currentTable = parseInt(btn.dataset.n, 10);
+    enterMode('learn');
   });
 });
 
-function startLearn() {
-  document.getElementById('pick-screen').classList.remove('active');
-  const ls = document.getElementById('learn-screen');
-  ls.classList.add('active');
-  ls.style.display = 'flex';
-
-  // Set accent colour
+function enterMode(mode) {
+  currentMode = mode;
   const color = TABLE_COLORS[currentTable];
   document.documentElement.style.setProperty('--accent', color);
 
-  buildGrid();
-  loadStep(currentStep);
+  document.getElementById('pick-screen').classList.remove('active');
+  document.getElementById('mode-screen').classList.add('active');
+
+  // tabs
+  document.querySelectorAll('.mode-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.mode === mode);
+  });
+  document.querySelectorAll('.mode-content').forEach(c => c.classList.remove('active'));
+  document.getElementById(mode === 'learn' ? 'learn-mode' : 'test-mode').classList.add('active');
+
+  if (mode === 'learn') {
+    currentStep = 1;
+    visitedSteps = new Set();
+    buildGrid();
+    loadStep(1);
+  } else {
+    showTestIntro();
+  }
 }
 
-// ── GRID ───────────────────────────────────────────────────────────────
+document.querySelectorAll('.mode-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    const m = tab.dataset.mode;
+    if (m === currentMode) return;
+    if (typeof speechSynthesis !== 'undefined') speechSynthesis.cancel();
+    if (animTimer)   { clearTimeout(animTimer); animTimer = null; }
+    if (revealTimer) { clearTimeout(revealTimer); revealTimer = null; }
+    enterMode(m);
+  });
+});
+
+// ─────────────────────────────────────────────────────────────────────────
+// LEARN — GRID
+// ─────────────────────────────────────────────────────────────────────────
 function buildGrid() {
   const grid = document.getElementById('times-grid');
   grid.innerHTML = '';
 
-  // corner
   const corner = document.createElement('div');
   corner.className = 'tg-cell corner';
   grid.appendChild(corner);
 
-  // column headers (1–10)
   for (let c = 1; c <= 10; c++) {
     const cell = document.createElement('div');
     cell.className = 'tg-cell hdr col-hdr';
@@ -498,9 +913,7 @@ function buildGrid() {
     grid.appendChild(cell);
   }
 
-  // rows
   for (let r = 1; r <= 10; r++) {
-    // row header
     const rh = document.createElement('div');
     rh.className = 'tg-cell hdr row-hdr';
     rh.id = `rh-${r}`;
@@ -521,15 +934,11 @@ function updateGrid() {
   const t = currentTable;
   const s = currentStep;
 
-  // reset all
   document.querySelectorAll('.tg-cell.hdr').forEach(el => el.classList.remove('active-hdr'));
   document.querySelectorAll('.tg-cell.val').forEach(el => {
     el.classList.remove('in-table', 'current-fact', 'visited');
   });
 
-  // highlight active headers — both row and column for current table
-  // The table is shown as: currentTable × step
-  // So we highlight row=currentTable and col=step (if table <= 10)
   if (t <= 10) {
     const rh = document.getElementById(`rh-${t}`);
     if (rh) rh.classList.add('active-hdr');
@@ -537,7 +946,6 @@ function updateGrid() {
   const ch = document.getElementById(`ch-${s}`);
   if (ch) ch.classList.add('active-hdr');
 
-  // highlight the whole row for this table (in-table)
   if (t <= 10) {
     for (let c = 1; c <= 10; c++) {
       const cell = document.getElementById(`cell-${t}-${c}`);
@@ -545,7 +953,6 @@ function updateGrid() {
     }
   }
 
-  // visited steps
   visitedSteps.forEach(vs => {
     if (vs !== s && t <= 10) {
       const cell = document.getElementById(`cell-${t}-${vs}`);
@@ -553,16 +960,19 @@ function updateGrid() {
     }
   });
 
-  // current fact
   if (t <= 10) {
     const cur = document.getElementById(`cell-${t}-${s}`);
     if (cur) { cur.classList.remove('in-table', 'visited'); cur.classList.add('current-fact'); }
   }
 }
 
-// ── LOAD STEP ──────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────
+// LEARN — STEP LOAD + ARRAY ANIMATION
+// ─────────────────────────────────────────────────────────────────────────
 function loadStep(step) {
-  if (animTimer) { clearTimeout(animTimer); animTimer = null; }
+  if (animTimer)   { clearTimeout(animTimer); animTimer = null; }
+  if (revealTimer) { clearTimeout(revealTimer); revealTimer = null; }
+  if (typeof speechSynthesis !== 'undefined') speechSynthesis.cancel();
 
   currentStep = step;
   visitedSteps.add(step);
@@ -571,7 +981,6 @@ function loadStep(step) {
   const s = step;
   const result = t * s;
 
-  // equation bar
   document.getElementById('eq-counter').textContent = `${s} of 10`;
   document.getElementById('eq-a').textContent = t;
   document.getElementById('eq-b').textContent = s;
@@ -579,21 +988,14 @@ function loadStep(step) {
   eqResult.textContent = result;
   eqResult.classList.add('hidden');
 
-  // nav buttons
   document.getElementById('prev-btn').disabled = (step === 1);
   document.getElementById('next-btn').disabled = (step === 10);
 
-  // grid
   updateGrid();
-
-  // array
   buildArray(t, s, result);
-
-  // pattern hint
   showPattern(t, s);
 }
 
-// ── ARRAY ANIMATION ────────────────────────────────────────────────────
 function buildArray(t, s, result) {
   const container = document.getElementById('array-groups');
   const label     = document.getElementById('array-label-text');
@@ -606,19 +1008,13 @@ function buildArray(t, s, result) {
   summary.textContent = '';
   summary.classList.remove('shown');
 
-  // We show: s groups of t dots (s rows, each with t dots)
-  // But if t is large, swap for readability: show t groups of s
-  // Actually let's show: t rows of s dots — so t × s
-  // Label: "t groups of s"
-  const groups  = t;  // number of rows
-  const perGroup = s; // dots per row
+  const groups   = t;
+  const perGroup = s;
 
   label.textContent = `${groups} group${groups!==1?'s':''} of ${perGroup} — watch them build!`;
 
-  // dot size class
   const sizeClass = perGroup > 9 ? 'dots-tiny' : perGroup > 6 ? 'dots-small' : '';
 
-  // build row elements (hidden)
   for (let g = 0; g < groups; g++) {
     const row = document.createElement('div');
     row.className = 'array-row' + (sizeClass ? ' ' + sizeClass : '');
@@ -636,50 +1032,35 @@ function buildArray(t, s, result) {
     container.appendChild(row);
   }
 
-  // animate rows in sequentially
-  let runningTotal = 0;
-  const ROW_DELAY = 420;  // ms between rows
-  const DOT_DELAY = 55;   // ms between dots within a row
+  const ROW_DELAY = 380;
+  const DOT_DELAY = 50;
 
   for (let g = 0; g < groups; g++) {
-    const rowEl   = container.children[g];
-    const dots    = rowEl.querySelectorAll('.dot');
+    const rowEl    = container.children[g];
+    const dots     = rowEl.querySelectorAll('.dot');
     const rowStart = g * ROW_DELAY + 200;
     const groupVal = (g + 1) * perGroup;
 
-    // show row
-    animTimer = setTimeout(() => {
-      rowEl.classList.add('visible');
-    }, rowStart);
-
-    // show dots one by one
+    setTimeout(() => { rowEl.classList.add('visible'); }, rowStart);
     dots.forEach((dot, di) => {
-      setTimeout(() => {
-        dot.classList.add('show');
-      }, rowStart + 60 + di * DOT_DELAY);
+      setTimeout(() => { dot.classList.add('show'); }, rowStart + 60 + di * DOT_DELAY);
     });
-
-    // update running total after row complete
-    const totalTime = rowStart + 60 + (perGroup - 1) * DOT_DELAY + 150;
-    setTimeout(() => {
-      runningTotal = groupVal;
-      running.textContent = runningTotal;
-    }, totalTime);
+    setTimeout(() => { running.textContent = groupVal; },
+      rowStart + 60 + (perGroup - 1) * DOT_DELAY + 150);
   }
 
-  // reveal answer after all groups done
   const allDone = (groups - 1) * ROW_DELAY + 200 + 60 + (perGroup - 1) * DOT_DELAY + 300;
 
-  setTimeout(() => {
+  revealTimer = setTimeout(() => {
     eqResult.classList.remove('hidden');
     running.textContent = result;
-    label.textContent = `${groups} groups of ${perGroup} = ${result}`;
+    label.textContent = `${groups} group${groups!==1?'s':''} of ${perGroup} = ${result}`;
     summary.textContent = `${t} × ${s} = ${result} ✓`;
     summary.classList.add('shown');
+    chantEquation(t, s, result);
   }, allDone);
 }
 
-// ── PATTERN HINTS ──────────────────────────────────────────────────────
 function showPattern(t, s) {
   const strip = document.getElementById('pattern-strip');
   const text  = document.getElementById('pattern-text');
@@ -690,15 +1071,6 @@ function showPattern(t, s) {
     const result = fn(s);
     if (result) msg = result;
   }
-
-  // Symmetry hint for any table
-  if (!msg && t !== s) {
-    if (s === t) {
-      msg = `${t} × ${s} — when both numbers are the same, that's a square number!`;
-    }
-  }
-
-  // Show "same either way" for non-matching pairs
   if (!msg && t !== s && t <= 10 && s <= 10) {
     msg = `Did you notice? ${t} × ${s} = ${s} × ${t} = ${t*s}. It works both ways!`;
   }
@@ -711,24 +1083,291 @@ function showPattern(t, s) {
   }
 }
 
-// ── NAV ────────────────────────────────────────────────────────────────
 document.getElementById('prev-btn').addEventListener('click', () => {
   if (currentStep > 1) loadStep(currentStep - 1);
 });
 document.getElementById('next-btn').addEventListener('click', () => {
   if (currentStep < 10) loadStep(currentStep + 1);
 });
+document.getElementById('ready-test-btn').addEventListener('click', () => {
+  enterMode('test');
+});
 
-// ── BACK TO PICK ───────────────────────────────────────────────────────
-document.querySelector('.back-btn').addEventListener('click', e => {
-  const ls = document.getElementById('learn-screen');
-  if (ls.classList.contains('active')) {
+// ─────────────────────────────────────────────────────────────────────────
+// TEST — INTRO
+// ─────────────────────────────────────────────────────────────────────────
+function showTestIntro() {
+  // reset test sub-state
+  document.querySelectorAll('.test-state').forEach(s => s.classList.remove('active'));
+  document.getElementById('test-intro').classList.add('active');
+
+  document.getElementById('test-intro-table').textContent = currentTable;
+  const best = getBest(currentTable);
+  document.getElementById('test-intro-best').textContent = best !== null ? `${best} / 5` : '— / 5';
+}
+
+document.getElementById('start-test-btn').addEventListener('click', startTest);
+
+// ─────────────────────────────────────────────────────────────────────────
+// TEST — ACTIVE
+// ─────────────────────────────────────────────────────────────────────────
+function startTest() {
+  // pick 5 random unique steps from 1-10
+  const allSteps = [1,2,3,4,5,6,7,8,9,10];
+  const shuffled = [...allSteps].sort(() => Math.random() - 0.5);
+  testBlanks = shuffled.slice(0, 5).sort((a,b) => a - b);
+  testIdx = 0;
+  testScore = 0;
+  testInput = '';
+  testResults = [];
+  testLocked = false;
+
+  document.querySelectorAll('.test-state').forEach(s => s.classList.remove('active'));
+  document.getElementById('test-active').classList.add('active');
+
+  buildTestTable();
+  updateTestHud();
+  document.getElementById('test-feedback').className = 'feedback-bar';
+}
+
+function buildTestTable() {
+  const list = document.getElementById('test-table-list');
+  list.innerHTML = '';
+  for (let s = 1; s <= 10; s++) {
+    const isBlank = testBlanks.includes(s);
+    const isActive = isBlank && (testBlanks[testIdx] === s);
+    const row = document.createElement('div');
+    row.className = 'test-row';
+    row.dataset.step = s;
+    if (isActive) {
+      row.classList.add('active');
+    } else if (isBlank) {
+      row.classList.add('pending');
+    } else {
+      row.classList.add('given');
+    }
+    const eqSpan = document.createElement('span');
+    eqSpan.className = 'tr-eq';
+    eqSpan.textContent = `${currentTable} × ${s} =`;
+    const ansSpan = document.createElement('span');
+    ansSpan.className = 'tr-ans';
+    if (isActive) {
+      ansSpan.classList.add('empty');
+      ansSpan.textContent = '';
+    } else if (isBlank) {
+      ansSpan.textContent = '?';
+    } else {
+      ansSpan.textContent = currentTable * s;
+    }
+    row.appendChild(eqSpan);
+    row.appendChild(ansSpan);
+    list.appendChild(row);
+  }
+  // scroll active into view (helps when keyboard area is scrolled)
+  const activeEl = list.querySelector('.test-row.active');
+  if (activeEl) activeEl.scrollIntoView({ block: 'center', behavior: 'smooth' });
+}
+
+function updateTestHud() {
+  document.getElementById('test-prog-label').textContent = `Question ${Math.min(testIdx + 1, testBlanks.length)} of ${testBlanks.length}`;
+  document.getElementById('test-score-pill').textContent = `⭐ ${testScore} / ${testBlanks.length}`;
+  const pct = (testIdx / testBlanks.length) * 100;
+  document.getElementById('test-prog-fill').style.width = `${pct}%`;
+}
+
+function updateActiveAnswerDisplay() {
+  const list = document.getElementById('test-table-list');
+  const active = list.querySelector('.test-row.active .tr-ans');
+  if (!active) return;
+  if (testInput === '') {
+    active.classList.add('empty');
+    active.textContent = '';
+  } else {
+    active.classList.remove('empty');
+    active.textContent = testInput;
+  }
+  // submit button state
+  document.getElementById('np-submit').disabled = (testInput === '');
+}
+
+// numpad handlers
+document.querySelectorAll('.np-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (testLocked) return;
+    if (currentMode !== 'test') return;
+    const action = btn.dataset.action;
+    const digit  = btn.dataset.d;
+    if (action === 'back') {
+      testInput = testInput.slice(0, -1);
+      updateActiveAnswerDisplay();
+    } else if (action === 'submit') {
+      if (testInput === '') return;
+      submitTestAnswer();
+    } else if (digit !== undefined) {
+      if (testInput.length < 3) {
+        testInput += digit;
+        updateActiveAnswerDisplay();
+      }
+    }
+  });
+});
+
+function submitTestAnswer() {
+  testLocked = true;
+  const step = testBlanks[testIdx];
+  const correctAnswer = currentTable * step;
+  const userAnswer = parseInt(testInput, 10);
+  const correct = userAnswer === correctAnswer;
+
+  testResults.push({ step, correct, userAnswer, correctAnswer });
+
+  // update active row to correct/wrong state, ALWAYS show correct answer
+  const list = document.getElementById('test-table-list');
+  const row = list.querySelector(`.test-row[data-step="${step}"]`);
+  if (row) {
+    row.classList.remove('active', 'pending');
+    row.classList.add(correct ? 'correct' : 'wrong');
+    const ans = row.querySelector('.tr-ans');
+    if (ans) {
+      ans.classList.remove('empty');
+      ans.textContent = correctAnswer;
+    }
+  }
+
+  // feedback bar
+  const fb = document.getElementById('test-feedback');
+  const emoji = document.getElementById('test-fb-emoji');
+  const msg = document.getElementById('test-fb-msg');
+  let prefix;
+  if (correct) {
+    testScore++;
+    fb.className = 'feedback-bar correct';
+    emoji.textContent = ['🌟','🎉','⭐','🏆','✨'][Math.floor(Math.random()*5)];
+    prefix = ['Brilliant!','Got it!','Yes!','Perfect!','Nice one!'][Math.floor(Math.random()*5)];
+    msg.textContent = `${prefix} ${currentTable} × ${step} = ${correctAnswer}`;
+    confetti();
+  } else {
+    fb.className = 'feedback-bar wrong';
+    emoji.textContent = '💡';
+    msg.textContent = `${currentTable} × ${step} = ${correctAnswer} — keep going!`;
+  }
+
+  // audio — chant the equation in both cases, with cheerful prefix
+  chantEquation(currentTable, step, correctAnswer, correct ? prefix : null);
+
+  updateTestHud();
+
+  // advance after a beat
+  setTimeout(() => {
+    testInput = '';
+    testIdx++;
+    if (testIdx >= testBlanks.length) {
+      showTestResults();
+    } else {
+      // move active highlight to next blank
+      buildTestTable();
+      document.getElementById('test-feedback').className = 'feedback-bar';
+      updateActiveAnswerDisplay();
+      testLocked = false;
+    }
+  }, 1900);
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// TEST — RESULTS
+// ─────────────────────────────────────────────────────────────────────────
+function showTestResults() {
+  document.querySelectorAll('.test-state').forEach(s => s.classList.remove('active'));
+  document.getElementById('test-results').classList.add('active');
+
+  const total = testBlanks.length;
+  const pct = testScore / total;
+
+  document.getElementById('res-score').innerHTML = `${testScore} <span>/ ${total}</span>`;
+
+  let title, msg, trophy;
+  if (testScore === total)   { title = 'Perfect, FTS! 🌟'; msg = 'Every single answer correct!'; trophy = '🏆'; confetti(); setTimeout(confetti, 500); }
+  else if (pct >= 0.8)       { title = 'Brilliant work!'; msg = 'So close to perfect!'; trophy = '🌟'; }
+  else if (pct >= 0.6)       { title = 'Great effort, FTS!'; msg = 'You are getting the hang of it!'; trophy = '⭐'; }
+  else if (pct >= 0.4)       { title = 'Good try, FTS!'; msg = 'Practice the learn mode and try again!'; trophy = '💪'; }
+  else                       { title = 'Keep practising!'; msg = 'Try the learn mode first — patterns help!'; trophy = '📚'; }
+
+  document.getElementById('res-trophy').textContent = trophy;
+  document.getElementById('res-title').textContent  = title;
+  document.getElementById('res-msg').textContent    = msg;
+
+  // best score handling
+  const wasNew = setBest(currentTable, testScore);
+  const best = getBest(currentTable);
+  const bestEl = document.getElementById('res-best');
+  const bestText = document.getElementById('res-best-text');
+  if (wasNew) {
+    bestEl.style.display = 'flex';
+    bestText.textContent = `New personal best: ${best}/5!`;
+    setTimeout(confetti, 200);
+  } else if (best !== null) {
+    bestEl.style.display = 'flex';
+    bestText.textContent = `Personal best: ${best}/5`;
+  } else {
+    bestEl.style.display = 'none';
+  }
+  refreshAllBests();
+
+  // recap
+  const recap = document.getElementById('res-recap');
+  recap.innerHTML = '';
+  testResults.forEach(r => {
+    const row = document.createElement('div');
+    row.className = 'recap-row ' + (r.correct ? 'r-correct' : 'r-wrong');
+    row.innerHTML = `<span class="r-eq">${currentTable} × ${r.step} =</span><span class="r-result">${r.correctAnswer} ${r.correct ? '✓' : '✗'}</span>`;
+    recap.appendChild(row);
+  });
+
+  // celebratory audio summary
+  if (testScore === total) {
+    setTimeout(() => speak(`Perfect! You got every single one!`), 600);
+  } else if (pct >= 0.6) {
+    setTimeout(() => speak(`Great work! You scored ${testScore} out of ${total}.`), 600);
+  } else {
+    setTimeout(() => speak(`Good try! You scored ${testScore} out of ${total}. Keep practising!`), 600);
+  }
+}
+
+document.getElementById('res-back-learn').addEventListener('click', () => enterMode('learn'));
+document.getElementById('res-test-again').addEventListener('click', startTest);
+
+// ─────────────────────────────────────────────────────────────────────────
+// CONFETTI
+// ─────────────────────────────────────────────────────────────────────────
+function confetti() {
+  const colors = ['#f59e0b','#3b82f6','#16a34a','#ec4899','#8b5cf6','#ef4444','#06b6d4'];
+  for (let i = 0; i < 24; i++) {
+    setTimeout(() => {
+      const p = document.createElement('div');
+      p.className = 'confetti-piece';
+      p.style.cssText = `left:${Math.random()*100}vw;top:-10px;width:${8+Math.random()*8}px;height:${8+Math.random()*8}px;background:${colors[Math.floor(Math.random()*colors.length)]};border-radius:${Math.random()>.5?'50%':'2px'};animation-duration:${1.5+Math.random()*2}s;transform:rotate(${Math.random()*360}deg)`;
+      document.body.appendChild(p);
+      setTimeout(() => p.remove(), 4000);
+    }, i * 45);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// BACK BUTTON BEHAVIOUR
+// ─────────────────────────────────────────────────────────────────────────
+document.getElementById('back-btn').addEventListener('click', e => {
+  const modeOpen = document.getElementById('mode-screen').classList.contains('active');
+  if (modeOpen) {
     e.preventDefault();
-    ls.classList.remove('active');
-    ls.style.display = 'none';
+    if (typeof speechSynthesis !== 'undefined') speechSynthesis.cancel();
+    if (animTimer)   { clearTimeout(animTimer); animTimer = null; }
+    if (revealTimer) { clearTimeout(revealTimer); revealTimer = null; }
+    document.getElementById('mode-screen').classList.remove('active');
     document.getElementById('pick-screen').classList.add('active');
     document.documentElement.style.setProperty('--accent', 'var(--teal)');
+    refreshAllBests();
   }
+  // else: anchor href takes over → goes to index.html
 });
 </script>
 </body>
