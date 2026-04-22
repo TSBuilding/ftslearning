@@ -77,8 +77,9 @@
   .landmark-info { padding: 12px 18px 14px; display: flex; align-items: center; gap: 12px; }
   .landmark-card.compact .landmark-info { padding: 10px 16px; }
   .landmark-name-tag { font-family: 'Fredoka One', cursive; font-size: 17px; color: var(--gold); flex: 1; }
-  .landmark-clue { font-size: 14px; font-weight: 700; color: var(--muted); line-height: 1.5; padding: 0 18px 14px; }
+  .landmark-clue { font-size: 14px; font-weight: 700; color: var(--muted); line-height: 1.6; padding: 0 18px 14px; }
   .landmark-clue span { color: var(--text); }
+  .landmark-clue .mask { display: inline-block; background: var(--card2); color: var(--gold); padding: 1px 8px; border-radius: 6px; font-weight: 900; letter-spacing: 1.5px; font-size: 0.9em; vertical-align: middle; }
   .landmark-card.compact .landmark-clue { display: none; }
 
   /* Map */
@@ -247,42 +248,41 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
 <script>
 
-// ── LANDMARK DATA (duplicated from World_Landmarks.html + continent/country) ──
-// Continent classifications use the most defensible school-curriculum answer:
-// - Hagia Sophia: Asia (Turkey commonly classed as Western Asia)
-// - St Basil's:   Europe (Moscow is in European Russia)
-// - Pyramids:     Africa (Egypt is in Africa, despite Middle East cultural ties)
+// ── LANDMARK DATA ─────────────────────────────────────────────────────
+// Clue text masks any country/city/continent/nationality references with
+// xxxxxx so the geography questions (Q2 continent, Q3 country) stay
+// genuinely challenging — FTS sees the clue during Q1 only.
 const LANDMARKS = [
-  { name: "Eiffel Tower",          wiki: "Eiffel Tower",            continent: "Europe",        country: "France",          emoji: "🗼", clue: "This tall iron tower in <span>Paris</span> sparkles with thousands of lights every night!" },
-  { name: "Taj Mahal",             wiki: "Taj Mahal",               continent: "Asia",          country: "India",           emoji: "🕌", clue: "A <span>white marble palace</span> in India, built as a symbol of love by an emperor for his wife." },
-  { name: "Statue of Liberty",     wiki: "Statue of Liberty",       continent: "North America", country: "USA",             emoji: "🗽", clue: "A giant <span>green lady holding a torch</span> high in the air, standing on an island in New York!" },
-  { name: "Big Ben",               wiki: "Big Ben",                 continent: "Europe",        country: "United Kingdom",  emoji: "🕐", clue: "A famous <span>clock tower</span> in London that chimes loudly every hour — BONG BONG BONG!" },
-  { name: "Sydney Opera House",    wiki: "Sydney Opera House",      continent: "Australia",     country: "Australia",       emoji: "🎭", clue: "A famous building in <span>Sydney</span> with a roof shaped like giant white sails on the harbour!" },
-  { name: "Great Wall of China",   wiki: "Great Wall of China",     continent: "Asia",          country: "China",           emoji: "🧱", clue: "The <span>longest wall in the world</span>, stretching thousands of kilometres across Chinese mountains!" },
-  { name: "Colosseum",             wiki: "Colosseum",               continent: "Europe",        country: "Italy",           emoji: "🏟️", clue: "Ancient <span>Romans watched gladiators fight</span> inside this huge oval arena almost 2,000 years ago!" },
-  { name: "Pyramids of Giza",      wiki: "Giza pyramid complex",    continent: "Africa",        country: "Egypt",           emoji: "🔺", clue: "Giant <span>triangle-shaped tombs</span> built in the Egyptian desert for powerful pharaohs!" },
-  { name: "Machu Picchu",          wiki: "Machu Picchu",            continent: "South America", country: "Peru",            emoji: "🏔️", clue: "Ancient ruins high in the <span>mountains of Peru</span> — once a secret city of the Inca people!" },
-  { name: "Leaning Tower of Pisa", wiki: "Leaning Tower of Pisa",   continent: "Europe",        country: "Italy",           emoji: "🗼", clue: "A round white tower in Italy famous for <span>leaning to one side</span> — it's been tilting for hundreds of years!" },
-  { name: "Mount Fuji",            wiki: "Mount Fuji",              continent: "Asia",          country: "Japan",           emoji: "🗻", clue: "Japan's most famous <span>volcano</span>, with a perfect cone shape and a beautiful snowy top!" },
-  { name: "Parthenon",             wiki: "Parthenon",               continent: "Europe",        country: "Greece",          emoji: "🏛️", clue: "An ancient <span>Greek temple</span> on top of a rocky hill in Athens, with rows of tall white columns!" },
-  { name: "Burj Khalifa",          wiki: "Burj Khalifa",            continent: "Asia",          country: "UAE",             emoji: "🏙️", clue: "The <span>tallest building in the world</span>, rising from the desert city of Dubai like a giant silver spike!" },
-  { name: "Christ the Redeemer",   wiki: "Christ the Redeemer",     continent: "South America", country: "Brazil",          emoji: "✝️", clue: "A giant white statue with <span>arms spread wide</span>, watching over Rio de Janeiro from a mountain top!" },
-  { name: "Sagrada Família",       wiki: "Sagrada Família",         continent: "Europe",        country: "Spain",           emoji: "⛪", clue: "A stunning church in <span>Barcelona</span> with towers that look like giant dripping sandcastles!" },
-  { name: "Angkor Wat",            wiki: "Angkor Wat",              continent: "Asia",          country: "Cambodia",        emoji: "🛕", clue: "The <span>largest religious temple</span> in the world, hidden in the jungles of Cambodia!" },
-  { name: "Chichen Itza",          wiki: "Chichen Itza",            continent: "North America", country: "Mexico",          emoji: "🔺", clue: "A giant <span>step pyramid</span> built by the ancient Mayan people in Mexico over 1,000 years ago!" },
-  { name: "Stonehenge",            wiki: "Stonehenge",              continent: "Europe",        country: "United Kingdom",  emoji: "🪨", clue: "A mysterious circle of <span>huge standing stones</span> in England — nobody is quite sure how they got there!" },
-  { name: "Hagia Sophia",          wiki: "Hagia Sophia",            continent: "Asia",          country: "Turkey",          emoji: "🕌", clue: "A breathtaking building in <span>Istanbul</span> with an enormous dome — it has been both a church and a mosque!" },
-  { name: "Alhambra",              wiki: "Alhambra",                continent: "Europe",        country: "Spain",           emoji: "🏰", clue: "A stunning <span>Moorish palace and fortress</span> on a hilltop in Granada, Spain, with beautiful tiled gardens!" },
-  { name: "Golden Gate Bridge",    wiki: "Golden Gate Bridge",      continent: "North America", country: "USA",             emoji: "🌉", clue: "A famous <span>red-orange suspension bridge</span> stretching across the bay in San Francisco!" },
-  { name: "Neuschwanstein Castle", wiki: "Neuschwanstein Castle",   continent: "Europe",        country: "Germany",         emoji: "🏰", clue: "A <span>fairy-tale castle</span> high in the Bavarian mountains of Germany — it inspired Disney's Cinderella castle!" },
-  { name: "Uluru",                 wiki: "Uluru",                   continent: "Australia",     country: "Australia",       emoji: "🟫", clue: "A giant <span>red sandstone rock</span> rising from flat desert in the middle of Australia, sacred to Aboriginal people!" },
-  { name: "St Basil's Cathedral",  wiki: "Saint Basil's Cathedral", continent: "Europe",        country: "Russia",          emoji: "⛪", clue: "A colourful cathedral in <span>Moscow's Red Square</span> famous for its onion-shaped domes of many bright colours!" },
-  { name: "Mount Rushmore",        wiki: "Mount Rushmore",          continent: "North America", country: "USA",             emoji: "🗿", clue: "The giant <span>faces of four US presidents</span> carved into a granite mountain in South Dakota!" },
-  { name: "Trevi Fountain",        wiki: "Trevi Fountain",          continent: "Europe",        country: "Italy",           emoji: "⛲", clue: "The most famous <span>fountain in the world</span> in Rome — throwing a coin means you'll return to Rome!" },
-  { name: "Notre Dame Cathedral",  wiki: "Notre-Dame de Paris",     continent: "Europe",        country: "France",          emoji: "⛪", clue: "A stunning <span>Gothic cathedral</span> in Paris, famous for its gargoyles, rose windows and tall spires!" },
-  { name: "Petra",                 wiki: "Petra, Jordan",           continent: "Asia",          country: "Jordan",          emoji: "🏛️", clue: "An ancient <span>city carved directly into rose-red cliffs</span> in the desert of Jordan — called the Rose City!" },
-  { name: "Table Mountain",        wiki: "Table Mountain",          continent: "Africa",        country: "South Africa",    emoji: "🏔️", clue: "A famous flat-topped mountain that looks like a <span>giant table</span>, towering over Cape Town!" },
-  { name: "Forbidden City",        wiki: "Forbidden City",          continent: "Asia",          country: "China",           emoji: "🏯", clue: "A vast <span>imperial palace</span> in Beijing where 24 emperors lived — ordinary people were forbidden from entering!" },
+  { name: "Eiffel Tower",          wiki: "Eiffel Tower",            continent: "Europe",        country: "France",          emoji: "🗼", clue: "This tall iron tower in <span class='mask'>xxxxxx</span> sparkles with thousands of lights every night!" },
+  { name: "Taj Mahal",             wiki: "Taj Mahal",               continent: "Asia",          country: "India",           emoji: "🕌", clue: "A <span>white marble palace</span> in <span class='mask'>xxxxxx</span>, built as a symbol of love by an emperor for his wife." },
+  { name: "Statue of Liberty",     wiki: "Statue of Liberty",       continent: "North America", country: "USA",             emoji: "🗽", clue: "A giant <span>green lady holding a torch</span> high in the air, standing on an island in <span class='mask'>xxxxxx</span>!" },
+  { name: "Big Ben",               wiki: "Big Ben",                 continent: "Europe",        country: "United Kingdom",  emoji: "🕐", clue: "A famous <span>clock tower</span> in <span class='mask'>xxxxxx</span> that chimes loudly every hour — BONG BONG BONG!" },
+  { name: "Sydney Opera House",    wiki: "Sydney Opera House",      continent: "Australia",     country: "Australia",       emoji: "🎭", clue: "A famous building in <span class='mask'>xxxxxx</span> with a <span>roof shaped like giant white sails</span> on the harbour!" },
+  { name: "Great Wall of China",   wiki: "Great Wall of China",     continent: "Asia",          country: "China",           emoji: "🧱", clue: "The <span>longest wall in the world</span>, stretching thousands of kilometres across <span class='mask'>xxxxxx</span> mountains!" },
+  { name: "Colosseum",             wiki: "Colosseum",               continent: "Europe",        country: "Italy",           emoji: "🏟️", clue: "Ancient <span class='mask'>xxxxxx</span> watched <span>gladiators fight</span> inside this huge oval arena almost 2,000 years ago!" },
+  { name: "Pyramids of Giza",      wiki: "Giza pyramid complex",    continent: "Africa",        country: "Egypt",           emoji: "🔺", clue: "Giant <span>triangle-shaped tombs</span> built in the <span class='mask'>xxxxxx</span> desert for powerful pharaohs!" },
+  { name: "Machu Picchu",          wiki: "Machu Picchu",            continent: "South America", country: "Peru",            emoji: "🏔️", clue: "Ancient ruins high in the mountains of <span class='mask'>xxxxxx</span> — once a <span>secret city of the Inca people</span>!" },
+  { name: "Leaning Tower of Pisa", wiki: "Leaning Tower of Pisa",   continent: "Europe",        country: "Italy",           emoji: "🗼", clue: "A round white tower in <span class='mask'>xxxxxx</span> famous for <span>leaning to one side</span> — it's been tilting for hundreds of years!" },
+  { name: "Mount Fuji",            wiki: "Mount Fuji",              continent: "Asia",          country: "Japan",           emoji: "🗻", clue: "<span class='mask'>xxxxxx</span>'s most famous <span>volcano</span>, with a perfect cone shape and a beautiful snowy top!" },
+  { name: "Parthenon",             wiki: "Parthenon",               continent: "Europe",        country: "Greece",          emoji: "🏛️", clue: "An ancient temple on top of a rocky hill in <span class='mask'>xxxxxx</span>, with rows of <span>tall white columns</span>!" },
+  { name: "Burj Khalifa",          wiki: "Burj Khalifa",            continent: "Asia",          country: "UAE",             emoji: "🏙️", clue: "The <span>tallest building in the world</span>, rising from the desert city of <span class='mask'>xxxxxx</span> like a giant silver spike!" },
+  { name: "Christ the Redeemer",   wiki: "Christ the Redeemer",     continent: "South America", country: "Brazil",          emoji: "✝️", clue: "A giant white statue with <span>arms spread wide</span>, watching over <span class='mask'>xxxxxx</span> from a mountain top!" },
+  { name: "Sagrada Família",       wiki: "Sagrada Família",         continent: "Europe",        country: "Spain",           emoji: "⛪", clue: "A stunning church in <span class='mask'>xxxxxx</span> with towers that look like <span>giant dripping sandcastles</span>!" },
+  { name: "Angkor Wat",            wiki: "Angkor Wat",              continent: "Asia",          country: "Cambodia",        emoji: "🛕", clue: "The <span>largest religious temple</span> in the world, hidden in the jungles of <span class='mask'>xxxxxx</span>!" },
+  { name: "Chichen Itza",          wiki: "Chichen Itza",            continent: "North America", country: "Mexico",          emoji: "🔺", clue: "A giant <span>step pyramid</span> built by the ancient Mayan people in <span class='mask'>xxxxxx</span> over 1,000 years ago!" },
+  { name: "Stonehenge",            wiki: "Stonehenge",              continent: "Europe",        country: "United Kingdom",  emoji: "🪨", clue: "A mysterious circle of <span>huge standing stones</span> in <span class='mask'>xxxxxx</span> — nobody is quite sure how they got there!" },
+  { name: "Hagia Sophia",          wiki: "Hagia Sophia",            continent: "Asia",          country: "Turkey",          emoji: "🕌", clue: "A breathtaking building in <span class='mask'>xxxxxx</span> with an <span>enormous dome</span> — it has been both a church and a mosque!" },
+  { name: "Alhambra",              wiki: "Alhambra",                continent: "Europe",        country: "Spain",           emoji: "🏰", clue: "A stunning <span>Moorish palace and fortress</span> on a hilltop in <span class='mask'>xxxxxx</span>, with beautiful tiled gardens!" },
+  { name: "Golden Gate Bridge",    wiki: "Golden Gate Bridge",      continent: "North America", country: "USA",             emoji: "🌉", clue: "A famous <span>red-orange suspension bridge</span> stretching across the bay in <span class='mask'>xxxxxx</span>!" },
+  { name: "Neuschwanstein Castle", wiki: "Neuschwanstein Castle",   continent: "Europe",        country: "Germany",         emoji: "🏰", clue: "A <span>fairy-tale castle</span> high in the mountains of <span class='mask'>xxxxxx</span> — it inspired Disney's Cinderella castle!" },
+  { name: "Uluru",                 wiki: "Uluru",                   continent: "Australia",     country: "Australia",       emoji: "🟫", clue: "A giant <span>red sandstone rock</span> rising from flat desert in the middle of <span class='mask'>xxxxxx</span>, sacred to Aboriginal people!" },
+  { name: "St Basil's Cathedral",  wiki: "Saint Basil's Cathedral", continent: "Europe",        country: "Russia",          emoji: "⛪", clue: "A colourful cathedral in <span class='mask'>xxxxxx</span>'s Red Square famous for its <span>onion-shaped domes</span> of many bright colours!" },
+  { name: "Mount Rushmore",        wiki: "Mount Rushmore",          continent: "North America", country: "USA",             emoji: "🗿", clue: "The giant <span>faces of four presidents</span> carved into a granite mountain in <span class='mask'>xxxxxx</span>!" },
+  { name: "Trevi Fountain",        wiki: "Trevi Fountain",          continent: "Europe",        country: "Italy",           emoji: "⛲", clue: "The most famous <span>fountain in the world</span> in <span class='mask'>xxxxxx</span> — throwing a coin means you'll return there!" },
+  { name: "Notre Dame Cathedral",  wiki: "Notre-Dame de Paris",     continent: "Europe",        country: "France",          emoji: "⛪", clue: "A stunning <span>Gothic cathedral</span> in <span class='mask'>xxxxxx</span>, famous for its gargoyles, rose windows and tall spires!" },
+  { name: "Petra",                 wiki: "Petra, Jordan",           continent: "Asia",          country: "Jordan",          emoji: "🏛️", clue: "An ancient <span>city carved directly into rose-red cliffs</span> in the desert of <span class='mask'>xxxxxx</span> — called the Rose City!" },
+  { name: "Table Mountain",        wiki: "Table Mountain",          continent: "Africa",        country: "South Africa",    emoji: "🏔️", clue: "A famous flat-topped mountain that looks like a <span>giant table</span>, towering over <span class='mask'>xxxxxx</span>!" },
+  { name: "Forbidden City",        wiki: "Forbidden City",          continent: "Asia",          country: "China",           emoji: "🏯", clue: "A vast <span>imperial palace</span> in <span class='mask'>xxxxxx</span> where 24 emperors lived — ordinary people were forbidden from entering!" },
 ];
 
 // ── CONTINENTS ────────────────────────────────────────────────────────
@@ -313,13 +313,13 @@ Object.entries(CONT_IDS).forEach(([k, ids]) => ids.forEach(id => { ID_TO_CONT[id
 
 // ── STATE ─────────────────────────────────────────────────────────────
 const SESSION_LENGTH = 15;
-let session = [];        // 15 landmarks
-let landmarkIdx = 0;     // 0..14
-let questionIdx = 0;     // 0=landmark, 1=continent, 2=country
-let score = 0;           // 0..45
+let session = [];
+let landmarkIdx = 0;
+let questionIdx = 0;
+let score = 0;
 let answered = false;
-let perLandmark = [];    // [{name, continent, country, results: [bool,bool,bool]}, ...]
-let worldData = null;    // TopoJSON
+let perLandmark = [];
+let worldData = null;
 
 function shuffle(a) { return [...a].sort(() => Math.random() - 0.5); }
 
@@ -328,7 +328,7 @@ async function fetchImages() {
   let loaded = 0;
   const bar   = document.getElementById('loading-bar');
   const count = document.getElementById('loading-count');
-  const total = LANDMARKS.length + 1; // +1 for the world map
+  const total = LANDMARKS.length + 1;
 
   await Promise.all(LANDMARKS.map(async lm => {
     try {
@@ -347,7 +347,6 @@ async function fetchImages() {
     count.textContent = `${loaded} / ${total}`;
   }));
 
-  // Now fetch world map TopoJSON
   try {
     const mapRes = await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json');
     worldData = await mapRes.json();
@@ -426,7 +425,6 @@ function loadQuestion() {
   grid.className = 'choices-grid';
   grid.innerHTML = '';
 
-  // Always set photo (re-shows on Q1 of new landmark; photo persists across Q2/Q3)
   if (questionIdx === 0) {
     const img = document.getElementById('landmark-img');
     const placeholder = document.getElementById('photo-placeholder');
@@ -520,7 +518,6 @@ function handleAnswer(btn, correct, correctValue) {
   if (correct) { btn.classList.remove('reveal'); btn.classList.add('correct'); }
   else         { btn.classList.add('wrong'); }
 
-  // If Q2 wrong, still highlight the correct continent so they SEE it
   if (questionIdx === 1 && !correct) {
     highlightContinent(correctValue);
   }
@@ -579,7 +576,6 @@ function showResults() {
   document.getElementById('results-title').textContent  = title;
   document.getElementById('results-msg').textContent    = msg;
 
-  // Breakdown
   let lmCount = 0, ctCount = 0, coCount = 0;
   perLandmark.forEach(p => {
     if (p.results[0]) lmCount++;
@@ -590,13 +586,12 @@ function showResults() {
   document.getElementById('bd-continent').textContent = `${ctCount}/${SESSION_LENGTH}`;
   document.getElementById('bd-country').textContent   = `${coCount}/${SESSION_LENGTH}`;
 
-  // Recap
   const list = document.getElementById('recap-list');
   list.innerHTML = '';
   perLandmark.forEach(p => {
     const row = document.createElement('div');
     row.className = 'recap-row';
-    const labels = ['L', 'C', 'Co']; // landmark, continent, country
+    const labels = ['L', 'C', 'Co'];
     const pillsHtml = p.results.map((r, i) => {
       const cls = r === true ? 'pass' : (r === false ? 'fail' : '');
       const mark = r === true ? '✓' : (r === false ? '✗' : '·');
