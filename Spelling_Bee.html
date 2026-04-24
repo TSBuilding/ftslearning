@@ -21,9 +21,10 @@
     --card2: #243459;
     --text: #f0f4ff;
     --muted: #94a3b8;
+    --purple: #a78bfa;
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
   body {
     background: var(--bg);
@@ -37,7 +38,6 @@
     overflow-x: hidden;
   }
 
-  /* Honeycomb background pattern */
   body::before {
     content: '';
     position: fixed;
@@ -83,39 +83,16 @@
   }
   .back-btn:hover { background: var(--card2); color: var(--text); }
 
-  .title-block {
-    text-align: center;
-    flex: 1;
-  }
+  .title-block { text-align: center; flex: 1; }
   .title-block h1 {
     font-family: 'Fredoka One', cursive;
-    font-size: 28px;
+    font-size: 26px;
     color: var(--gold);
     letter-spacing: 1px;
     line-height: 1;
   }
-  .title-block p {
-    font-size: 12px;
-    color: var(--muted);
-    font-weight: 600;
-    margin-top: 2px;
-  }
-
-  .edit-btn {
-    background: var(--card);
-    border: none;
-    color: var(--muted);
-    font-size: 20px;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .edit-btn:hover { background: var(--card2); color: var(--text); }
+  .title-block p { font-size: 12px; color: var(--muted); font-weight: 600; margin-top: 2px; }
+  .header-spacer { width: 70px; }
 
   /* Progress bar */
   .progress-wrap {
@@ -158,17 +135,24 @@
     animation: bob 2s ease-in-out infinite;
     line-height: 1;
   }
-  @keyframes bob {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-8px); }
-  }
+  @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
 
-  .prompt-text {
-    font-size: 18px;
-    font-weight: 700;
+  .prompt-text { font-size: 18px; font-weight: 700; color: var(--muted); text-align: center; }
+
+  .category-badge {
+    background: var(--card2);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 11px;
+    font-weight: 800;
     color: var(--muted);
-    text-align: center;
+    letter-spacing: 1px;
+    text-transform: uppercase;
   }
+  .category-badge.ck    { color: var(--gold);   border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.06); }
+  .category-badge.k     { color: var(--blue-light); border-color: rgba(59,130,246,0.3); background: rgba(59,130,246,0.06); }
+  .category-badge.tricky { color: var(--purple); border-color: rgba(167,139,250,0.3); background: rgba(167,139,250,0.06); }
 
   /* Speak button */
   .speak-btn {
@@ -190,10 +174,8 @@
   .speak-btn:hover { transform: scale(1.04); box-shadow: 0 6px 28px rgba(245,158,11,0.5); }
   .speak-btn:active { transform: scale(0.97); }
   .speak-btn.speaking { background: linear-gradient(135deg, #60a5fa, var(--blue)); color: white; }
-
   .speak-icon { font-size: 22px; }
 
-  /* Input */
   .input-wrap {
     width: 100%;
     display: flex;
@@ -236,8 +218,7 @@
     box-shadow: 0 4px 20px rgba(37,99,235,0.35);
     transition: all 0.2s;
   }
-  .check-btn:hover { transform: scale(1.02); box-shadow: 0 6px 28px rgba(37,99,235,0.5); }
-  .check-btn:active { transform: scale(0.98); }
+  .check-btn:hover { transform: scale(1.02); }
   .check-btn:disabled { opacity: 0.4; cursor: default; transform: none; }
 
   /* Feedback */
@@ -251,10 +232,7 @@
     gap: 8px;
     animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
   }
-  @keyframes popIn {
-    from { transform: scale(0.8); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
-  }
+  @keyframes popIn { from{transform:scale(0.8);opacity:0} to{transform:scale(1);opacity:1} }
   .feedback.correct { background: rgba(22,163,74,0.15); border: 2px solid var(--green); display: flex; }
   .feedback.wrong { background: rgba(220,38,38,0.12); border: 2px solid var(--red); display: flex; }
 
@@ -263,35 +241,34 @@
   .feedback.correct .feedback-msg { color: #4ade80; }
   .feedback.wrong .feedback-msg { color: #f87171; }
 
-  /* Letter-level display */
-  .letter-display {
-    display: flex;
-    gap: 4px;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-top: 4px;
-  }
+  .letter-display { display: flex; gap: 4px; justify-content: center; flex-wrap: wrap; margin-top: 4px; }
   .letter-box {
-    width: 36px;
-    height: 42px;
+    width: 36px; height: 42px;
     border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    font-weight: 900;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; font-weight: 900;
     font-family: 'Fredoka One', cursive;
   }
   .letter-box.match { background: var(--green); color: white; }
   .letter-box.miss { background: var(--red); color: white; }
   .letter-box.extra { background: #78350f; color: #fde68a; }
 
-  .correct-word {
-    font-size: 14px;
-    color: var(--muted);
-    font-weight: 700;
-  }
+  .correct-word { font-size: 14px; color: var(--muted); font-weight: 700; }
   .correct-word span { color: white; }
+
+  /* Rule reminder in feedback */
+  .rule-reminder {
+    background: rgba(245,158,11,0.12);
+    border: 1px solid rgba(245,158,11,0.3);
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--gold-light);
+    margin-top: 6px;
+    line-height: 1.4;
+  }
+  .rule-reminder strong { color: var(--gold); }
 
   .next-btn {
     width: 100%;
@@ -306,24 +283,16 @@
     transition: all 0.2s;
     margin-top: 8px;
   }
-  .next-btn:hover { background: var(--card2); border-color: rgba(255,255,255,0.2); }
+  .next-btn:hover { background: var(--card2); }
 
   /* Score strip */
-  .score-strip {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
+  .score-strip { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
   .score-dot {
-    width: 28px;
-    height: 28px;
+    width: 28px; height: 28px;
     border-radius: 50%;
     background: var(--card2);
     border: 2px solid rgba(255,255,255,0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     font-size: 14px;
     transition: all 0.3s;
   }
@@ -331,41 +300,22 @@
   .score-dot.fail { background: var(--red); border-color: var(--red); }
 
   /* Results screen */
-  #results-screen {
-    display: none;
-    width: 100%;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-  }
-
   .results-card {
     width: 100%;
     background: var(--card);
     border-radius: 24px;
     padding: 36px 28px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display: flex; flex-direction: column; align-items: center;
     gap: 16px;
     box-shadow: 0 8px 32px rgba(0,0,0,0.4);
     border: 1px solid rgba(255,255,255,0.06);
     text-align: center;
   }
   .results-trophy { font-size: 72px; animation: bob 2s ease-in-out infinite; }
-  .results-title {
-    font-family: 'Fredoka One', cursive;
-    font-size: 32px;
-    color: var(--gold);
-  }
-  .results-sub { font-size: 16px; color: var(--muted); font-weight: 600; }
-  .results-score {
-    font-family: 'Fredoka One', cursive;
-    font-size: 56px;
-    color: white;
-    line-height: 1;
-  }
-  .results-score span { font-size: 28px; color: var(--muted); }
+  .results-title { font-family: 'Fredoka One', cursive; font-size: 30px; color: var(--gold); }
+  .results-sub { font-size: 15px; color: var(--muted); font-weight: 600; }
+  .results-score { font-family: 'Fredoka One', cursive; font-size: 52px; color: white; line-height: 1; }
+  .results-score span { font-size: 26px; color: var(--muted); }
 
   .missed-words {
     width: 100%;
@@ -376,20 +326,11 @@
     display: none;
     flex-direction: column;
     gap: 8px;
+    text-align: left;
   }
-  .missed-words h3 {
-    font-size: 13px;
-    font-weight: 800;
-    color: #f87171;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-  .missed-word-item {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--text);
-  }
-  .missed-word-item em { color: var(--muted); font-style: normal; font-size: 13px; font-weight: 600; }
+  .missed-words h3 { font-size: 12px; font-weight: 800; color: #f87171; text-transform: uppercase; letter-spacing: 1px; }
+  .missed-word-item { font-size: 15px; font-weight: 700; color: var(--text); }
+  .missed-word-item em { color: var(--muted); font-style: normal; font-size: 12px; font-weight: 600; }
 
   .play-again-btn {
     width: 100%;
@@ -406,188 +347,179 @@
   }
   .play-again-btn:hover { transform: scale(1.02); }
 
-  /* Edit screen */
-  #edit-screen {
-    display: none;
-    width: 100%;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .edit-card {
+  .back-home-btn {
     width: 100%;
     background: var(--card);
-    border-radius: 24px;
-    padding: 24px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-    border: 1px solid rgba(255,255,255,0.06);
-  }
-  .edit-card h2 {
-    font-family: 'Fredoka One', cursive;
-    font-size: 22px;
-    color: var(--gold);
-    margin-bottom: 16px;
-  }
-  .edit-card p {
-    font-size: 13px;
-    color: var(--muted);
-    font-weight: 600;
-    margin-bottom: 16px;
-    line-height: 1.5;
-  }
-
-  .word-list-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    max-height: 50vh;
-    overflow-y: auto;
-    padding-right: 4px;
-  }
-
-  .word-row {
-    display: grid;
-    grid-template-columns: 1fr 2fr auto;
-    gap: 8px;
-    align-items: center;
-  }
-  .word-row input {
-    background: var(--card2);
-    border: 1.5px solid rgba(255,255,255,0.1);
-    border-radius: 10px;
-    padding: 10px 12px;
-    font-family: 'Nunito', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
+    border: 2px solid rgba(255,255,255,0.1);
     color: var(--text);
-    outline: none;
-  }
-  .word-row input:focus { border-color: var(--blue-light); }
-  .word-row input::placeholder { color: var(--muted); font-weight: 600; }
-
-  .del-btn {
-    background: rgba(220,38,38,0.15);
-    border: none;
-    color: #f87171;
-    width: 36px;
-    height: 36px;
-    border-radius: 8px;
-    font-size: 18px;
-    cursor: pointer;
-    transition: background 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .del-btn:hover { background: rgba(220,38,38,0.3); }
-
-  .add-word-btn {
-    width: 100%;
-    background: var(--card2);
-    border: 2px dashed rgba(255,255,255,0.15);
-    color: var(--muted);
-    font-family: 'Nunito', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
-    padding: 12px;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.2s;
-    margin-top: 8px;
-  }
-  .add-word-btn:hover { border-color: var(--blue-light); color: var(--text); }
-
-  .save-btn {
-    width: 100%;
-    background: linear-gradient(135deg, var(--blue), #1d4ed8);
-    border: none;
-    color: white;
     font-family: 'Fredoka One', cursive;
-    font-size: 20px;
-    padding: 16px;
+    font-size: 18px;
+    padding: 14px;
     border-radius: 14px;
     cursor: pointer;
-    box-shadow: 0 4px 20px rgba(37,99,235,0.35);
     transition: all 0.2s;
   }
-  .save-btn:hover { transform: scale(1.02); }
+  .back-home-btn:hover { background: var(--card2); }
 
-  /* Start screen */
-  #start-screen {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-  }
-  .start-card {
+  /* Start / Category screen */
+  .start-hero {
     width: 100%;
     background: var(--card);
     border-radius: 24px;
-    padding: 40px 28px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
+    padding: 32px 24px 28px;
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
     box-shadow: 0 8px 32px rgba(0,0,0,0.4);
     border: 1px solid rgba(255,255,255,0.06);
     text-align: center;
   }
-  .start-title {
+  .start-title { font-family: 'Fredoka One', cursive; font-size: 26px; color: var(--text); line-height: 1.3; }
+  .start-title span { color: var(--gold); }
+  .start-sub { font-size: 15px; color: var(--muted); font-weight: 600; line-height: 1.5; }
+
+  .cat-section-label {
+    width: 100%;
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 0 4px;
+    margin-top: 4px;
+  }
+
+  .cat-btn {
+    width: 100%;
+    background: var(--card);
+    border: 2px solid rgba(255,255,255,0.08);
+    border-radius: 18px;
+    padding: 18px 20px;
+    display: flex; align-items: center; gap: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+    color: var(--text);
+  }
+  .cat-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+  .cat-btn.ck     { border-color: rgba(245,158,11,0.35); }
+  .cat-btn.ck:hover     { background: rgba(245,158,11,0.06); }
+  .cat-btn.tricky { border-color: rgba(167,139,250,0.35); }
+  .cat-btn.tricky:hover { background: rgba(167,139,250,0.06); }
+  .cat-btn.all    { border-color: rgba(59,130,246,0.35); }
+  .cat-btn.all:hover    { background: rgba(59,130,246,0.06); }
+
+  .cat-icon { font-size: 36px; flex-shrink: 0; }
+  .cat-info { flex: 1; }
+  .cat-name { font-family: 'Fredoka One', cursive; font-size: 18px; color: var(--text); letter-spacing: 0.5px; }
+  .cat-desc { font-size: 12px; color: var(--muted); font-weight: 600; margin-top: 2px; line-height: 1.3; }
+  .cat-arrow { font-size: 20px; color: var(--muted); }
+
+  .rule-btn {
+    width: 100%;
+    background: transparent;
+    border: 1.5px solid rgba(245,158,11,0.3);
+    color: var(--gold);
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    padding: 10px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+  }
+  .rule-btn:hover { background: rgba(245,158,11,0.08); }
+
+  /* Rule teach screen */
+  .rule-card {
+    width: 100%;
+    background: var(--card);
+    border-radius: 24px;
+    padding: 32px 24px;
+    display: flex; flex-direction: column; gap: 18px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,255,255,0.06);
+    text-align: center;
+  }
+  .rule-title {
     font-family: 'Fredoka One', cursive;
     font-size: 26px;
-    color: var(--text);
-    line-height: 1.3;
+    color: var(--gold);
+    line-height: 1.1;
   }
-  .start-title span { color: var(--gold); }
-  .start-sub { font-size: 16px; color: var(--muted); font-weight: 600; line-height: 1.5; }
+  .rule-sub { font-size: 14px; color: var(--muted); font-weight: 600; }
 
-  .start-btn {
+  .rule-panel {
+    background: var(--card2);
+    border-radius: 16px;
+    padding: 18px 18px;
+    display: flex; flex-direction: column; gap: 12px;
+    text-align: left;
+  }
+  .rule-line {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 12px;
+    align-items: start;
+    font-size: 15px;
+    line-height: 1.45;
+    color: var(--text);
+    font-weight: 600;
+  }
+  .rule-chip {
+    font-family: 'Fredoka One', cursive;
+    font-size: 22px;
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .rule-chip.ck { background: rgba(245,158,11,0.18); color: var(--gold); border: 1.5px solid rgba(245,158,11,0.4); }
+  .rule-chip.k  { background: rgba(59,130,246,0.18); color: var(--blue-light); border: 1.5px solid rgba(59,130,246,0.4); }
+  .rule-line strong { color: var(--gold); }
+  .rule-line .kblue { color: var(--blue-light); }
+  .rule-word { font-family: 'Fredoka One', cursive; color: var(--text); }
+
+  .rule-start-btn {
     width: 100%;
     background: linear-gradient(135deg, var(--gold), #d97706);
     border: none;
     color: #1a1000;
     font-family: 'Fredoka One', cursive;
-    font-size: 24px;
-    padding: 20px;
+    font-size: 22px;
+    padding: 18px;
     border-radius: 16px;
     cursor: pointer;
     box-shadow: 0 4px 20px rgba(245,158,11,0.35);
     transition: all 0.2s;
     letter-spacing: 0.5px;
   }
-  .start-btn:hover { transform: scale(1.02); box-shadow: 0 6px 28px rgba(245,158,11,0.5); }
+  .rule-start-btn:hover { transform: scale(1.02); }
 
-  .word-count-badge {
-    background: var(--card2);
-    border-radius: 20px;
-    padding: 6px 16px;
-    font-size: 13px;
-    font-weight: 700;
+  .rule-back-btn {
+    width: 100%;
+    background: transparent;
+    border: 2px solid rgba(255,255,255,0.1);
     color: var(--muted);
+    font-family: 'Fredoka One', cursive;
+    font-size: 16px;
+    padding: 12px;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
   }
-  .word-count-badge span { color: var(--gold); }
+  .rule-back-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
 
   /* Sentence hint */
   .sentence-hint {
-    font-size: 14px;
-    color: var(--muted);
-    font-style: italic;
-    font-weight: 600;
-    text-align: center;
-    line-height: 1.4;
-    min-height: 20px;
-    padding: 0 8px;
+    font-size: 14px; color: var(--muted); font-style: italic; font-weight: 600;
+    text-align: center; line-height: 1.4; min-height: 20px; padding: 0 8px;
   }
 
   /* Confetti */
   .confetti-piece {
-    position: fixed;
-    width: 10px;
-    height: 10px;
-    border-radius: 2px;
-    pointer-events: none;
-    z-index: 999;
+    position: fixed; width: 10px; height: 10px;
+    border-radius: 2px; pointer-events: none; z-index: 999;
     animation: confettiFall linear forwards;
   }
   @keyframes confettiFall {
@@ -595,7 +527,6 @@
     100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
   }
 
-  /* Utility */
   .hidden { display: none !important; }
 </style>
 </head>
@@ -609,17 +540,71 @@
       <h1>🐝 Spelling Bee</h1>
       <p>FTS Learning HQ</p>
     </div>
-    <button class="edit-btn" id="edit-toggle-btn" title="Edit word list">✏️</button>
+    <div class="header-spacer"></div>
   </div>
 
   <!-- START SCREEN -->
-  <div id="start-screen">
-    <div class="start-card">
+  <div id="start-screen" style="width:100%;display:flex;flex-direction:column;gap:16px;">
+    <div class="start-hero">
       <div class="bee-icon">🐝</div>
       <div class="start-title">Ready to spell,<br><span>FTS</span>?</div>
-      <div class="start-sub">I'll say a word and use it in a sentence. Type it in and check your spelling!</div>
-      <div class="word-count-badge">Word list: <span id="word-count-display">0</span> words</div>
-      <button class="start-btn" id="start-btn">🎯 Start Spelling!</button>
+      <div class="start-sub">This week's focus: the <strong style="color:var(--gold)">ck</strong> rule and tricky words.</div>
+      <button class="rule-btn" id="rule-btn">📖 Remind me of the rule</button>
+    </div>
+
+    <div class="cat-section-label">Pick your practice</div>
+
+    <button class="cat-btn ck" data-cat="rule">
+      <div class="cat-icon">🎯</div>
+      <div class="cat-info">
+        <div class="cat-name">This Week's Rule</div>
+        <div class="cat-desc">ck and k words mixed — 10 words</div>
+      </div>
+      <div class="cat-arrow">›</div>
+    </button>
+
+    <button class="cat-btn tricky" data-cat="tricky">
+      <div class="cat-icon">🧠</div>
+      <div class="cat-info">
+        <div class="cat-name">Tricky Words</div>
+        <div class="cat-desc">Words that don't follow any rule — <span id="tricky-count">2</span> words</div>
+      </div>
+      <div class="cat-arrow">›</div>
+    </button>
+
+    <button class="cat-btn all" data-cat="all">
+      <div class="cat-icon">⭐</div>
+      <div class="cat-info">
+        <div class="cat-name">Everything Mixed</div>
+        <div class="cat-desc">Rule words + tricky words — 10 words</div>
+      </div>
+      <div class="cat-arrow">›</div>
+    </button>
+  </div>
+
+  <!-- RULE TEACH SCREEN -->
+  <div id="rule-screen" class="hidden" style="width:100%;display:none;flex-direction:column;gap:16px;">
+    <div class="rule-card">
+      <div class="rule-title">The <span style="color:var(--text)">ck</span> Rule!</div>
+      <div class="rule-sub">When do you use <strong style="color:var(--gold)">ck</strong> and when do you use <strong style="color:var(--blue-light)">k</strong>?</div>
+
+      <div class="rule-panel">
+        <div class="rule-line">
+          <div class="rule-chip ck">ck</div>
+          <div>Use <strong>ck</strong> after a <strong>short vowel</strong> sound at the end of a word.<br>
+          <span class="rule-word">d<strong>u</strong>ck · r<strong>o</strong>ck · s<strong>a</strong>ck · br<strong>i</strong>ck</span></div>
+        </div>
+        <div class="rule-line">
+          <div class="rule-chip k">k</div>
+          <div>Use <span class="kblue"><strong>k</strong></span> after other sounds — like <strong>long vowels</strong>, <strong>consonants</strong>, or <strong>vowel teams</strong>.<br>
+          <span class="rule-word">mil<strong>k</strong> · par<strong>k</strong> · boo<strong>k</strong></span></div>
+        </div>
+      </div>
+
+      <div class="rule-sub">Listen carefully to the vowel sound — that's your clue!</div>
+
+      <button class="rule-start-btn" id="rule-start-btn">🎯 I'm Ready!</button>
+      <button class="rule-back-btn" id="rule-back-btn">← Back</button>
     </div>
   </div>
 
@@ -637,6 +622,7 @@
 
     <div class="game-card">
       <div class="bee-icon" id="bee-anim">🐝</div>
+      <div class="category-badge" id="category-badge">ck rule</div>
       <div class="prompt-text" id="prompt-text">Listen carefully, then type the word!</div>
 
       <button class="speak-btn" id="speak-btn">
@@ -656,6 +642,7 @@
         <div class="feedback-msg" id="feedback-msg"></div>
         <div class="letter-display" id="letter-display"></div>
         <div class="correct-word" id="correct-word-hint"></div>
+        <div class="rule-reminder hidden" id="rule-reminder"></div>
         <button class="next-btn" id="next-btn">Next Word →</button>
       </div>
     </div>
@@ -663,7 +650,7 @@
   </div>
 
   <!-- RESULTS SCREEN -->
-  <div id="results-screen">
+  <div id="results-screen" class="hidden" style="width:100%;display:none;flex-direction:column;gap:16px;">
     <div class="results-card">
       <div class="results-trophy" id="results-trophy">🏆</div>
       <div class="results-title" id="results-title">Well done, FTS!</div>
@@ -676,106 +663,146 @@
       </div>
     </div>
     <button class="play-again-btn" id="play-again-btn">🐝 Play Again!</button>
-  </div>
-
-  <!-- EDIT SCREEN -->
-  <div id="edit-screen">
-    <div class="edit-card">
-      <h2>✏️ Edit Word List</h2>
-      <p>Each word needs the word itself and a sentence using it. The sentence will be read aloud to give a clue.</p>
-      <div class="word-list-container" id="word-list-editor"></div>
-      <button class="add-word-btn" id="add-word-btn">+ Add a Word</button>
-    </div>
-    <button class="save-btn" id="save-btn">💾 Save & Go Back</button>
+    <button class="back-home-btn" id="back-to-start-btn">← Back to Categories</button>
   </div>
 
 </div>
 
 <script>
-// ── DEFAULT WORD LIST ──────────────────────────────────────────────────────
-const DEFAULT_WORDS = [
-  // ch words — fresh set, same level
-  { word: "chat",     sentence: "FTS had a chat with his friend at school." },
-  { word: "chick",    sentence: "A fluffy chick hatched from the egg." },
-  { word: "chunk",    sentence: "FTS broke off a big chunk of bread." },
-  { word: "charm",    sentence: "The little charm hung on the bracelet." },
-  { word: "check",    sentence: "FTS did a check to make sure his bag was packed." },
-  { word: "chimp",    sentence: "The chimp swung from branch to branch." },
-  { word: "chant",    sentence: "The crowd started to chant for the Crows." },
-  { word: "chomp",    sentence: "FTS took a big chomp out of his apple." },
-  // sh words — fresh set, same level
-  { word: "shin",     sentence: "FTS scraped his shin on the fence." },
-  { word: "shack",    sentence: "The old shack was falling apart." },
-  { word: "shelf",    sentence: "FTS put his trophy on the shelf." },
-  { word: "shift",    sentence: "FTS had to shift the heavy box." },
-  { word: "shrimp",   sentence: "FTS ordered shrimp at the restaurant." },
-  { word: "gush",     sentence: "Water began to gush out of the tap." },
-  { word: "squash",   sentence: "FTS played squash with his dad." },
-  { word: "splash",   sentence: "FTS made a big splash in the pool." },
-  { word: "fresh",    sentence: "The bread smelled fresh from the oven." },
-  { word: "blush",    sentence: "FTS felt his face blush when he got the answer right." },
-  // th words — fresh set, same level
-  { word: "thud",     sentence: "The book fell with a loud thud." },
-  { word: "thatch",   sentence: "The roof of the hut was made of thatch." },
-  { word: "thirst",   sentence: "FTS had a big thirst after the game." },
-  { word: "froth",    sentence: "The froth on the milkshake was thick." },
-  { word: "broth",    sentence: "Mum made a warm broth for dinner." },
-  { word: "tenth",    sentence: "FTS finished in tenth place in the race." },
-  { word: "sixth",    sentence: "It was the sixth game of the season." },
-  { word: "filth",    sentence: "FTS got covered in filth playing in the mud." },
-  // b/d confusion words — fresh set, same level
-  { word: "dip",      sentence: "FTS had a dip in the pool to cool down." },
-  { word: "damp",     sentence: "The grass was damp after the rain." },
-  { word: "dock",     sentence: "The boat pulled up to the dock." },
-  { word: "drip",     sentence: "The ice cream started to drip in the sun." },
-  { word: "dusk",     sentence: "The sky turned orange at dusk." },
-  { word: "blob",     sentence: "FTS dropped a blob of paint on the paper." },
-  { word: "blot",     sentence: "There was a blot of ink on the page." },
-  { word: "brim",     sentence: "The cup was filled right to the brim." },
-  { word: "bred",     sentence: "The puppy was bred to be a guide dog." },
-  { word: "drab",     sentence: "The room looked drab without any colour." },
-  { word: "bind",     sentence: "FTS used string to bind the sticks together." },
-  { word: "debt",     sentence: "Dad said he had a debt to pay back." },
+// ──────────────────────────────────────────────────────────────────────────
+// CLEAR LEGACY localStorage word list
+// Previous versions had an edit screen that saved words to localStorage.
+// That feature is removed — word lists are now updated via GitHub each week.
+// Clear any old cached list so the current committed words are authoritative.
+// ──────────────────────────────────────────────────────────────────────────
+localStorage.removeItem('spelling_bee_words');
+
+// ──────────────────────────────────────────────────────────────────────────
+// WORD DATA — updated weekly via GitHub
+// ──────────────────────────────────────────────────────────────────────────
+
+// CK RULE words: short vowel + ck at end of one-syllable word
+const CK_WORDS = [
+  { word: "duck",  sentence: "The duck swam across the pond." },
+  { word: "rock",  sentence: "FTS picked up a smooth rock at the beach." },
+  { word: "sack",  sentence: "Dad carried the sack of potatoes inside." },
+  { word: "brick", sentence: "The wall was made of red brick." },
+  { word: "clock", sentence: "The clock on the wall ticked loudly." },
+  { word: "kick",  sentence: "FTS gave the footy a mighty kick." },
+  { word: "back",  sentence: "FTS ran all the way to the back of the yard." },
+  { word: "neck",  sentence: "The giraffe has a very long neck." },
+  { word: "truck", sentence: "A big truck rolled down the street." },
+  { word: "pack",  sentence: "FTS helped pack his school bag." },
+  { word: "lock",  sentence: "The lock on the gate was rusty." },
+  { word: "stick", sentence: "FTS threw a stick for the dog to fetch." },
+  { word: "black", sentence: "The Crows wear black and red." },
+  { word: "pick",  sentence: "FTS could pick any flavour he wanted." },
+  { word: "sock",  sentence: "FTS could only find one sock under the bed." },
 ];
 
-// Remove duplicates
-const seen = new Set();
-const WORDS = DEFAULT_WORDS.filter(w => {
-  if (seen.has(w.word)) return false;
-  seen.add(w.word);
-  return true;
-});
+// K CONTRAST words: explain WHY they use k not ck
+// (long vowel / consonant before k / vowel team)
+const K_WORDS = [
+  { word: "milk", sentence: "FTS poured milk on his cereal.",              reason: "consonant before k (L)" },
+  { word: "desk", sentence: "FTS tidied up his desk at school.",           reason: "consonant before k (S)" },
+  { word: "mask", sentence: "FTS wore a superhero mask.",                  reason: "consonant before k (S)" },
+  { word: "park", sentence: "FTS played at the park after school.",        reason: "consonant before k (R)" },
+  { word: "bark", sentence: "The tree had rough brown bark.",              reason: "consonant before k (R)" },
+  { word: "book", sentence: "FTS read his book before bed.",               reason: "vowel team (oo)" },
+  { word: "look", sentence: "FTS had a good look at the map.",             reason: "vowel team (oo)" },
+];
 
-// ── STATE ──────────────────────────────────────────────────────────────────
-let wordList = [];
+// TRICKY WORDS: no rule, just memorise
+const TRICKY_WORDS = [
+  { word: "great", sentence: "FTS did a great job on his work." },
+  { word: "their", sentence: "The children packed up their books." },
+];
+
+// Session sizes
+const RULE_SESSION_SIZE = 10;   // mix of ck and k words
+const ALL_SESSION_SIZE  = 10;   // mix of everything
+
+// ──────────────────────────────────────────────────────────────────────────
+// TAG WORDS WITH CATEGORY
+// ──────────────────────────────────────────────────────────────────────────
+const CK_TAGGED     = CK_WORDS.map(w => ({ ...w, cat: 'ck' }));
+const K_TAGGED      = K_WORDS.map(w => ({ ...w, cat: 'k' }));
+const TRICKY_TAGGED = TRICKY_WORDS.map(w => ({ ...w, cat: 'tricky' }));
+
+document.getElementById('tricky-count').textContent = TRICKY_TAGGED.length;
+
+// ──────────────────────────────────────────────────────────────────────────
+// STATE
+// ──────────────────────────────────────────────────────────────────────────
 let sessionQueue = [];
-let sessionResults = []; // {word, correct}
+let sessionResults = [];
 let currentIndex = 0;
 let currentWord = null;
 let answered = false;
 let correctThisSession = 0;
-const SESSION_SIZE = 10;
+let currentCategory = 'rule'; // 'rule' | 'tricky' | 'all'
 
-// ── LOAD / SAVE WORDS ──────────────────────────────────────────────────────
-function loadWords() {
-  const saved = localStorage.getItem('spelling_bee_words');
-  if (saved) {
-    try { wordList = JSON.parse(saved); } catch(e) { wordList = [...WORDS]; }
-  } else {
-    wordList = [...WORDS];
+// Voice caching (iOS Safari)
+let voiceCache = null;
+function loadVoices() {
+  if (typeof speechSynthesis === 'undefined') return;
+  const voices = speechSynthesis.getVoices();
+  voiceCache = voices.find(v => v.name === 'Karen')
+            || voices.find(v => v.lang === 'en-AU')
+            || voices.find(v => v.lang && v.lang.startsWith('en'))
+            || voices[0]
+            || null;
+}
+if (typeof speechSynthesis !== 'undefined') {
+  speechSynthesis.onvoiceschanged = loadVoices;
+  loadVoices();
+}
+
+// ──────────────────────────────────────────────────────────────────────────
+// SCREEN MANAGEMENT
+// ──────────────────────────────────────────────────────────────────────────
+function showScreen(name) {
+  ['start-screen','rule-screen','game-screen','results-screen'].forEach(id => {
+    const el = document.getElementById(id);
+    if (id === name) {
+      el.style.display = 'flex';
+      el.classList.remove('hidden');
+    } else {
+      el.style.display = 'none';
+      el.classList.add('hidden');
+    }
+  });
+}
+
+// ──────────────────────────────────────────────────────────────────────────
+// SESSION BUILD
+// ──────────────────────────────────────────────────────────────────────────
+function buildSession(category) {
+  currentCategory = category;
+  let pool;
+  let size;
+
+  if (category === 'rule') {
+    // Mix ck and k words — weight toward ck (teaching the rule) but ensure
+    // at least a few k words appear for contrast
+    const ckShuffled = [...CK_TAGGED].sort(() => Math.random() - 0.5);
+    const kShuffled  = [...K_TAGGED].sort(() => Math.random() - 0.5);
+    // 7 ck + 3 k = 10 (ensures contrast without overwhelming with k)
+    const ckSlice = ckShuffled.slice(0, 7);
+    const kSlice  = kShuffled.slice(0, 3);
+    pool = [...ckSlice, ...kSlice].sort(() => Math.random() - 0.5);
+    size = pool.length;
+  } else if (category === 'tricky') {
+    // All tricky words, in random order
+    pool = [...TRICKY_TAGGED].sort(() => Math.random() - 0.5);
+    size = pool.length;
+  } else { // 'all'
+    const combined = [...CK_TAGGED, ...K_TAGGED, ...TRICKY_TAGGED];
+    pool = combined.sort(() => Math.random() - 0.5).slice(0, ALL_SESSION_SIZE);
+    size = pool.length;
   }
-  document.getElementById('word-count-display').textContent = wordList.length;
-}
 
-function saveWords() {
-  localStorage.setItem('spelling_bee_words', JSON.stringify(wordList));
-  document.getElementById('word-count-display').textContent = wordList.length;
-}
-
-// ── SESSION SETUP ──────────────────────────────────────────────────────────
-function buildSession() {
-  const shuffled = [...wordList].sort(() => Math.random() - 0.5);
-  sessionQueue = shuffled.slice(0, Math.min(SESSION_SIZE, shuffled.length));
+  sessionQueue = pool;
   sessionResults = [];
   correctThisSession = 0;
   currentIndex = 0;
@@ -793,25 +820,15 @@ function buildScoreDots() {
   }
 }
 
-// ── SCREEN MANAGEMENT ─────────────────────────────────────────────────────
-function showScreen(name) {
-  ['start-screen','game-screen','results-screen','edit-screen'].forEach(id => {
-    const el = document.getElementById(id);
-    if (id === name) {
-      el.style.display = 'flex';
-      el.classList.remove('hidden');
-    } else {
-      el.style.display = 'none';
-      el.classList.add('hidden');
-    }
-  });
-}
-
-// ── SPEECH ─────────────────────────────────────────────────────────────────
+// ──────────────────────────────────────────────────────────────────────────
+// SPEECH
+// ──────────────────────────────────────────────────────────────────────────
 function speak(text, onEnd) {
+  if (typeof speechSynthesis === 'undefined') { if (onEnd) onEnd(); return; }
   window.speechSynthesis.cancel();
   const utt = new SpeechSynthesisUtterance(text);
-  utt.rate = 0.88;
+  if (voiceCache) utt.voice = voiceCache;
+  utt.rate = 0.7;   // matches existing spec
   utt.pitch = 1.05;
   utt.lang = 'en-AU';
   if (onEnd) utt.onend = onEnd;
@@ -824,16 +841,15 @@ function speakCurrentWord() {
   btn.classList.add('speaking');
   btn.querySelector('span:last-child').textContent = 'Listening…';
 
-  // Speak: word, pause, sentence
+  // Speak: word, then sentence
   const text = `${currentWord.word}. ... ${currentWord.sentence}`;
   speak(text, () => {
     btn.classList.remove('speaking');
     btn.querySelector('span:last-child').textContent = 'Hear the Word';
   });
 
-  // Show sentence hint after a beat
+  // Show masked sentence hint
   setTimeout(() => {
-    const stars = '*'.repeat(currentWord.word.length);
     const masked = currentWord.sentence.split(' ').map(w => {
       const clean = w.replace(/[^a-zA-Z]/g, '').toLowerCase();
       return clean === currentWord.word.toLowerCase() ? w.replace(/[a-zA-Z]/g, '*') : w;
@@ -842,7 +858,9 @@ function speakCurrentWord() {
   }, 1200);
 }
 
-// ── LOAD WORD ──────────────────────────────────────────────────────────────
+// ──────────────────────────────────────────────────────────────────────────
+// LOAD WORD
+// ──────────────────────────────────────────────────────────────────────────
 function loadWord(index) {
   currentWord = sessionQueue[index];
   answered = false;
@@ -851,23 +869,32 @@ function loadWord(index) {
   document.getElementById('progress-bar').style.width = `${(index / total) * 100}%`;
   document.getElementById('progress-label').textContent = `Word ${index + 1} of ${total}`;
 
+  // Category badge
+  const badge = document.getElementById('category-badge');
+  badge.className = 'category-badge ' + currentWord.cat;
+  if (currentWord.cat === 'ck')          badge.textContent = 'ck rule word';
+  else if (currentWord.cat === 'k')      badge.textContent = 'k word (not ck!)';
+  else if (currentWord.cat === 'tricky') badge.textContent = 'tricky word — just memorise!';
+
   const input = document.getElementById('spelling-input');
   input.value = '';
   input.className = '';
   input.disabled = false;
-  input.focus();
+  setTimeout(() => input.focus(), 50);
 
   document.getElementById('feedback').className = 'feedback';
+  document.getElementById('rule-reminder').classList.add('hidden');
   document.getElementById('sentence-hint').textContent = '';
   document.getElementById('prompt-text').textContent = 'Listen carefully, then type the word!';
   document.getElementById('check-btn').disabled = false;
-  document.getElementById('bee-anim').style.filter = '';
 
   // Auto-speak after short delay
   setTimeout(speakCurrentWord, 400);
 }
 
-// ── CHECK ANSWER ───────────────────────────────────────────────────────────
+// ──────────────────────────────────────────────────────────────────────────
+// CHECK ANSWER
+// ──────────────────────────────────────────────────────────────────────────
 function checkAnswer() {
   if (answered || !currentWord) return;
   const input = document.getElementById('spelling-input');
@@ -880,23 +907,30 @@ function checkAnswer() {
 
   const correct = attempt === currentWord.word.toLowerCase();
 
-  // Mark dot
+  // Mark score dot
   const dot = document.getElementById(`dot-${currentIndex}`);
-  if (dot) dot.classList.add(correct ? 'pass' : 'fail');
-  if (dot) dot.textContent = correct ? '✓' : '✗';
+  if (dot) { dot.classList.add(correct ? 'pass' : 'fail'); dot.textContent = correct ? '✓' : '✗'; }
 
-  sessionResults.push({ word: currentWord.word, sentence: currentWord.sentence, correct });
+  sessionResults.push({
+    word: currentWord.word,
+    sentence: currentWord.sentence,
+    cat: currentWord.cat,
+    correct
+  });
   if (correct) correctThisSession++;
 
-  // Show feedback
+  // Feedback UI
   const fb = document.getElementById('feedback');
   const emoji = document.getElementById('feedback-emoji');
   const msg = document.getElementById('feedback-msg');
   const letterDiv = document.getElementById('letter-display');
   const hintDiv = document.getElementById('correct-word-hint');
+  const ruleDiv = document.getElementById('rule-reminder');
 
   letterDiv.innerHTML = '';
   hintDiv.innerHTML = '';
+  ruleDiv.classList.add('hidden');
+  ruleDiv.innerHTML = '';
 
   if (correct) {
     input.classList.add('correct');
@@ -904,12 +938,14 @@ function checkAnswer() {
     emoji.textContent = ['🌟','🎉','⭐','🏆','✨'][Math.floor(Math.random()*5)];
     msg.textContent = ['Brilliant!','Perfect!','Nailed it!','You got it!','Awesome!'][Math.floor(Math.random()*5)];
     speak(['Brilliant!','Perfect!','Amazing!','You got it!'][Math.floor(Math.random()*4)]);
+    // Reinforce the rule even when right — quick one-liner
+    showRuleReminder(currentWord, true);
     triggerConfetti();
   } else {
     input.classList.add('wrong');
     fb.className = 'feedback wrong';
     emoji.textContent = '😅';
-    msg.textContent = 'Not quite — here\'s how to spell it:';
+    msg.textContent = "Not quite — here's how to spell it:";
 
     // Letter-level comparison
     const target = currentWord.word.toLowerCase();
@@ -922,11 +958,9 @@ function checkAnswer() {
         box.textContent = target[i].toUpperCase();
         box.classList.add(att[i] === target[i] ? 'match' : 'miss');
       } else if (i < target.length) {
-        // missing letters
         box.textContent = target[i].toUpperCase();
         box.classList.add('miss');
       } else {
-        // extra letters typed
         box.textContent = att[i].toUpperCase();
         box.classList.add('extra');
       }
@@ -934,10 +968,31 @@ function checkAnswer() {
     }
     hintDiv.innerHTML = `The correct spelling is: <span>${currentWord.word}</span>`;
     speak(`The correct spelling is: ${currentWord.word.split('').join(', ')}`);
+    // Show rule reminder
+    showRuleReminder(currentWord, false);
   }
 }
 
-// ── NEXT WORD ──────────────────────────────────────────────────────────────
+function showRuleReminder(word, wasCorrect) {
+  const ruleDiv = document.getElementById('rule-reminder');
+  let html = '';
+  if (word.cat === 'ck') {
+    html = `💡 <strong>${word.word}</strong> uses <strong>ck</strong> because of the short vowel sound.`;
+  } else if (word.cat === 'k') {
+    const reason = word.reason || 'the sound before it';
+    html = `💡 <strong>${word.word}</strong> uses just <strong>k</strong> — ${reason}.`;
+  } else if (word.cat === 'tricky') {
+    html = `🧠 <strong>${word.word}</strong> is a tricky word — no rule, just memorise the shape!`;
+  }
+  if (html) {
+    ruleDiv.innerHTML = html;
+    ruleDiv.classList.remove('hidden');
+  }
+}
+
+// ──────────────────────────────────────────────────────────────────────────
+// NEXT WORD
+// ──────────────────────────────────────────────────────────────────────────
 function nextWord() {
   currentIndex++;
   if (currentIndex >= sessionQueue.length) {
@@ -947,7 +1002,9 @@ function nextWord() {
   }
 }
 
-// ── RESULTS ────────────────────────────────────────────────────────────────
+// ──────────────────────────────────────────────────────────────────────────
+// RESULTS
+// ──────────────────────────────────────────────────────────────────────────
 function showResults() {
   document.getElementById('progress-bar').style.width = '100%';
   showScreen('results-screen');
@@ -957,11 +1014,11 @@ function showResults() {
   document.getElementById('results-score').innerHTML = `${score} <span>/ ${total}</span>`;
 
   let title, msg, trophy;
-  const pct = score / total;
-  if (pct === 1)      { title = 'Perfect Score! 🌟'; msg = 'You spelled every single word correctly!'; trophy = '🏆'; }
-  else if (pct >= 0.8){ title = 'Amazing work, FTS!'; msg = 'You\'re a spelling superstar!'; trophy = '⭐'; }
-  else if (pct >= 0.6){ title = 'Good effort, FTS!'; msg = 'Keep practising — you\'re getting there!'; trophy = '🎯'; }
-  else                { title = 'Keep going, FTS!'; msg = 'Practise makes perfect. Try again!'; trophy = '💪'; }
+  const pct = total > 0 ? score / total : 0;
+  if (pct === 1)       { title = 'Perfect Score! 🌟'; msg = 'You spelled every single word correctly!'; trophy = '🏆'; }
+  else if (pct >= 0.8) { title = 'Amazing work, FTS!'; msg = "You're a spelling superstar!"; trophy = '⭐'; }
+  else if (pct >= 0.6) { title = 'Good effort, FTS!'; msg = "Keep practising — you're getting there!"; trophy = '🎯'; }
+  else                 { title = 'Keep going, FTS!'; msg = 'Practice makes perfect. Try again!'; trophy = '💪'; }
 
   document.getElementById('results-title').textContent = title;
   document.getElementById('results-msg').textContent = msg;
@@ -984,11 +1041,12 @@ function showResults() {
   }
 
   if (pct === 1) { setTimeout(triggerConfetti, 200); setTimeout(triggerConfetti, 600); }
-
   speak(title + ' ' + msg);
 }
 
-// ── CONFETTI ───────────────────────────────────────────────────────────────
+// ──────────────────────────────────────────────────────────────────────────
+// CONFETTI
+// ──────────────────────────────────────────────────────────────────────────
 function triggerConfetti() {
   const colors = ['#f59e0b','#3b82f6','#16a34a','#ec4899','#8b5cf6','#ef4444'];
   for (let i = 0; i < 40; i++) {
@@ -1008,108 +1066,76 @@ function triggerConfetti() {
   }
 }
 
-// ── EDIT SCREEN ────────────────────────────────────────────────────────────
-function openEditScreen() {
-  renderWordEditor();
-  showScreen('edit-screen');
-}
+// ──────────────────────────────────────────────────────────────────────────
+// EVENT LISTENERS
+// ──────────────────────────────────────────────────────────────────────────
 
-function renderWordEditor() {
-  const container = document.getElementById('word-list-editor');
-  container.innerHTML = '';
-  wordList.forEach((item, i) => {
-    const row = document.createElement('div');
-    row.className = 'word-row';
-    row.innerHTML = `
-      <input type="text" placeholder="word" value="${escHtml(item.word)}" data-i="${i}" data-field="word">
-      <input type="text" placeholder="sentence using the word…" value="${escHtml(item.sentence)}" data-i="${i}" data-field="sentence">
-      <button class="del-btn" data-del="${i}">✕</button>
-    `;
-    container.appendChild(row);
+// Category buttons
+document.querySelectorAll('.cat-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const cat = btn.dataset.cat;
+    // For ck rule, show the rule screen first ONCE per session (session = until page refresh)
+    // Just always show it — small friction but reinforces the rule each time
+    if (cat === 'rule' && !sessionStorage.getItem('rule_seen')) {
+      sessionStorage.setItem('rule_seen', '1');
+      sessionStorage.setItem('pending_cat', cat);
+      showScreen('rule-screen');
+    } else {
+      startSession(cat);
+    }
   });
-}
-
-function escHtml(s) {
-  return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-function collectEdits() {
-  const rows = document.querySelectorAll('.word-row');
-  const newList = [];
-  rows.forEach(row => {
-    const word = row.querySelector('[data-field="word"]').value.trim().toLowerCase();
-    const sentence = row.querySelector('[data-field="sentence"]').value.trim();
-    if (word) newList.push({ word, sentence });
-  });
-  return newList;
-}
-
-// ── EVENT LISTENERS ────────────────────────────────────────────────────────
-document.getElementById('start-btn').addEventListener('click', () => {
-  buildSession();
-  showScreen('game-screen');
-  document.getElementById('game-screen').style.display = 'flex';
-  loadWord(0);
 });
 
+function startSession(cat) {
+  buildSession(cat);
+  showScreen('game-screen');
+  loadWord(0);
+}
+
+// Rule button on start screen
+document.getElementById('rule-btn').addEventListener('click', () => {
+  sessionStorage.removeItem('pending_cat'); // no auto-start, they just want to read
+  showScreen('rule-screen');
+});
+
+// Rule screen buttons
+document.getElementById('rule-start-btn').addEventListener('click', () => {
+  const pending = sessionStorage.getItem('pending_cat');
+  sessionStorage.removeItem('pending_cat');
+  if (pending) {
+    startSession(pending);
+  } else {
+    // Opened from "Remind me" button → go back to start
+    showScreen('start-screen');
+  }
+});
+document.getElementById('rule-back-btn').addEventListener('click', () => {
+  sessionStorage.removeItem('pending_cat');
+  showScreen('start-screen');
+});
+
+// Game screen
 document.getElementById('speak-btn').addEventListener('click', speakCurrentWord);
-
 document.getElementById('check-btn').addEventListener('click', checkAnswer);
-
 document.getElementById('spelling-input').addEventListener('keydown', e => {
   if (e.key === 'Enter') {
     if (!answered) checkAnswer();
     else nextWord();
   }
 });
-
 document.getElementById('next-btn').addEventListener('click', nextWord);
 
+// Results screen
 document.getElementById('play-again-btn').addEventListener('click', () => {
-  buildSession();
-  showScreen('game-screen');
-  document.getElementById('game-screen').style.display = 'flex';
-  loadWord(0);
+  startSession(currentCategory);
 });
-
-document.getElementById('edit-toggle-btn').addEventListener('click', () => {
-  const editScreen = document.getElementById('edit-screen');
-  if (editScreen.style.display === 'flex') {
-    showScreen('start-screen');
-  } else {
-    openEditScreen();
-  }
-});
-
-document.getElementById('add-word-btn').addEventListener('click', () => {
-  wordList = collectEdits();
-  wordList.push({ word: '', sentence: '' });
-  renderWordEditor();
-  // Scroll to bottom
-  const c = document.getElementById('word-list-editor');
-  c.scrollTop = c.scrollHeight;
-  // Focus new word input
-  const inputs = c.querySelectorAll('input[data-field="word"]');
-  if (inputs.length) inputs[inputs.length - 1].focus();
-});
-
-document.getElementById('word-list-editor').addEventListener('click', e => {
-  if (e.target.dataset.del !== undefined) {
-    wordList = collectEdits();
-    const idx = parseInt(e.target.dataset.del);
-    wordList.splice(idx, 1);
-    renderWordEditor();
-  }
-});
-
-document.getElementById('save-btn').addEventListener('click', () => {
-  wordList = collectEdits();
-  saveWords();
+document.getElementById('back-to-start-btn').addEventListener('click', () => {
   showScreen('start-screen');
 });
 
-// ── INIT ───────────────────────────────────────────────────────────────────
-loadWords();
+// ──────────────────────────────────────────────────────────────────────────
+// INIT
+// ──────────────────────────────────────────────────────────────────────────
 showScreen('start-screen');
 </script>
 </body>
