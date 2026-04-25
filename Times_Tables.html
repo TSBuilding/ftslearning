@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Times Tables — FTS Learning HQ</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+<!-- Supabase SDK (loaded from their CDN, like Google Fonts) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
   :root {
     --bg:      #0e1a2e;
@@ -72,6 +76,29 @@
   }
   .mute-btn:hover { background: #253552; }
   .mute-btn.muted { color: var(--muted); }
+
+  /* Cloud sync indicator */
+  .sync-indicator {
+    position: fixed;
+    bottom: 12px;
+    right: 12px;
+    z-index: 100;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    transition: all 0.3s;
+    opacity: 0.7;
+  }
+  .sync-indicator.connecting { color: var(--gold); }
+  .sync-indicator.connected  { color: var(--green); }
+  .sync-indicator.error      { color: var(--red); opacity: 1; }
+  .sync-indicator.busy       { color: var(--teal); }
 
   /* ── SCREENS ── */
   .screen { position: relative; z-index: 1; display: none; }
@@ -561,6 +588,9 @@
   <button class="mute-btn" id="mute-btn" title="Toggle sound">🔊</button>
 </div>
 
+<!-- Cloud sync indicator (bottom-right) -->
+<div class="sync-indicator connecting" id="sync-indicator">connecting…</div>
+
 <!-- ══ PICK SCREEN ══ -->
 <div id="pick-screen" class="screen active">
   <div class="pick-intro">
@@ -732,9 +762,148 @@
 </div>
 
 <script>
+// ═════════════════════════════════════════════════════════════════════════
+// SUPABASE CONFIG + AUTH (new in this version)
+// ═════════════════════════════════════════════════════════════════════════
+const SUPABASE_URL = 'https://uswsxfpspdcdmwlvmwfw.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_TGB7S0R_X0aDRPJ5VN3VIw_ijIccaTQ';
+
+// Hard-coded credentials for v1. We'll replace with a real login screen later.
+const PARENT_EMAIL    = 'smitp001@gmail.com';
+const PARENT_PASSWORD = 'Henleymile_Supa00';
+
+// Hard-coded child + tool for v1 — only one child, only one tool wired up.
+const CHILD_ID = 'bdc59f21-87e3-4ae2-8c46-440775ab5f3b';
+const TOOL_ID  = '7caf8015-249d-4c83-a9d5-4a07e7014899';
+
+// Initialise the SDK and a global supabase client. The `supabase` global
+// comes from the CDN script tag in <head>.
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+const syncEl = document.getElementById('sync-indicator');
+function setSync(state, label) {
+  syncEl.className = 'sync-indicator ' + state;
+  syncEl.textContent = label;
+}
+
+// Sign in on page load. The session persists in browser storage so refreshes
+// don't need to log in again, but for v1 we sign in unconditionally.
+async function signInParent() {
+  setSync('connecting', 'connecting…');
+  try {
+    const { error } = await sb.auth.signInWithPassword({
+      email: PARENT_EMAIL,
+      password: PARENT_PASSWORD
+    });
+    if (error) throw error;
+    setSync('connected', 'connected');
+    console.log('[supabase] signed in as parent');
+  } catch (err) {
+    setSync('error', 'sign-in failed');
+    console.error('[supabase] sign-in error:', err);
+  }
+}
+
+// Kick off auth as soon as the page loads. Tests still work if this fails —
+// they just won't record to the database.
+signInParent();
+
 // ─────────────────────────────────────────────────────────────────────────
-// VOICE / AUDIO
+// SUPABASE — recording helpers
+// Each one writes to the database and logs success/failure to the console.
+// All errors are swallowed so a bad network never breaks the tool itself.
 // ─────────────────────────────────────────────────────────────────────────
+async function getFamilyId() {
+  // Look up the family id of the signed-in user via our profile table.
+  // Cached after first call.
+  if (getFamilyId._cached) return getFamilyId._cached;
+  const { data, error } = await sb.from('users').select('family_id').single();
+  if (error) {
+    console.error('[supabase] family_id lookup error:', error);
+    return null;
+  }
+  getFamilyId._cached = data.family_id;
+  return data.family_id;
+}
+
+async function startSession() {
+  setSync('busy', 'starting session…');
+  try {
+    const family_id = await getFamilyId();
+    if (!family_id) throw new Error('no family_id');
+    const { data, error } = await sb.from('sessions').insert({
+      family_id,
+      child_id:  CHILD_ID,
+      tool_id:   TOOL_ID
+    }).select().single();
+    if (error) throw error;
+    console.log('[supabase] session started:', data.id);
+    setSync('connected', 'connected');
+    return data.id;
+  } catch (err) {
+    console.error('[supabase] startSession error:', err);
+    setSync('error', 'session error');
+    return null;
+  }
+}
+
+async function recordAttempt(sessionId, tableNumber, multiplier, answerGiven, correct, timeTakenMs) {
+  if (!sessionId) return; // silently skip if no session
+  setSync('busy', 'saving…');
+  try {
+    const family_id = await getFamilyId();
+    if (!family_id) throw new Error('no family_id');
+
+    // 1. Insert the parent event row
+    const { data: ev, error: evErr } = await sb.from('activity_events').insert({
+      family_id,
+      child_id:    CHILD_ID,
+      tool_id:     TOOL_ID,
+      session_id:  sessionId,
+      event_type:  'question_answered',
+      score:       correct ? 1 : 0
+    }).select().single();
+    if (evErr) throw evErr;
+
+    // 2. Insert the per-question detail row, linked to the event
+    const { error: detErr } = await sb.from('times_tables_attempts').insert({
+      event_id:       ev.id,
+      family_id,
+      table_number:   tableNumber,
+      multiplier,
+      answer_given:   answerGiven,
+      correct,
+      time_taken_ms:  timeTakenMs
+    });
+    if (detErr) throw detErr;
+
+    console.log('[supabase] attempt saved:', { tableNumber, multiplier, answerGiven, correct });
+    setSync('connected', 'connected');
+  } catch (err) {
+    console.error('[supabase] recordAttempt error:', err);
+    setSync('error', 'save failed');
+  }
+}
+
+async function endSession(sessionId) {
+  if (!sessionId) return;
+  setSync('busy', 'ending session…');
+  try {
+    const { error } = await sb.from('sessions').update({
+      ended_at: new Date().toISOString()
+    }).eq('id', sessionId);
+    if (error) throw error;
+    console.log('[supabase] session ended:', sessionId);
+    setSync('connected', 'connected');
+  } catch (err) {
+    console.error('[supabase] endSession error:', err);
+    setSync('error', 'end failed');
+  }
+}
+
+// ═════════════════════════════════════════════════════════════════════════
+// VOICE / AUDIO  (unchanged from previous version)
+// ═════════════════════════════════════════════════════════════════════════
 let voiceCache = null;
 let isMuted = localStorage.getItem('times_tables_mute') === 'true';
 
@@ -781,9 +950,9 @@ muteBtn.addEventListener('click', () => {
 });
 refreshMuteUI();
 
-// ─────────────────────────────────────────────────────────────────────────
-// COLOURS / PATTERNS
-// ─────────────────────────────────────────────────────────────────────────
+// ═════════════════════════════════════════════════════════════════════════
+// COLOURS / PATTERNS  (unchanged)
+// ═════════════════════════════════════════════════════════════════════════
 const TABLE_COLORS = {
   1:'#94a3b8', 2:'#f472b6', 3:'#fb923c', 4:'#facc15',
   5:'#4ade80', 6:'#2dd4bf', 7:'#60a5fa', 8:'#a78bfa',
@@ -803,11 +972,11 @@ const PATTERNS = {
   }
 };
 
-// ─────────────────────────────────────────────────────────────────────────
-// STATE
-// ─────────────────────────────────────────────────────────────────────────
+// ═════════════════════════════════════════════════════════════════════════
+// STATE  (test state expanded for cloud sync)
+// ═════════════════════════════════════════════════════════════════════════
 let currentTable = 2;
-let currentMode  = 'learn'; // 'learn' | 'test'
+let currentMode  = 'learn';
 
 // Learn state
 let currentStep  = 1;
@@ -816,15 +985,19 @@ let animTimer    = null;
 let revealTimer  = null;
 
 // Test state
-let testBlanks   = [];     // sorted ascending step numbers (1-10) that are blanks
-let testIdx      = 0;       // index into testBlanks
+let testBlanks   = [];
+let testIdx      = 0;
 let testInput    = '';
 let testScore    = 0;
-let testResults  = [];      // [{step, correct, userAnswer, correctAnswer}]
-let testLocked   = false;   // prevents input during feedback
+let testResults  = [];
+let testLocked   = false;
+
+// NEW: cloud sync state for test
+let currentSessionId = null;
+let questionStartedAt = 0;  // ms timestamp, used to measure time per question
 
 // ─────────────────────────────────────────────────────────────────────────
-// PERSONAL BEST
+// PERSONAL BEST  (still in localStorage for now — DB version comes later)
 // ─────────────────────────────────────────────────────────────────────────
 function bestKey(n) { return `times_tables_best_${n}`; }
 function getBest(n) {
@@ -849,7 +1022,7 @@ function refreshAllBests() {
 refreshAllBests();
 
 // ─────────────────────────────────────────────────────────────────────────
-// PICKER
+// PICKER  (unchanged)
 // ─────────────────────────────────────────────────────────────────────────
 document.querySelectorAll('.table-btn').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -866,7 +1039,6 @@ function enterMode(mode) {
   document.getElementById('pick-screen').classList.remove('active');
   document.getElementById('mode-screen').classList.add('active');
 
-  // tabs
   document.querySelectorAll('.mode-tab').forEach(t => {
     t.classList.toggle('active', t.dataset.mode === mode);
   });
@@ -895,7 +1067,7 @@ document.querySelectorAll('.mode-tab').forEach(tab => {
 });
 
 // ─────────────────────────────────────────────────────────────────────────
-// LEARN — GRID
+// LEARN — GRID  (unchanged)
 // ─────────────────────────────────────────────────────────────────────────
 function buildGrid() {
   const grid = document.getElementById('times-grid');
@@ -967,7 +1139,7 @@ function updateGrid() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────
-// LEARN — STEP LOAD + ARRAY ANIMATION
+// LEARN — STEP LOAD + ARRAY ANIMATION  (unchanged)
 // ─────────────────────────────────────────────────────────────────────────
 function loadStep(step) {
   if (animTimer)   { clearTimeout(animTimer); animTimer = null; }
@@ -1094,10 +1266,9 @@ document.getElementById('ready-test-btn').addEventListener('click', () => {
 });
 
 // ─────────────────────────────────────────────────────────────────────────
-// TEST — INTRO
+// TEST — INTRO  (unchanged)
 // ─────────────────────────────────────────────────────────────────────────
 function showTestIntro() {
-  // reset test sub-state
   document.querySelectorAll('.test-state').forEach(s => s.classList.remove('active'));
   document.getElementById('test-intro').classList.add('active');
 
@@ -1109,10 +1280,9 @@ function showTestIntro() {
 document.getElementById('start-test-btn').addEventListener('click', startTest);
 
 // ─────────────────────────────────────────────────────────────────────────
-// TEST — ACTIVE
+// TEST — ACTIVE   (CHANGED: starts a session and times each question)
 // ─────────────────────────────────────────────────────────────────────────
-function startTest() {
-  // pick 5 random unique steps from 1-10
+async function startTest() {
   const allSteps = [1,2,3,4,5,6,7,8,9,10];
   const shuffled = [...allSteps].sort(() => Math.random() - 0.5);
   testBlanks = shuffled.slice(0, 5).sort((a,b) => a - b);
@@ -1125,18 +1295,22 @@ function startTest() {
   document.querySelectorAll('.test-state').forEach(s => s.classList.remove('active'));
   document.getElementById('test-active').classList.add('active');
 
+  // NEW: start a database session for this test
+  currentSessionId = await startSession();
+
   buildTestTable();
   updateTestHud();
   updateActiveAnswerDisplay();
   document.getElementById('test-feedback').className = 'feedback-bar';
+
+  // NEW: start the timer for the first question
+  questionStartedAt = Date.now();
 }
 
 function buildTestTable() {
   const list = document.getElementById('test-table-list');
   list.innerHTML = '';
 
-  // Build a lookup of answered blanks by step so they retain their state
-  // across rebuilds — the table fills in progressively as he answers.
   const answeredByStep = {};
   testResults.forEach(r => { answeredByStep[r.step] = r; });
 
@@ -1182,7 +1356,6 @@ function buildTestTable() {
     list.appendChild(row);
   }
 
-  // scroll active into view (helps when keyboard area is scrolled)
   const activeEl = list.querySelector('.test-row.active');
   if (activeEl) activeEl.scrollIntoView({ block: 'center', behavior: 'smooth' });
 }
@@ -1205,11 +1378,9 @@ function updateActiveAnswerDisplay() {
     active.classList.remove('empty');
     active.textContent = testInput;
   }
-  // submit button state
   document.getElementById('np-submit').disabled = (testInput === '');
 }
 
-// numpad handlers
 document.querySelectorAll('.np-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     if (testLocked) return;
@@ -1231,16 +1402,20 @@ document.querySelectorAll('.np-btn').forEach(btn => {
   });
 });
 
+// CHANGED: now records the attempt to the database
 function submitTestAnswer() {
   testLocked = true;
   const step = testBlanks[testIdx];
   const correctAnswer = currentTable * step;
   const userAnswer = parseInt(testInput, 10);
   const correct = userAnswer === correctAnswer;
+  const timeTakenMs = Date.now() - questionStartedAt;
 
   testResults.push({ step, correct, userAnswer, correctAnswer });
 
-  // update active row to correct/wrong state, ALWAYS show correct answer
+  // NEW: fire-and-forget the database write
+  recordAttempt(currentSessionId, currentTable, step, userAnswer, correct, timeTakenMs);
+
   const list = document.getElementById('test-table-list');
   const row = list.querySelector(`.test-row[data-step="${step}"]`);
   if (row) {
@@ -1253,7 +1428,6 @@ function submitTestAnswer() {
     }
   }
 
-  // feedback bar
   const fb = document.getElementById('test-feedback');
   const emoji = document.getElementById('test-fb-emoji');
   const msg = document.getElementById('test-fb-msg');
@@ -1271,33 +1445,36 @@ function submitTestAnswer() {
     msg.textContent = `${currentTable} × ${step} = ${correctAnswer} — keep going!`;
   }
 
-  // audio — chant the equation in both cases, with cheerful prefix
   chantEquation(currentTable, step, correctAnswer, correct ? prefix : null);
 
   updateTestHud();
 
-  // advance after a beat
   setTimeout(() => {
     testInput = '';
     testIdx++;
     if (testIdx >= testBlanks.length) {
       showTestResults();
     } else {
-      // rebuild — answered blanks persist (see buildTestTable)
       buildTestTable();
       document.getElementById('test-feedback').className = 'feedback-bar';
       updateActiveAnswerDisplay();
       testLocked = false;
+      // NEW: restart the timer for the next question
+      questionStartedAt = Date.now();
     }
   }, 1900);
 }
 
 // ─────────────────────────────────────────────────────────────────────────
-// TEST — RESULTS
+// TEST — RESULTS   (CHANGED: ends the session)
 // ─────────────────────────────────────────────────────────────────────────
-function showTestResults() {
+async function showTestResults() {
   document.querySelectorAll('.test-state').forEach(s => s.classList.remove('active'));
   document.getElementById('test-results').classList.add('active');
+
+  // NEW: close the session in the database
+  endSession(currentSessionId);
+  currentSessionId = null;
 
   const total = testBlanks.length;
   const pct = testScore / total;
@@ -1315,7 +1492,6 @@ function showTestResults() {
   document.getElementById('res-title').textContent  = title;
   document.getElementById('res-msg').textContent    = msg;
 
-  // best score handling
   const wasNew = setBest(currentTable, testScore);
   const best = getBest(currentTable);
   const bestEl = document.getElementById('res-best');
@@ -1332,7 +1508,6 @@ function showTestResults() {
   }
   refreshAllBests();
 
-  // recap
   const recap = document.getElementById('res-recap');
   recap.innerHTML = '';
   testResults.forEach(r => {
@@ -1342,7 +1517,6 @@ function showTestResults() {
     recap.appendChild(row);
   });
 
-  // celebratory audio summary
   if (testScore === total) {
     setTimeout(() => speak(`Perfect! You got every single one!`), 600);
   } else if (pct >= 0.6) {
@@ -1356,7 +1530,7 @@ document.getElementById('res-back-learn').addEventListener('click', () => enterM
 document.getElementById('res-test-again').addEventListener('click', startTest);
 
 // ─────────────────────────────────────────────────────────────────────────
-// CONFETTI
+// CONFETTI  (unchanged)
 // ─────────────────────────────────────────────────────────────────────────
 function confetti() {
   const colors = ['#f59e0b','#3b82f6','#16a34a','#ec4899','#8b5cf6','#ef4444','#06b6d4'];
@@ -1372,7 +1546,7 @@ function confetti() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────
-// BACK BUTTON BEHAVIOUR
+// BACK BUTTON BEHAVIOUR  (unchanged)
 // ─────────────────────────────────────────────────────────────────────────
 document.getElementById('back-btn').addEventListener('click', e => {
   const modeOpen = document.getElementById('mode-screen').classList.contains('active');
@@ -1386,7 +1560,6 @@ document.getElementById('back-btn').addEventListener('click', e => {
     document.documentElement.style.setProperty('--accent', 'var(--teal)');
     refreshAllBests();
   }
-  // else: anchor href takes over → goes to index.html
 });
 </script>
 </body>
