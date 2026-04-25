@@ -766,11 +766,7 @@
 // SUPABASE CONFIG + AUTH (new in this version)
 // ═════════════════════════════════════════════════════════════════════════
 const SUPABASE_URL = 'https://uswsxfpspdcdmwlvmwfw.supabase.co';
-const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_TGB7S0R_X0aDRPJ5VN3VIw_ijIccaTQ';
-
-// Hard-coded credentials for v1. We'll replace with a real login screen later.
-const PARENT_EMAIL    = 'smitp001@gmail.com';
-const PARENT_PASSWORD = 'Henleymile_Supa00';
+const SUPABASE_PUBLISHABLE_KEY = '<your key>';
 
 // Hard-coded child + tool for v1 — only one child, only one tool wired up.
 const CHILD_ID = 'bdc59f21-87e3-4ae2-8c46-440775ab5f3b';
@@ -788,26 +784,19 @@ function setSync(state, label) {
 
 // Sign in on page load. The session persists in browser storage so refreshes
 // don't need to log in again, but for v1 we sign in unconditionally.
-async function signInParent() {
+async function ensureAuthenticated() {
   setSync('connecting', 'connecting…');
-  try {
-    const { error } = await sb.auth.signInWithPassword({
-      email: PARENT_EMAIL,
-      password: PARENT_PASSWORD
-    });
-    if (error) throw error;
-    setSync('connected', 'connected');
-    console.log('[supabase] signed in as parent');
-  } catch (err) {
-    setSync('error', 'sign-in failed');
-    console.error('[supabase] sign-in error:', err);
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) {
+    // No session — bounce to the home page to log in
+    window.location.href = 'index.html';
+    return;
   }
+  setSync('connected', 'connected');
+  console.log('[supabase] session active');
 }
 
-// Kick off auth as soon as the page loads. Tests still work if this fails —
-// they just won't record to the database.
-signInParent();
-
+ensureAuthenticated();
 // ─────────────────────────────────────────────────────────────────────────
 // SUPABASE — recording helpers
 // Each one writes to the database and logs success/failure to the console.
