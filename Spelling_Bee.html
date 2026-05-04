@@ -151,6 +151,8 @@
     text-transform: uppercase;
   }
   .category-badge.ear     { color: var(--gold);   border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.06); }
+  .category-badge.ck      { color: var(--gold);   border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.06); }
+  .category-badge.k       { color: var(--blue-light); border-color: rgba(59,130,246,0.3); background: rgba(59,130,246,0.06); }
   .category-badge.tricky  { color: var(--purple); border-color: rgba(167,139,250,0.3); background: rgba(167,139,250,0.06); }
 
   /* Speak button */
@@ -574,7 +576,7 @@
       <div class="cat-icon">⭐</div>
       <div class="cat-info">
         <div class="cat-name">Everything Mixed</div>
-        <div class="cat-desc">Pattern words + tricky words — 10 words</div>
+        <div class="cat-desc">10 random words from all the weeks so far</div>
       </div>
       <div class="cat-arrow">›</div>
     </button>
@@ -663,52 +665,112 @@
 
 <script>
 // ──────────────────────────────────────────────────────────────────────────
-// CLEAR LEGACY localStorage word list
-// Previous versions had an edit screen that saved words to localStorage.
-// That feature is removed — word lists are now updated via GitHub each week.
-// Clear any old cached list so the current committed words are authoritative.
+// CLEAR LEGACY localStorage word list (one-time cleanup from removed feature)
 // ──────────────────────────────────────────────────────────────────────────
 localStorage.removeItem('spelling_bee_words');
 
-// ──────────────────────────────────────────────────────────────────────────
-// WORD DATA — updated weekly via GitHub
-// THIS WEEK: 'ear' phonics pattern (e-a-r making the /ear/ sound)
-// ──────────────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════
+// WORD DATA
+// ══════════════════════════════════════════════════════════════════════════
+//
+// EACH WORD has:
+//   word     — the spelling
+//   sentence — used in context (TTS reads this; word is masked in hint)
+//   cat      — category code, drives the rule reminder shown after each answer
+//              Current categories: 'ear', 'ck', 'k', 'tricky'
+//              Add new ones as new phonics rules come up — also extend
+//              CATEGORY_LABELS and showRuleReminder() below to match.
+//
+// FOUR ARRAYS:
+//   CURRENT_PATTERN — this week's pattern words (used by "This Week's Pattern")
+//   CURRENT_TRICKY  — this week's tricky words  (used by "Tricky Words")
+//   ARCHIVE_PATTERN — all previous weeks' pattern words (used by "Everything Mixed")
+//   ARCHIVE_TRICKY  — all previous weeks' tricky words  (used by "Everything Mixed")
+//
+// "Everything Mixed" pulls 10 random words from the entire pool
+// (current + archive, pattern + tricky) — true random, not a deliberate split.
+//
+// ══════════════════════════════════════════════════════════════════════════
+//   WEEKLY UPDATE WORKFLOW
+// ══════════════════════════════════════════════════════════════════════════
+//   1. Move all CURRENT_PATTERN entries into ARCHIVE_PATTERN (append).
+//   2. Move all CURRENT_TRICKY  entries into ARCHIVE_TRICKY  (append).
+//   3. Replace CURRENT_PATTERN with this week's new pattern words.
+//   4. Replace CURRENT_TRICKY  with this week's new tricky words.
+//   5. Update the rule teach screen text + start hero copy + showRuleReminder
+//      to reflect the new week's pattern.
+// ══════════════════════════════════════════════════════════════════════════
 
-// PATTERN words: all use e-a-r making the /ear/ sound (as in "hear")
-// Deliberately excluded: bear/wear/pear (different /air/ sound),
-//                        earn/earth/learn (different /er/ sound),
-//                        tear (ambiguous pronunciation)
-const PATTERN_WORDS = [
-  { word: "near",   sentence: "FTS sat near the window to read his book." },
-  { word: "dear",   sentence: "Mum wrote 'Dear Grandma' at the top of the letter." },
-  { word: "year",   sentence: "FTS turned seven last year." },
-  { word: "fear",   sentence: "FTS had no fear when he climbed the tall slide." },
-  { word: "hear",   sentence: "FTS could hear the birds singing outside." },
-  { word: "ear",    sentence: "FTS whispered the secret in his friend's ear." },
-  { word: "clear",  sentence: "The sky was bright and clear today." },
-  { word: "beard",  sentence: "Dad has a brown beard on his chin." },
-  { word: "gear",   sentence: "FTS packed all his gear for the camping trip." },
-  { word: "rear",   sentence: "FTS sat in the rear seat of the car." },
-  { word: "smear",  sentence: "FTS had a smear of jam on his cheek." },
+// ── CURRENT WEEK (Week 2: 'ear' pattern) ─────────────────────────────────
+const CURRENT_PATTERN = [
+  { word: "near",   sentence: "FTS sat near the window to read his book.",     cat: 'ear' },
+  { word: "dear",   sentence: "Mum wrote 'Dear Grandma' at the top of the letter.", cat: 'ear' },
+  { word: "year",   sentence: "FTS turned seven last year.",                    cat: 'ear' },
+  { word: "fear",   sentence: "FTS had no fear when he climbed the tall slide.",cat: 'ear' },
+  { word: "hear",   sentence: "FTS could hear the birds singing outside.",      cat: 'ear' },
+  { word: "ear",    sentence: "FTS whispered the secret in his friend's ear.",  cat: 'ear' },
+  { word: "clear",  sentence: "The sky was bright and clear today.",            cat: 'ear' },
+  { word: "beard",  sentence: "Dad has a brown beard on his chin.",             cat: 'ear' },
+  { word: "gear",   sentence: "FTS packed all his gear for the camping trip.",  cat: 'ear' },
+  { word: "rear",   sentence: "FTS sat in the rear seat of the car.",           cat: 'ear' },
+  { word: "smear",  sentence: "FTS had a smear of jam on his cheek.",           cat: 'ear' },
 ];
 
-// TRICKY WORDS: no rule, just memorise
-const TRICKY_WORDS = [
-  { word: "animal", sentence: "The lion is FTS's favourite animal at the zoo." },
-  { word: "open",   sentence: "FTS will open his presents on his birthday." },
+const CURRENT_TRICKY = [
+  { word: "animal", sentence: "The lion is FTS's favourite animal at the zoo.", cat: 'tricky' },
+  { word: "open",   sentence: "FTS will open his presents on his birthday.",    cat: 'tricky' },
 ];
+
+// ── ARCHIVE (Week 1: ck rule + k contrast) ───────────────────────────────
+// As each week ends, move that week's words from CURRENT into here.
+const ARCHIVE_PATTERN = [
+  // Week 1 — ck rule (short vowel + ck)
+  { word: "duck",  sentence: "The duck swam across the pond.",              cat: 'ck' },
+  { word: "rock",  sentence: "FTS picked up a smooth rock at the beach.",   cat: 'ck' },
+  { word: "sack",  sentence: "Dad carried the sack of potatoes inside.",    cat: 'ck' },
+  { word: "brick", sentence: "The wall was made of red brick.",             cat: 'ck' },
+  { word: "clock", sentence: "The clock on the wall ticked loudly.",        cat: 'ck' },
+  { word: "kick",  sentence: "FTS gave the footy a mighty kick.",           cat: 'ck' },
+  { word: "back",  sentence: "FTS ran all the way to the back of the yard.",cat: 'ck' },
+  { word: "neck",  sentence: "The giraffe has a very long neck.",           cat: 'ck' },
+  { word: "truck", sentence: "A big truck rolled down the street.",         cat: 'ck' },
+  { word: "pack",  sentence: "FTS helped pack his school bag.",             cat: 'ck' },
+  { word: "lock",  sentence: "The lock on the gate was rusty.",             cat: 'ck' },
+  { word: "stick", sentence: "FTS threw a stick for the dog to fetch.",     cat: 'ck' },
+  { word: "black", sentence: "The Crows wear black and red.",               cat: 'ck' },
+  { word: "pick",  sentence: "FTS could pick any flavour he wanted.",       cat: 'ck' },
+  { word: "sock",  sentence: "FTS could only find one sock under the bed.", cat: 'ck' },
+  // Week 1 — k contrast words (these explain WHY they use k not ck)
+  { word: "milk",  sentence: "FTS poured milk on his cereal.",              cat: 'k', reason: "consonant before k (L)" },
+  { word: "desk",  sentence: "FTS tidied up his desk at school.",           cat: 'k', reason: "consonant before k (S)" },
+  { word: "mask",  sentence: "FTS wore a superhero mask.",                  cat: 'k', reason: "consonant before k (S)" },
+  { word: "park",  sentence: "FTS played at the park after school.",        cat: 'k', reason: "consonant before k (R)" },
+  { word: "bark",  sentence: "The tree had rough brown bark.",              cat: 'k', reason: "consonant before k (R)" },
+  { word: "book",  sentence: "FTS read his book before bed.",               cat: 'k', reason: "vowel team (oo)" },
+  { word: "look",  sentence: "FTS had a good look at the map.",             cat: 'k', reason: "vowel team (oo)" },
+];
+
+const ARCHIVE_TRICKY = [
+  // Week 1
+  { word: "great", sentence: "FTS did a great job on his work.",            cat: 'tricky' },
+  { word: "their", sentence: "The children packed up their books.",         cat: 'tricky' },
+];
+
+// ── CATEGORY LABELS (for the badge above each word in the game) ──────────
+const CATEGORY_LABELS = {
+  ear:    "'ear' pattern word",
+  ck:     "ck rule word",
+  k:      "k word (not ck!)",
+  tricky: "tricky word — just memorise!",
+};
 
 // Session sizes
-const ALL_SESSION_SIZE  = 10;   // mix of everything
+const ALL_SESSION_SIZE = 10;
 
 // ──────────────────────────────────────────────────────────────────────────
-// TAG WORDS WITH CATEGORY
+// Tricky count for the picker
 // ──────────────────────────────────────────────────────────────────────────
-const PATTERN_TAGGED = PATTERN_WORDS.map(w => ({ ...w, cat: 'ear' }));
-const TRICKY_TAGGED  = TRICKY_WORDS.map(w => ({ ...w, cat: 'tricky' }));
-
-document.getElementById('tricky-count').textContent = TRICKY_TAGGED.length;
+document.getElementById('tricky-count').textContent = CURRENT_TRICKY.length;
 
 // ──────────────────────────────────────────────────────────────────────────
 // STATE
@@ -761,14 +823,18 @@ function buildSession(category) {
   let pool;
 
   if (category === 'rule') {
-    // Pattern words only — shuffled, take up to 10
-    const shuffled = [...PATTERN_TAGGED].sort(() => Math.random() - 0.5);
+    // Current week's pattern words only
+    const shuffled = [...CURRENT_PATTERN].sort(() => Math.random() - 0.5);
     pool = shuffled.slice(0, Math.min(10, shuffled.length));
   } else if (category === 'tricky') {
-    // All tricky words, in random order
-    pool = [...TRICKY_TAGGED].sort(() => Math.random() - 0.5);
+    // Current week's tricky words only
+    pool = [...CURRENT_TRICKY].sort(() => Math.random() - 0.5);
   } else { // 'all'
-    const combined = [...PATTERN_TAGGED, ...TRICKY_TAGGED];
+    // Combined pool of current + archive, pattern + tricky → random 10
+    const combined = [
+      ...CURRENT_PATTERN, ...CURRENT_TRICKY,
+      ...ARCHIVE_PATTERN, ...ARCHIVE_TRICKY,
+    ];
     pool = combined.sort(() => Math.random() - 0.5).slice(0, ALL_SESSION_SIZE);
   }
 
@@ -838,11 +904,10 @@ function loadWord(index) {
   document.getElementById('progress-bar').style.width = `${(index / total) * 100}%`;
   document.getElementById('progress-label').textContent = `Word ${index + 1} of ${total}`;
 
-  // Category badge
+  // Category badge — reads from CATEGORY_LABELS, falls back to category code
   const badge = document.getElementById('category-badge');
   badge.className = 'category-badge ' + currentWord.cat;
-  if (currentWord.cat === 'ear')         badge.textContent = "'ear' pattern word";
-  else if (currentWord.cat === 'tricky') badge.textContent = 'tricky word — just memorise!';
+  badge.textContent = CATEGORY_LABELS[currentWord.cat] || currentWord.cat;
 
   const input = document.getElementById('spelling-input');
   input.value = '';
@@ -903,7 +968,7 @@ function checkAnswer() {
     emoji.textContent = ['🌟','🎉','⭐','🏆','✨'][Math.floor(Math.random()*5)];
     msg.textContent = ['Brilliant!','Perfect!','Nailed it!','You got it!','Awesome!'][Math.floor(Math.random()*5)];
     speak(['Brilliant!','Perfect!','Amazing!','You got it!'][Math.floor(Math.random()*4)]);
-    showRuleReminder(currentWord, true);
+    showRuleReminder(currentWord);
     triggerConfetti();
   } else {
     input.classList.add('wrong');
@@ -931,15 +996,21 @@ function checkAnswer() {
     }
     hintDiv.innerHTML = `The correct spelling is: <span>${currentWord.word}</span>`;
     speak(`The correct spelling is: ${currentWord.word.split('').join(', ')}`);
-    showRuleReminder(currentWord, false);
+    showRuleReminder(currentWord);
   }
 }
 
-function showRuleReminder(word, wasCorrect) {
+// Per-category rule reminder. Add a new branch when a new category appears.
+function showRuleReminder(word) {
   const ruleDiv = document.getElementById('rule-reminder');
   let html = '';
   if (word.cat === 'ear') {
     html = `💡 <strong>${word.word}</strong> uses <strong>e-a-r</strong> for the /ear/ sound.`;
+  } else if (word.cat === 'ck') {
+    html = `💡 <strong>${word.word}</strong> uses <strong>ck</strong> because of the short vowel sound.`;
+  } else if (word.cat === 'k') {
+    const reason = word.reason || 'the sound before it';
+    html = `💡 <strong>${word.word}</strong> uses just <strong>k</strong> — ${reason}.`;
   } else if (word.cat === 'tricky') {
     html = `🧠 <strong>${word.word}</strong> is a tricky word — no rule, just memorise the shape!`;
   }
@@ -1029,7 +1100,6 @@ function triggerConfetti() {
 // EVENT LISTENERS
 // ──────────────────────────────────────────────────────────────────────────
 
-// Category buttons
 document.querySelectorAll('.cat-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     const cat = btn.dataset.cat;
