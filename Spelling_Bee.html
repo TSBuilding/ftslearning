@@ -150,9 +150,8 @@
     letter-spacing: 1px;
     text-transform: uppercase;
   }
-  .category-badge.ck    { color: var(--gold);   border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.06); }
-  .category-badge.k     { color: var(--blue-light); border-color: rgba(59,130,246,0.3); background: rgba(59,130,246,0.06); }
-  .category-badge.tricky { color: var(--purple); border-color: rgba(167,139,250,0.3); background: rgba(167,139,250,0.06); }
+  .category-badge.ear     { color: var(--gold);   border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.06); }
+  .category-badge.tricky  { color: var(--purple); border-color: rgba(167,139,250,0.3); background: rgba(167,139,250,0.06); }
 
   /* Speak button */
   .speak-btn {
@@ -400,8 +399,8 @@
     color: var(--text);
   }
   .cat-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
-  .cat-btn.ck     { border-color: rgba(245,158,11,0.35); }
-  .cat-btn.ck:hover     { background: rgba(245,158,11,0.06); }
+  .cat-btn.ear    { border-color: rgba(245,158,11,0.35); }
+  .cat-btn.ear:hover    { background: rgba(245,158,11,0.06); }
   .cat-btn.tricky { border-color: rgba(167,139,250,0.35); }
   .cat-btn.tricky:hover { background: rgba(167,139,250,0.06); }
   .cat-btn.all    { border-color: rgba(59,130,246,0.35); }
@@ -468,17 +467,16 @@
   .rule-chip {
     font-family: 'Fredoka One', cursive;
     font-size: 22px;
-    width: 52px;
+    width: 60px;
     height: 52px;
     border-radius: 12px;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
   }
-  .rule-chip.ck { background: rgba(245,158,11,0.18); color: var(--gold); border: 1.5px solid rgba(245,158,11,0.4); }
-  .rule-chip.k  { background: rgba(59,130,246,0.18); color: var(--blue-light); border: 1.5px solid rgba(59,130,246,0.4); }
+  .rule-chip.ear { background: rgba(245,158,11,0.18); color: var(--gold); border: 1.5px solid rgba(245,158,11,0.4); }
   .rule-line strong { color: var(--gold); }
-  .rule-line .kblue { color: var(--blue-light); }
   .rule-word { font-family: 'Fredoka One', cursive; color: var(--text); }
+  .rule-word strong { color: var(--gold); }
 
   .rule-start-btn {
     width: 100%;
@@ -548,17 +546,17 @@
     <div class="start-hero">
       <div class="bee-icon">🐝</div>
       <div class="start-title">Ready to spell,<br><span>FTS</span>?</div>
-      <div class="start-sub">This week's focus: the <strong style="color:var(--gold)">ck</strong> rule and tricky words.</div>
-      <button class="rule-btn" id="rule-btn">📖 Remind me of the rule</button>
+      <div class="start-sub">This week's focus: the <strong style="color:var(--gold)">'ear'</strong> sound and tricky words.</div>
+      <button class="rule-btn" id="rule-btn">📖 Remind me of the pattern</button>
     </div>
 
     <div class="cat-section-label">Pick your practice</div>
 
-    <button class="cat-btn ck" data-cat="rule">
-      <div class="cat-icon">🎯</div>
+    <button class="cat-btn ear" data-cat="rule">
+      <div class="cat-icon">👂</div>
       <div class="cat-info">
-        <div class="cat-name">This Week's Rule</div>
-        <div class="cat-desc">ck and k words mixed — 10 words</div>
+        <div class="cat-name">This Week's Pattern</div>
+        <div class="cat-desc">Words with the 'ear' sound — 10 words</div>
       </div>
       <div class="cat-arrow">›</div>
     </button>
@@ -576,7 +574,7 @@
       <div class="cat-icon">⭐</div>
       <div class="cat-info">
         <div class="cat-name">Everything Mixed</div>
-        <div class="cat-desc">Rule words + tricky words — 10 words</div>
+        <div class="cat-desc">Pattern words + tricky words — 10 words</div>
       </div>
       <div class="cat-arrow">›</div>
     </button>
@@ -585,23 +583,18 @@
   <!-- RULE TEACH SCREEN -->
   <div id="rule-screen" class="hidden" style="width:100%;display:none;flex-direction:column;gap:16px;">
     <div class="rule-card">
-      <div class="rule-title">The <span style="color:var(--text)">ck</span> Rule!</div>
-      <div class="rule-sub">When do you use <strong style="color:var(--gold)">ck</strong> and when do you use <strong style="color:var(--blue-light)">k</strong>?</div>
+      <div class="rule-title">The <span style="color:var(--text)">'ear'</span> Sound!</div>
+      <div class="rule-sub">When you hear /ear/ at the end of a word, it's usually spelled <strong style="color:var(--gold)">e-a-r</strong>.</div>
 
       <div class="rule-panel">
         <div class="rule-line">
-          <div class="rule-chip ck">ck</div>
-          <div>Use <strong>ck</strong> after a <strong>short vowel</strong> sound at the end of a word.<br>
-          <span class="rule-word">d<strong>u</strong>ck · r<strong>o</strong>ck · s<strong>a</strong>ck · br<strong>i</strong>ck</span></div>
-        </div>
-        <div class="rule-line">
-          <div class="rule-chip k">k</div>
-          <div>Use <span class="kblue"><strong>k</strong></span> after other sounds — like <strong>long vowels</strong>, <strong>consonants</strong>, or <strong>vowel teams</strong>.<br>
-          <span class="rule-word">mil<strong>k</strong> · par<strong>k</strong> · boo<strong>k</strong></span></div>
+          <div class="rule-chip ear">ear</div>
+          <div>The three letters <strong>e</strong>, <strong>a</strong>, <strong>r</strong> work as a team to make the /ear/ sound.<br>
+          <span class="rule-word">n<strong>ear</strong> · d<strong>ear</strong> · y<strong>ear</strong> · f<strong>ear</strong></span></div>
         </div>
       </div>
 
-      <div class="rule-sub">Listen carefully to the vowel sound — that's your clue!</div>
+      <div class="rule-sub">Listen for the /ear/ sound — the spelling almost always follows!</div>
 
       <button class="rule-start-btn" id="rule-start-btn">🎯 I'm Ready!</button>
       <button class="rule-back-btn" id="rule-back-btn">← Back</button>
@@ -622,7 +615,7 @@
 
     <div class="game-card">
       <div class="bee-icon" id="bee-anim">🐝</div>
-      <div class="category-badge" id="category-badge">ck rule</div>
+      <div class="category-badge" id="category-badge">ear pattern</div>
       <div class="prompt-text" id="prompt-text">Listen carefully, then type the word!</div>
 
       <button class="speak-btn" id="speak-btn">
@@ -679,55 +672,41 @@ localStorage.removeItem('spelling_bee_words');
 
 // ──────────────────────────────────────────────────────────────────────────
 // WORD DATA — updated weekly via GitHub
+// THIS WEEK: 'ear' phonics pattern (e-a-r making the /ear/ sound)
 // ──────────────────────────────────────────────────────────────────────────
 
-// CK RULE words: short vowel + ck at end of one-syllable word
-const CK_WORDS = [
-  { word: "duck",  sentence: "The duck swam across the pond." },
-  { word: "rock",  sentence: "FTS picked up a smooth rock at the beach." },
-  { word: "sack",  sentence: "Dad carried the sack of potatoes inside." },
-  { word: "brick", sentence: "The wall was made of red brick." },
-  { word: "clock", sentence: "The clock on the wall ticked loudly." },
-  { word: "kick",  sentence: "FTS gave the footy a mighty kick." },
-  { word: "back",  sentence: "FTS ran all the way to the back of the yard." },
-  { word: "neck",  sentence: "The giraffe has a very long neck." },
-  { word: "truck", sentence: "A big truck rolled down the street." },
-  { word: "pack",  sentence: "FTS helped pack his school bag." },
-  { word: "lock",  sentence: "The lock on the gate was rusty." },
-  { word: "stick", sentence: "FTS threw a stick for the dog to fetch." },
-  { word: "black", sentence: "The Crows wear black and red." },
-  { word: "pick",  sentence: "FTS could pick any flavour he wanted." },
-  { word: "sock",  sentence: "FTS could only find one sock under the bed." },
-];
-
-// K CONTRAST words: explain WHY they use k not ck
-// (long vowel / consonant before k / vowel team)
-const K_WORDS = [
-  { word: "milk", sentence: "FTS poured milk on his cereal.",              reason: "consonant before k (L)" },
-  { word: "desk", sentence: "FTS tidied up his desk at school.",           reason: "consonant before k (S)" },
-  { word: "mask", sentence: "FTS wore a superhero mask.",                  reason: "consonant before k (S)" },
-  { word: "park", sentence: "FTS played at the park after school.",        reason: "consonant before k (R)" },
-  { word: "bark", sentence: "The tree had rough brown bark.",              reason: "consonant before k (R)" },
-  { word: "book", sentence: "FTS read his book before bed.",               reason: "vowel team (oo)" },
-  { word: "look", sentence: "FTS had a good look at the map.",             reason: "vowel team (oo)" },
+// PATTERN words: all use e-a-r making the /ear/ sound (as in "hear")
+// Deliberately excluded: bear/wear/pear (different /air/ sound),
+//                        earn/earth/learn (different /er/ sound),
+//                        tear (ambiguous pronunciation)
+const PATTERN_WORDS = [
+  { word: "near",   sentence: "FTS sat near the window to read his book." },
+  { word: "dear",   sentence: "Mum wrote 'Dear Grandma' at the top of the letter." },
+  { word: "year",   sentence: "FTS turned seven last year." },
+  { word: "fear",   sentence: "FTS had no fear when he climbed the tall slide." },
+  { word: "hear",   sentence: "FTS could hear the birds singing outside." },
+  { word: "ear",    sentence: "FTS whispered the secret in his friend's ear." },
+  { word: "clear",  sentence: "The sky was bright and clear today." },
+  { word: "beard",  sentence: "Dad has a brown beard on his chin." },
+  { word: "gear",   sentence: "FTS packed all his gear for the camping trip." },
+  { word: "rear",   sentence: "FTS sat in the rear seat of the car." },
+  { word: "smear",  sentence: "FTS had a smear of jam on his cheek." },
 ];
 
 // TRICKY WORDS: no rule, just memorise
 const TRICKY_WORDS = [
-  { word: "great", sentence: "FTS did a great job on his work." },
-  { word: "their", sentence: "The children packed up their books." },
+  { word: "animal", sentence: "The lion is FTS's favourite animal at the zoo." },
+  { word: "open",   sentence: "FTS will open his presents on his birthday." },
 ];
 
 // Session sizes
-const RULE_SESSION_SIZE = 10;   // mix of ck and k words
 const ALL_SESSION_SIZE  = 10;   // mix of everything
 
 // ──────────────────────────────────────────────────────────────────────────
 // TAG WORDS WITH CATEGORY
 // ──────────────────────────────────────────────────────────────────────────
-const CK_TAGGED     = CK_WORDS.map(w => ({ ...w, cat: 'ck' }));
-const K_TAGGED      = K_WORDS.map(w => ({ ...w, cat: 'k' }));
-const TRICKY_TAGGED = TRICKY_WORDS.map(w => ({ ...w, cat: 'tricky' }));
+const PATTERN_TAGGED = PATTERN_WORDS.map(w => ({ ...w, cat: 'ear' }));
+const TRICKY_TAGGED  = TRICKY_WORDS.map(w => ({ ...w, cat: 'tricky' }));
 
 document.getElementById('tricky-count').textContent = TRICKY_TAGGED.length;
 
@@ -780,26 +759,17 @@ function showScreen(name) {
 function buildSession(category) {
   currentCategory = category;
   let pool;
-  let size;
 
   if (category === 'rule') {
-    // Mix ck and k words — weight toward ck (teaching the rule) but ensure
-    // at least a few k words appear for contrast
-    const ckShuffled = [...CK_TAGGED].sort(() => Math.random() - 0.5);
-    const kShuffled  = [...K_TAGGED].sort(() => Math.random() - 0.5);
-    // 7 ck + 3 k = 10 (ensures contrast without overwhelming with k)
-    const ckSlice = ckShuffled.slice(0, 7);
-    const kSlice  = kShuffled.slice(0, 3);
-    pool = [...ckSlice, ...kSlice].sort(() => Math.random() - 0.5);
-    size = pool.length;
+    // Pattern words only — shuffled, take up to 10
+    const shuffled = [...PATTERN_TAGGED].sort(() => Math.random() - 0.5);
+    pool = shuffled.slice(0, Math.min(10, shuffled.length));
   } else if (category === 'tricky') {
     // All tricky words, in random order
     pool = [...TRICKY_TAGGED].sort(() => Math.random() - 0.5);
-    size = pool.length;
   } else { // 'all'
-    const combined = [...CK_TAGGED, ...K_TAGGED, ...TRICKY_TAGGED];
+    const combined = [...PATTERN_TAGGED, ...TRICKY_TAGGED];
     pool = combined.sort(() => Math.random() - 0.5).slice(0, ALL_SESSION_SIZE);
-    size = pool.length;
   }
 
   sessionQueue = pool;
@@ -828,7 +798,7 @@ function speak(text, onEnd) {
   window.speechSynthesis.cancel();
   const utt = new SpeechSynthesisUtterance(text);
   if (voiceCache) utt.voice = voiceCache;
-  utt.rate = 0.7;   // matches existing spec
+  utt.rate = 0.7;
   utt.pitch = 1.05;
   utt.lang = 'en-AU';
   if (onEnd) utt.onend = onEnd;
@@ -841,7 +811,6 @@ function speakCurrentWord() {
   btn.classList.add('speaking');
   btn.querySelector('span:last-child').textContent = 'Listening…';
 
-  // Speak: word, then sentence
   const text = `${currentWord.word}. ... ${currentWord.sentence}`;
   speak(text, () => {
     btn.classList.remove('speaking');
@@ -872,8 +841,7 @@ function loadWord(index) {
   // Category badge
   const badge = document.getElementById('category-badge');
   badge.className = 'category-badge ' + currentWord.cat;
-  if (currentWord.cat === 'ck')          badge.textContent = 'ck rule word';
-  else if (currentWord.cat === 'k')      badge.textContent = 'k word (not ck!)';
+  if (currentWord.cat === 'ear')         badge.textContent = "'ear' pattern word";
   else if (currentWord.cat === 'tricky') badge.textContent = 'tricky word — just memorise!';
 
   const input = document.getElementById('spelling-input');
@@ -888,7 +856,6 @@ function loadWord(index) {
   document.getElementById('prompt-text').textContent = 'Listen carefully, then type the word!';
   document.getElementById('check-btn').disabled = false;
 
-  // Auto-speak after short delay
   setTimeout(speakCurrentWord, 400);
 }
 
@@ -907,7 +874,6 @@ function checkAnswer() {
 
   const correct = attempt === currentWord.word.toLowerCase();
 
-  // Mark score dot
   const dot = document.getElementById(`dot-${currentIndex}`);
   if (dot) { dot.classList.add(correct ? 'pass' : 'fail'); dot.textContent = correct ? '✓' : '✗'; }
 
@@ -919,7 +885,6 @@ function checkAnswer() {
   });
   if (correct) correctThisSession++;
 
-  // Feedback UI
   const fb = document.getElementById('feedback');
   const emoji = document.getElementById('feedback-emoji');
   const msg = document.getElementById('feedback-msg');
@@ -938,7 +903,6 @@ function checkAnswer() {
     emoji.textContent = ['🌟','🎉','⭐','🏆','✨'][Math.floor(Math.random()*5)];
     msg.textContent = ['Brilliant!','Perfect!','Nailed it!','You got it!','Awesome!'][Math.floor(Math.random()*5)];
     speak(['Brilliant!','Perfect!','Amazing!','You got it!'][Math.floor(Math.random()*4)]);
-    // Reinforce the rule even when right — quick one-liner
     showRuleReminder(currentWord, true);
     triggerConfetti();
   } else {
@@ -947,7 +911,6 @@ function checkAnswer() {
     emoji.textContent = '😅';
     msg.textContent = "Not quite — here's how to spell it:";
 
-    // Letter-level comparison
     const target = currentWord.word.toLowerCase();
     const att = attempt.toLowerCase();
     const maxLen = Math.max(target.length, att.length);
@@ -968,7 +931,6 @@ function checkAnswer() {
     }
     hintDiv.innerHTML = `The correct spelling is: <span>${currentWord.word}</span>`;
     speak(`The correct spelling is: ${currentWord.word.split('').join(', ')}`);
-    // Show rule reminder
     showRuleReminder(currentWord, false);
   }
 }
@@ -976,11 +938,8 @@ function checkAnswer() {
 function showRuleReminder(word, wasCorrect) {
   const ruleDiv = document.getElementById('rule-reminder');
   let html = '';
-  if (word.cat === 'ck') {
-    html = `💡 <strong>${word.word}</strong> uses <strong>ck</strong> because of the short vowel sound.`;
-  } else if (word.cat === 'k') {
-    const reason = word.reason || 'the sound before it';
-    html = `💡 <strong>${word.word}</strong> uses just <strong>k</strong> — ${reason}.`;
+  if (word.cat === 'ear') {
+    html = `💡 <strong>${word.word}</strong> uses <strong>e-a-r</strong> for the /ear/ sound.`;
   } else if (word.cat === 'tricky') {
     html = `🧠 <strong>${word.word}</strong> is a tricky word — no rule, just memorise the shape!`;
   }
@@ -1074,8 +1033,6 @@ function triggerConfetti() {
 document.querySelectorAll('.cat-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     const cat = btn.dataset.cat;
-    // For ck rule, show the rule screen first ONCE per session (session = until page refresh)
-    // Just always show it — small friction but reinforces the rule each time
     if (cat === 'rule' && !sessionStorage.getItem('rule_seen')) {
       sessionStorage.setItem('rule_seen', '1');
       sessionStorage.setItem('pending_cat', cat);
@@ -1092,20 +1049,17 @@ function startSession(cat) {
   loadWord(0);
 }
 
-// Rule button on start screen
 document.getElementById('rule-btn').addEventListener('click', () => {
-  sessionStorage.removeItem('pending_cat'); // no auto-start, they just want to read
+  sessionStorage.removeItem('pending_cat');
   showScreen('rule-screen');
 });
 
-// Rule screen buttons
 document.getElementById('rule-start-btn').addEventListener('click', () => {
   const pending = sessionStorage.getItem('pending_cat');
   sessionStorage.removeItem('pending_cat');
   if (pending) {
     startSession(pending);
   } else {
-    // Opened from "Remind me" button → go back to start
     showScreen('start-screen');
   }
 });
@@ -1114,7 +1068,6 @@ document.getElementById('rule-back-btn').addEventListener('click', () => {
   showScreen('start-screen');
 });
 
-// Game screen
 document.getElementById('speak-btn').addEventListener('click', speakCurrentWord);
 document.getElementById('check-btn').addEventListener('click', checkAnswer);
 document.getElementById('spelling-input').addEventListener('keydown', e => {
@@ -1125,7 +1078,6 @@ document.getElementById('spelling-input').addEventListener('keydown', e => {
 });
 document.getElementById('next-btn').addEventListener('click', nextWord);
 
-// Results screen
 document.getElementById('play-again-btn').addEventListener('click', () => {
   startSession(currentCategory);
 });
