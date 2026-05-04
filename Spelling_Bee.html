@@ -535,7 +535,7 @@
 
   <!-- Header -->
   <div class="header">
-    <a href="index.html" class="back-btn">← Home</a>
+    <a href="index.html" class="back-btn" id="header-back-btn">← Home</a>
     <div class="title-block">
       <h1>🐝 Spelling Bee</h1>
       <p>FTS Learning HQ</p>
@@ -1153,6 +1153,40 @@ document.getElementById('play-again-btn').addEventListener('click', () => {
 });
 document.getElementById('back-to-start-btn').addEventListener('click', () => {
   showScreen('start-screen');
+});
+
+// ──────────────────────────────────────────────────────────────────────────
+// HEADER BACK BUTTON — context-aware
+// On start screen → goes to HQ (via the anchor's href).
+// On any other screen → returns to start screen (intercepts the click).
+// Label updates to reflect what it'll do.
+// ──────────────────────────────────────────────────────────────────────────
+const headerBackBtn = document.getElementById('header-back-btn');
+
+function updateBackButtonLabel() {
+  const onStart = !document.getElementById('start-screen').classList.contains('hidden')
+               && document.getElementById('start-screen').style.display !== 'none';
+  headerBackBtn.textContent = onStart ? '← Home' : '← Back';
+}
+
+// Wrap showScreen so the back button label refreshes on every screen change
+const _origShowScreen = showScreen;
+showScreen = function(name) {
+  _origShowScreen(name);
+  updateBackButtonLabel();
+};
+
+headerBackBtn.addEventListener('click', e => {
+  const onStart = !document.getElementById('start-screen').classList.contains('hidden')
+               && document.getElementById('start-screen').style.display !== 'none';
+  if (!onStart) {
+    // Anywhere except the start screen: cancel the navigation, go back to picker
+    e.preventDefault();
+    if (typeof speechSynthesis !== 'undefined') speechSynthesis.cancel();
+    sessionStorage.removeItem('pending_cat');
+    showScreen('start-screen');
+  }
+  // On start screen: let the anchor href do its job → index.html
 });
 
 // ──────────────────────────────────────────────────────────────────────────
