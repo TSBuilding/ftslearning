@@ -150,6 +150,7 @@
     letter-spacing: 1px;
     text-transform: uppercase;
   }
+  .category-badge.eer     { color: var(--gold);   border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.06); }
   .category-badge.ear     { color: var(--gold);   border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.06); }
   .category-badge.ck      { color: var(--gold);   border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.06); }
   .category-badge.k       { color: var(--blue-light); border-color: rgba(59,130,246,0.3); background: rgba(59,130,246,0.06); }
@@ -401,8 +402,9 @@
     color: var(--text);
   }
   .cat-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
-  .cat-btn.ear    { border-color: rgba(245,158,11,0.35); }
-  .cat-btn.ear:hover    { background: rgba(245,158,11,0.06); }
+  /* Generic "this week's pattern" button styling — stays gold regardless of which pattern */
+  .cat-btn.pattern { border-color: rgba(245,158,11,0.35); }
+  .cat-btn.pattern:hover { background: rgba(245,158,11,0.06); }
   .cat-btn.tricky { border-color: rgba(167,139,250,0.35); }
   .cat-btn.tricky:hover { background: rgba(167,139,250,0.06); }
   .cat-btn.all    { border-color: rgba(59,130,246,0.35); }
@@ -453,7 +455,7 @@
     background: var(--card2);
     border-radius: 16px;
     padding: 18px 18px;
-    display: flex; flex-direction: column; gap: 12px;
+    display: flex; flex-direction: column; gap: 14px;
     text-align: left;
   }
   .rule-line {
@@ -475,10 +477,24 @@
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
   }
-  .rule-chip.ear { background: rgba(245,158,11,0.18); color: var(--gold); border: 1.5px solid rgba(245,158,11,0.4); }
+  .rule-chip.eer { background: rgba(245,158,11,0.18); color: var(--gold); border: 1.5px solid rgba(245,158,11,0.4); }
+  .rule-chip.ear { background: rgba(167,139,250,0.15); color: var(--purple); border: 1.5px solid rgba(167,139,250,0.35); }
   .rule-line strong { color: var(--gold); }
   .rule-word { font-family: 'Fredoka One', cursive; color: var(--text); }
   .rule-word strong { color: var(--gold); }
+  .rule-word .alt { color: var(--purple); }
+  .rule-note {
+    background: rgba(167,139,250,0.08);
+    border: 1px solid rgba(167,139,250,0.25);
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.45;
+    text-align: left;
+  }
+  .rule-note strong { color: var(--purple); }
 
   .rule-start-btn {
     width: 100%;
@@ -548,17 +564,17 @@
     <div class="start-hero">
       <div class="bee-icon">🐝</div>
       <div class="start-title">Ready to spell,<br><span>FTS</span>?</div>
-      <div class="start-sub">This week's focus: the <strong style="color:var(--gold)">'ear'</strong> sound and tricky words.</div>
+      <div class="start-sub">This week's focus: the <strong style="color:var(--gold)">'eer'</strong> spelling and a tricky word.</div>
       <button class="rule-btn" id="rule-btn">📖 Remind me of the pattern</button>
     </div>
 
     <div class="cat-section-label">Pick your practice</div>
 
-    <button class="cat-btn ear" data-cat="rule">
+    <button class="cat-btn pattern" data-cat="rule">
       <div class="cat-icon">👂</div>
       <div class="cat-info">
         <div class="cat-name">This Week's Pattern</div>
-        <div class="cat-desc">Words with the 'ear' sound — 10 words</div>
+        <div class="cat-desc">Words with the 'eer' spelling — 7 words</div>
       </div>
       <div class="cat-arrow">›</div>
     </button>
@@ -567,7 +583,7 @@
       <div class="cat-icon">🧠</div>
       <div class="cat-info">
         <div class="cat-name">Tricky Words</div>
-        <div class="cat-desc">Words that don't follow any rule — <span id="tricky-count">2</span> words</div>
+        <div class="cat-desc">Words that don't follow any rule — <span id="tricky-count">1</span> word</div>
       </div>
       <div class="cat-arrow">›</div>
     </button>
@@ -585,18 +601,25 @@
   <!-- RULE TEACH SCREEN -->
   <div id="rule-screen" class="hidden" style="width:100%;display:none;flex-direction:column;gap:16px;">
     <div class="rule-card">
-      <div class="rule-title">The <span style="color:var(--text)">'ear'</span> Sound!</div>
-      <div class="rule-sub">When you hear /ear/ at the end of a word, it's usually spelled <strong style="color:var(--gold)">e-a-r</strong>.</div>
+      <div class="rule-title">The <span style="color:var(--text)">'eer'</span> spelling!</div>
+      <div class="rule-sub">Same sound as last week — but spelled differently.</div>
 
       <div class="rule-panel">
         <div class="rule-line">
+          <div class="rule-chip eer">eer</div>
+          <div>This week's words use <strong>e-e-r</strong> to make the /ear/ sound.<br>
+          <span class="rule-word">ch<strong>eer</strong> · d<strong>eer</strong> · p<strong>eer</strong> · j<strong>eer</strong></span></div>
+        </div>
+        <div class="rule-line">
           <div class="rule-chip ear">ear</div>
-          <div>The three letters <strong>e</strong>, <strong>a</strong>, <strong>r</strong> work as a team to make the /ear/ sound.<br>
-          <span class="rule-word">n<strong>ear</strong> · d<strong>ear</strong> · y<strong>ear</strong> · f<strong>ear</strong></span></div>
+          <div>Last week's words used <span class="alt"><strong>e-a-r</strong></span> for the same sound.<br>
+          <span class="rule-word"><span class="alt">n<strong>ear</strong> · d<strong>ear</strong> · y<strong>ear</strong> · f<strong>ear</strong></span></span></div>
         </div>
       </div>
 
-      <div class="rule-sub">Listen for the /ear/ sound — the spelling almost always follows!</div>
+      <div class="rule-note">
+        🧐 <strong>The tricky part:</strong> there's no rule that tells you which spelling to use — you just have to learn which words use 'eer' and which use 'ear'. Listen carefully and remember the shape of each word!
+      </div>
 
       <button class="rule-start-btn" id="rule-start-btn">🎯 I'm Ready!</button>
       <button class="rule-back-btn" id="rule-back-btn">← Back</button>
@@ -617,7 +640,7 @@
 
     <div class="game-card">
       <div class="bee-icon" id="bee-anim">🐝</div>
-      <div class="category-badge" id="category-badge">ear pattern</div>
+      <div class="category-badge" id="category-badge">eer pattern</div>
       <div class="prompt-text" id="prompt-text">Listen carefully, then type the word!</div>
 
       <button class="speak-btn" id="speak-btn">
@@ -677,7 +700,7 @@ localStorage.removeItem('spelling_bee_words');
 //   word     — the spelling
 //   sentence — used in context (TTS reads this; word is masked in hint)
 //   cat      — category code, drives the rule reminder shown after each answer
-//              Current categories: 'ear', 'ck', 'k', 'tricky'
+//              Current categories: 'eer', 'ear', 'ck', 'k', 'tricky'
 //              Add new ones as new phonics rules come up — also extend
 //              CATEGORY_LABELS and showRuleReminder() below to match.
 //
@@ -699,32 +722,29 @@ localStorage.removeItem('spelling_bee_words');
 //   4. Replace CURRENT_TRICKY  with this week's new tricky words.
 //   5. Update the rule teach screen text + start hero copy + showRuleReminder
 //      to reflect the new week's pattern.
+//   6. Update CATEGORY_LABELS if you add a new category code.
+//   7. Add a category-badge CSS rule if you add a new category code.
 // ══════════════════════════════════════════════════════════════════════════
 
-// ── CURRENT WEEK (Week 2: 'ear' pattern) ─────────────────────────────────
+// ── CURRENT WEEK (Week 3: 'eer' spelling for the /ear/ sound) ────────────
 const CURRENT_PATTERN = [
-  { word: "near",   sentence: "FTS sat near the window to read his book.",     cat: 'ear' },
-  { word: "dear",   sentence: "Mum wrote 'Dear Grandma' at the top of the letter.", cat: 'ear' },
-  { word: "year",   sentence: "FTS turned seven last year.",                    cat: 'ear' },
-  { word: "fear",   sentence: "FTS had no fear when he climbed the tall slide.",cat: 'ear' },
-  { word: "hear",   sentence: "FTS could hear the birds singing outside.",      cat: 'ear' },
-  { word: "ear",    sentence: "FTS whispered the secret in his friend's ear.",  cat: 'ear' },
-  { word: "clear",  sentence: "The sky was bright and clear today.",            cat: 'ear' },
-  { word: "beard",  sentence: "Dad has a brown beard on his chin.",             cat: 'ear' },
-  { word: "gear",   sentence: "FTS packed all his gear for the camping trip.",  cat: 'ear' },
-  { word: "rear",   sentence: "FTS sat in the rear seat of the car.",           cat: 'ear' },
-  { word: "smear",  sentence: "FTS had a smear of jam on his cheek.",           cat: 'ear' },
+  { word: "cheer",  sentence: "FTS gave a loud cheer when the Crows kicked a goal.", cat: 'eer' },
+  { word: "deer",   sentence: "A deer stood quietly at the edge of the forest.",     cat: 'eer' },
+  { word: "peer",   sentence: "FTS had to peer through the window to see who was there.", cat: 'eer' },
+  { word: "jeer",   sentence: "Some people in the crowd started to jeer at the umpire.", cat: 'eer' },
+  { word: "sneer",  sentence: "The villain had a nasty sneer on his face.",          cat: 'eer' },
+  { word: "steer",  sentence: "FTS helped Dad steer the boat across the lake.",      cat: 'eer' },
+  { word: "career", sentence: "When FTS grows up, he can pick any career he wants.", cat: 'eer' },
 ];
 
 const CURRENT_TRICKY = [
-  { word: "animal", sentence: "The lion is FTS's favourite animal at the zoo.", cat: 'tricky' },
-  { word: "open",   sentence: "FTS will open his presents on his birthday.",    cat: 'tricky' },
+  { word: "other", sentence: "FTS wanted the other piece of cake, not this one.", cat: 'tricky' },
 ];
 
-// ── ARCHIVE (Week 1: ck rule + k contrast) ───────────────────────────────
+// ── ARCHIVE (previous weeks) ─────────────────────────────────────────────
 // As each week ends, move that week's words from CURRENT into here.
 const ARCHIVE_PATTERN = [
-  // Week 1 — ck rule (short vowel + ck)
+  // ─── Week 1: ck rule (short vowel + ck) ────────────────────────────────
   { word: "duck",  sentence: "The duck swam across the pond.",              cat: 'ck' },
   { word: "rock",  sentence: "FTS picked up a smooth rock at the beach.",   cat: 'ck' },
   { word: "sack",  sentence: "Dad carried the sack of potatoes inside.",    cat: 'ck' },
@@ -748,17 +768,33 @@ const ARCHIVE_PATTERN = [
   { word: "bark",  sentence: "The tree had rough brown bark.",              cat: 'k', reason: "consonant before k (R)" },
   { word: "book",  sentence: "FTS read his book before bed.",               cat: 'k', reason: "vowel team (oo)" },
   { word: "look",  sentence: "FTS had a good look at the map.",             cat: 'k', reason: "vowel team (oo)" },
+  // ─── Week 2: 'ear' pattern for the /ear/ sound ─────────────────────────
+  { word: "near",   sentence: "FTS sat near the window to read his book.",     cat: 'ear' },
+  { word: "dear",   sentence: "Mum wrote 'Dear Grandma' at the top of the letter.", cat: 'ear' },
+  { word: "year",   sentence: "FTS turned seven last year.",                    cat: 'ear' },
+  { word: "fear",   sentence: "FTS had no fear when he climbed the tall slide.",cat: 'ear' },
+  { word: "hear",   sentence: "FTS could hear the birds singing outside.",      cat: 'ear' },
+  { word: "ear",    sentence: "FTS whispered the secret in his friend's ear.",  cat: 'ear' },
+  { word: "clear",  sentence: "The sky was bright and clear today.",            cat: 'ear' },
+  { word: "beard",  sentence: "Dad has a brown beard on his chin.",             cat: 'ear' },
+  { word: "gear",   sentence: "FTS packed all his gear for the camping trip.",  cat: 'ear' },
+  { word: "rear",   sentence: "FTS sat in the rear seat of the car.",           cat: 'ear' },
+  { word: "smear",  sentence: "FTS had a smear of jam on his cheek.",           cat: 'ear' },
 ];
 
 const ARCHIVE_TRICKY = [
   // Week 1
   { word: "great", sentence: "FTS did a great job on his work.",            cat: 'tricky' },
   { word: "their", sentence: "The children packed up their books.",         cat: 'tricky' },
+  // Week 2
+  { word: "animal", sentence: "The lion is FTS's favourite animal at the zoo.", cat: 'tricky' },
+  { word: "open",   sentence: "FTS will open his presents on his birthday.",    cat: 'tricky' },
 ];
 
 // ── CATEGORY LABELS (for the badge above each word in the game) ──────────
 const CATEGORY_LABELS = {
-  ear:    "'ear' pattern word",
+  eer:    "'eer' spelling word",
+  ear:    "'ear' spelling word",
   ck:     "ck rule word",
   k:      "k word (not ck!)",
   tricky: "tricky word — just memorise!",
@@ -770,7 +806,15 @@ const ALL_SESSION_SIZE = 10;
 // ──────────────────────────────────────────────────────────────────────────
 // Tricky count for the picker
 // ──────────────────────────────────────────────────────────────────────────
-document.getElementById('tricky-count').textContent = CURRENT_TRICKY.length;
+(function setTrickyLabel() {
+  const n = CURRENT_TRICKY.length;
+  document.getElementById('tricky-count').textContent = n;
+  // also pluralise the trailing word
+  const btn = document.querySelector('.cat-btn.tricky .cat-desc');
+  if (btn) {
+    btn.innerHTML = `Words that don't follow any rule — <span id="tricky-count">${n}</span> ${n === 1 ? 'word' : 'words'}`;
+  }
+})();
 
 // ──────────────────────────────────────────────────────────────────────────
 // STATE
@@ -1004,8 +1048,10 @@ function checkAnswer() {
 function showRuleReminder(word) {
   const ruleDiv = document.getElementById('rule-reminder');
   let html = '';
-  if (word.cat === 'ear') {
-    html = `💡 <strong>${word.word}</strong> uses <strong>e-a-r</strong> for the /ear/ sound.`;
+  if (word.cat === 'eer') {
+    html = `💡 <strong>${word.word}</strong> uses <strong>e-e-r</strong> for the /ear/ sound — not 'ear' like last week.`;
+  } else if (word.cat === 'ear') {
+    html = `💡 <strong>${word.word}</strong> uses <strong>e-a-r</strong> for the /ear/ sound — not 'eer'.`;
   } else if (word.cat === 'ck') {
     html = `💡 <strong>${word.word}</strong> uses <strong>ck</strong> because of the short vowel sound.`;
   } else if (word.cat === 'k') {
@@ -1169,7 +1215,6 @@ function updateBackButtonLabel() {
   headerBackBtn.textContent = onStart ? '← Home' : '← Back';
 }
 
-// Wrap showScreen so the back button label refreshes on every screen change
 const _origShowScreen = showScreen;
 showScreen = function(name) {
   _origShowScreen(name);
@@ -1180,13 +1225,11 @@ headerBackBtn.addEventListener('click', e => {
   const onStart = !document.getElementById('start-screen').classList.contains('hidden')
                && document.getElementById('start-screen').style.display !== 'none';
   if (!onStart) {
-    // Anywhere except the start screen: cancel the navigation, go back to picker
     e.preventDefault();
     if (typeof speechSynthesis !== 'undefined') speechSynthesis.cancel();
     sessionStorage.removeItem('pending_cat');
     showScreen('start-screen');
   }
-  // On start screen: let the anchor href do its job → index.html
 });
 
 // ──────────────────────────────────────────────────────────────────────────
