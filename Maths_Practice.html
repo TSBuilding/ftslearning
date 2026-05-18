@@ -447,33 +447,30 @@
 // ─────────────────────────────────────────────────────────────────────────
 const QUESTIONS_PER_SESSION = 10;
 
-// Difficulty progression: each question = [addendCount, minDigits, maxDigits]
-// "Standard" mode keeps addendCount=2 throughout; "Stretch" mode is 3.
-// Digit counts grow as the round progresses so it ramps within the session.
 const STANDARD_PLAN = [
-  { addends: 2, digits: 3, allowCarry: false }, // 1: warm-up, 3-digit, no carry forced
-  { addends: 2, digits: 3, allowCarry: true  }, // 2
-  { addends: 2, digits: 4, allowCarry: false }, // 3
-  { addends: 2, digits: 4, allowCarry: true  }, // 4
-  { addends: 2, digits: 4, allowCarry: true  }, // 5
-  { addends: 2, digits: 4, allowCarry: true  }, // 6
-  { addends: 2, digits: 5, allowCarry: false }, // 7: 5-digit warm-up
-  { addends: 2, digits: 5, allowCarry: true  }, // 8
-  { addends: 2, digits: 5, allowCarry: true  }, // 9
-  { addends: 2, digits: 5, allowCarry: true  }, // 10
+  { addends: 2, digits: 3, allowCarry: false },
+  { addends: 2, digits: 3, allowCarry: true  },
+  { addends: 2, digits: 4, allowCarry: false },
+  { addends: 2, digits: 4, allowCarry: true  },
+  { addends: 2, digits: 4, allowCarry: true  },
+  { addends: 2, digits: 4, allowCarry: true  },
+  { addends: 2, digits: 5, allowCarry: false },
+  { addends: 2, digits: 5, allowCarry: true  },
+  { addends: 2, digits: 5, allowCarry: true  },
+  { addends: 2, digits: 5, allowCarry: true  },
 ];
 
 const STRETCH_PLAN = [
-  { addends: 3, digits: 3, allowCarry: false }, // 1: warm-up, 3-digit, no carry forced
-  { addends: 3, digits: 3, allowCarry: true  }, // 2
-  { addends: 3, digits: 4, allowCarry: false }, // 3
-  { addends: 3, digits: 4, allowCarry: true  }, // 4
-  { addends: 3, digits: 4, allowCarry: true  }, // 5
-  { addends: 3, digits: 4, allowCarry: true  }, // 6
-  { addends: 3, digits: 5, allowCarry: false }, // 7
-  { addends: 3, digits: 5, allowCarry: true  }, // 8
-  { addends: 3, digits: 5, allowCarry: true  }, // 9
-  { addends: 3, digits: 5, allowCarry: true  }, // 10
+  { addends: 3, digits: 3, allowCarry: false },
+  { addends: 3, digits: 3, allowCarry: true  },
+  { addends: 3, digits: 4, allowCarry: false },
+  { addends: 3, digits: 4, allowCarry: true  },
+  { addends: 3, digits: 4, allowCarry: true  },
+  { addends: 3, digits: 4, allowCarry: true  },
+  { addends: 3, digits: 5, allowCarry: false },
+  { addends: 3, digits: 5, allowCarry: true  },
+  { addends: 3, digits: 5, allowCarry: true  },
+  { addends: 3, digits: 5, allowCarry: true  },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────
@@ -485,8 +482,8 @@ let questions = [];
 let qIdx = 0;
 let score = 0;
 let answered = false;
-let answerInputs = []; // array of <input> for the current question's answer row
-let carryInputs  = []; // array of <input> for the current question's carry row
+let answerInputs = [];
+let carryInputs  = [];
 
 // ─────────────────────────────────────────────────────────────────────────
 // PERSONAL BEST
@@ -524,16 +521,12 @@ function showScreen(name) {
 // ─────────────────────────────────────────────────────────────────────────
 function randInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 
-// Build a number with exactly `digits` digits (leading digit ≥ 1).
 function buildNumber(digits) {
   let n = randInt(1, 9);
   for (let i = 1; i < digits; i++) n = n * 10 + randInt(0, 9);
   return n;
 }
 
-// Generate a question conforming to the plan slot. Repeats generation until
-// the carry constraint is satisfied (i.e. if allowCarry=false, the column
-// sums must all be < 10).
 function generateQuestion(slot) {
   const { addends, digits, allowCarry } = slot;
   let attempts = 0;
@@ -542,7 +535,6 @@ function generateQuestion(slot) {
     const nums = Array.from({ length: addends }, () => buildNumber(digits));
     const total = nums.reduce((a, b) => a + b, 0);
     if (!allowCarry) {
-      // Check no column sums to ≥ 10
       let carryFree = true;
       for (let pos = 0; pos < digits; pos++) {
         let colSum = 0;
@@ -553,7 +545,6 @@ function generateQuestion(slot) {
     }
     return { nums, total };
   }
-  // Fallback — if 200 tries fail (very unlikely), return whatever we got
   const nums = Array.from({ length: addends }, () => buildNumber(digits));
   return { nums, total: nums.reduce((a, b) => a + b, 0) };
 }
@@ -580,17 +571,31 @@ function updateHud() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────
+// INPUT HELPERS — iOS-safe digit entry
+// ─────────────────────────────────────────────────────────────────────────
+// iOS Safari quirk: when an input has existing content and the user taps
+// in to retype, the cursor doesn't reliably go to the end. Typing then
+// inserts at the cursor position rather than replacing, and our slice(-1)
+// can keep the WRONG digit. Fix: select-all on focus so typing always
+// replaces the existing content.
+function attachDigitInputBehaviour(inp, onAdvance) {
+  inp.addEventListener('focus', e => {
+    // Defer so iOS doesn't undo the selection immediately
+    setTimeout(() => { try { e.target.select(); } catch (_) {} }, 0);
+  });
+  inp.addEventListener('input', e => {
+    // Strip anything that isn't a digit, keep only the LAST one typed.
+    // Combined with select-on-focus, this means typing reliably replaces.
+    const cleaned = e.target.value.replace(/\D/g, '');
+    const v = cleaned.length > 0 ? cleaned.slice(-1) : '';
+    if (e.target.value !== v) e.target.value = v;
+    if (v && onAdvance) onAdvance(e.target);
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────
 // RENDER QUESTION
 // ─────────────────────────────────────────────────────────────────────────
-// Layout:
-//   Row 1: row-label "+" placeholder + N carry inputs (one per column)
-//   Rows 2..(addends+1): row-label ("" or "+") + N digit cells per addend
-//   Row addends+2: horizontal line spanning the digit columns
-//   Row addends+3: row-label "" + N answer inputs
-//
-// Column count: max(digits in any addend, digits in the total)
-// Right-aligned by design: smaller numbers padded with empty cells on the left.
-
 function renderQuestion() {
   answered = false;
   const q = questions[qIdx];
@@ -602,18 +607,13 @@ function renderQuestion() {
   const totalDigits = String(q.total).length;
   const maxAddendDigits = Math.max(...q.nums.map(n => String(n).length));
   const cols = Math.max(totalDigits, maxAddendDigits);
-  // Grid columns: 1 label column + `cols` data columns
   grid.style.gridTemplateColumns = `auto repeat(${cols}, 44px)`;
 
   // ─── Carry row ────────────────────────────────────────────────────────
-  // First cell is empty (label space)
   const carryLabel = document.createElement('div');
   carryLabel.className = 'row-label';
   carryLabel.textContent = '';
   grid.appendChild(carryLabel);
-  // One carry cell per column. The rightmost column never receives a carry
-  // (nothing carries INTO units), so mark it unused. For pedagogy we still
-  // render it as a box so the visual layout is consistent.
   for (let c = 0; c < cols; c++) {
     const wrap = document.createElement('div');
     wrap.className = 'carry-cell';
@@ -621,15 +621,14 @@ function renderQuestion() {
     const inp = document.createElement('input');
     inp.type = 'text';
     inp.inputMode = 'numeric';
-    inp.maxLength = 1;
+    // NOTE: maxLength removed deliberately. iOS Safari can silently reject
+    // keystrokes when maxLength=1 and the field has content; combined with
+    // unpredictable cursor placement this caused the "marked wrong but the
+    // displayed correct answer matches what I typed" bug. The input handler
+    // below enforces single-digit on its own.
     inp.className = 'carry-input';
     inp.dataset.col = String(c);
-    inp.placeholder = '';
-    inp.addEventListener('input', e => {
-      // Strip non-digits, keep single digit
-      const v = e.target.value.replace(/\D/g, '').slice(-1);
-      e.target.value = v;
-    });
+    attachDigitInputBehaviour(inp, null);
     wrap.appendChild(inp);
     carryInputs.push(inp);
     grid.appendChild(wrap);
@@ -637,14 +636,12 @@ function renderQuestion() {
 
   // ─── Addend rows ──────────────────────────────────────────────────────
   q.nums.forEach((n, rowIdx) => {
-    // Label: "+" for all but the first addend
     const label = document.createElement('div');
     label.className = 'row-label';
     label.textContent = (rowIdx === 0) ? '' : '+';
     grid.appendChild(label);
 
     const str = String(n);
-    // Right-align: pad with empty cells on the left
     const pad = cols - str.length;
     for (let c = 0; c < cols; c++) {
       const cell = document.createElement('div');
@@ -654,7 +651,6 @@ function renderQuestion() {
       } else {
         const digit = str[c - pad];
         cell.textContent = digit;
-        // Place value: rightmost = 0 (units), next = 1 (tens), etc.
         const place = (cols - 1) - c;
         cell.dataset.place = String(place);
       }
@@ -663,7 +659,6 @@ function renderQuestion() {
   });
 
   // ─── Line row ─────────────────────────────────────────────────────────
-  // Spans label column + all data columns
   const lineLabel = document.createElement('div');
   lineLabel.className = 'row-label';
   lineLabel.textContent = '';
@@ -685,30 +680,23 @@ function renderQuestion() {
     const inp = document.createElement('input');
     inp.type = 'text';
     inp.inputMode = 'numeric';
-    inp.maxLength = 1;
+    // See note above — maxLength removed deliberately.
     inp.className = 'ans-input';
     inp.dataset.col = String(c);
-    inp.placeholder = '';
-    inp.addEventListener('input', e => {
-      const v = e.target.value.replace(/\D/g, '').slice(-1);
-      e.target.value = v;
-      // Auto-cycle: right-to-left, matching the column addition algorithm.
-      // Typing a digit advances focus LEFTWARD (toward the higher place value).
-      if (v) {
-        const idx = answerInputs.indexOf(e.target);
-        if (idx > 0) {
-          answerInputs[idx - 1].focus();
-        }
-      }
+
+    // Answer inputs auto-cycle LEFTWARD (right-to-left algorithm).
+    attachDigitInputBehaviour(inp, (target) => {
+      const idx = answerInputs.indexOf(target);
+      if (idx > 0) answerInputs[idx - 1].focus();
     });
+
     inp.addEventListener('keydown', e => {
-      // Backspace on empty → go back to the cell on the right (the one just typed)
+      // Backspace on empty → go back to the cell on the right
       if (e.key === 'Backspace' && e.target.value === '') {
         const idx = answerInputs.indexOf(e.target);
         if (idx < answerInputs.length - 1) { answerInputs[idx + 1].focus(); e.preventDefault(); }
       }
       if (e.key === 'Enter') {
-        // Submit on enter if all filled
         if (answerInputs.every(x => x.value !== '')) checkAnswer();
       }
     });
@@ -720,31 +708,31 @@ function renderQuestion() {
   // Focus rightmost answer cell (right-to-left algorithm)
   setTimeout(() => answerInputs[answerInputs.length - 1].focus(), 80);
 
-  // Reset feedback
   document.getElementById('feedback').className = 'feedback-bar';
   document.getElementById('check-btn').disabled = false;
 }
 
 // ─────────────────────────────────────────────────────────────────────────
-// CHECK ANSWER (Option B: judge the whole answer, reveal correct if wrong)
+// CHECK ANSWER
 // ─────────────────────────────────────────────────────────────────────────
 function checkAnswer() {
   if (answered) return;
-  // Require all cells filled
   if (answerInputs.some(x => x.value === '')) {
-    // Focus first empty
     const firstEmpty = answerInputs.find(x => x.value === '');
     if (firstEmpty) firstEmpty.focus();
     return;
   }
   answered = true;
 
-  // Build the entered answer by concatenating digits left-to-right
-  const entered = parseInt(answerInputs.map(x => x.value).join(''), 10);
+  // Build entered answer. Defensive: strip any non-digits per cell first
+  // in case anything weird snuck through, then join.
+  const enteredStr = answerInputs
+    .map(x => (x.value || '').replace(/\D/g, ''))
+    .join('');
+  const entered = parseInt(enteredStr, 10);
   const correct = questions[qIdx].total;
   const isCorrect = entered === correct;
 
-  // Disable inputs
   answerInputs.forEach(x => x.disabled = true);
   carryInputs.forEach(x => x.disabled = true);
 
@@ -757,7 +745,6 @@ function checkAnswer() {
     confetti();
   } else {
     answerInputs.forEach(x => { x.classList.add('wrong'); });
-    // Reveal correct answer in the boxes (replacing his entry)
     const correctStr = String(correct);
     const pad = answerInputs.length - correctStr.length;
     answerInputs.forEach((inp, i) => {
@@ -767,7 +754,6 @@ function checkAnswer() {
         inp.classList.add('reveal');
       } else {
         inp.value = correctStr[i - pad];
-        // After 1 second, swap to "reveal" styling (green) showing the correct digits
       }
     });
     setTimeout(() => {
@@ -856,9 +842,7 @@ document.getElementById('res-play-again').addEventListener('click', () => {
 });
 
 // ─────────────────────────────────────────────────────────────────────────
-// HEADER BACK BUTTON — context-aware
-// On pick screen → goes to HQ.
-// On game/results → returns to pick screen.
+// HEADER BACK BUTTON
 // ─────────────────────────────────────────────────────────────────────────
 const headerBackBtn = document.getElementById('header-back-btn');
 function updateBackButtonLabel() {
