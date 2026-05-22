@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Fraction Fun House — FTS Learning HQ</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1729;
+    --card: #1e2d4a;
+    --card2: #243459;
+    --border: rgba(255,255,255,0.08);
+    --text: #f0f4ff;
+    --muted: #94a3b8;
+    --gold: #f59e0b;
+    --gold-light: #fde68a;
+    --blue: #3b82f6;
+    --blue-deep: #2563eb;
+    --green: #16a34a;
+    --green-light: #4ade80;
+    --red: #dc2626;
+    --red-light: #f87171;
+    --purple: #a78bfa;
+    --pink: #f472b6;
+    --teal: #2dd4bf;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html { height: 100%; }
+  body {
+    background: var(--bg);
+    font-family: 'Nunito', sans-serif;
+    color: var(--text);
+    min-height: 100%;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 20%, rgba(244,114,182,0.07) 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 80%, rgba(45,212,191,0.06) 0%, transparent 55%);
+    pointer-events: none; z-index: 0;
+  }
+
+  .wrapper {
+    position: relative; z-index: 1;
+    max-width: 600px; margin: 0 auto;
+    padding: 16px 16px 48px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+
+  /* HEADER */
+  .header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 0; }
+  .back-btn {
+    background: var(--card); border: none; color: var(--muted);
+    font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 700;
+    padding: 8px 16px; border-radius: 20px; cursor: pointer;
+    text-decoration: none; transition: all 0.2s; flex-shrink: 0;
+  }
+  .back-btn:hover { background: var(--card2); color: var(--text); }
+  .title-block { text-align: center; flex: 1; }
+  .title-block h1 { font-family: 'Fredoka One', cursive; font-size: 22px; color: var(--pink); letter-spacing: 1px; line-height: 1; }
+  .title-block p { font-size: 11px; color: var(--muted); font-weight: 700; margin-top: 2px; }
+  .header-spacer { width: 70px; }
+
+  /* SCREENS */
+  .screen { display: none; flex-direction: column; gap: 16px; }
+  .screen.active { display: flex; }
+
+  /* MUTE TOGGLE */
+  .mute-btn {
+    background: var(--card); border: 1px solid var(--border);
+    color: var(--muted); font-size: 18px;
+    width: 38px; height: 38px; border-radius: 12px;
+    cursor: pointer; transition: all 0.2s; flex-shrink: 0;
+  }
+  .mute-btn:hover { background: var(--card2); }
+  .mute-btn.muted { color: var(--red-light); border-color: rgba(220,38,38,0.3); }
+
+  /* ═════════ PICK SCREEN ═════════ */
+  .pick-hero {
+    background: var(--card);
+    border-radius: 24px;
+    padding: 28px 24px 20px;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    border: 1px solid var(--border);
+    text-align: center;
+  }
+  .pick-icon { font-size: 56px; animation: bob 2.5s ease-in-out infinite; }
+  @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+  .pick-title { font-family: 'Fredoka One', cursive; font-size: 22px; color: var(--text); line-height: 1.3; }
+  .pick-title span { color: var(--pink); }
+  .pick-sub { font-size: 14px; color: var(--muted); font-weight: 600; line-height: 1.5; }
+
+  .stage-label {
+    font-size: 12px; font-weight: 800; color: var(--muted);
+    letter-spacing: 1px; text-transform: uppercase;
+    padding: 4px 4px 0;
+  }
+
+  .stage-btn {
+    width: 100%;
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: 18px;
+    padding: 16px 18px;
+    display: flex; align-items: center; gap: 14px;
+    cursor: pointer; transition: all 0.2s;
+    text-align: left; color: var(--text);
+    position: relative;
+  }
+  .stage-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+  .stage-btn.s1 { border-color: rgba(74,222,128,0.35); }
+  .stage-btn.s1:hover { background: rgba(74,222,128,0.06); }
+  .stage-btn.s2 { border-color: rgba(45,212,191,0.35); }
+  .stage-btn.s2:hover { background: rgba(45,212,191,0.06); }
+  .stage-btn.s3 { border-color: rgba(245,158,11,0.35); }
+  .stage-btn.s3:hover { background: rgba(245,158,11,0.06); }
+  .stage-btn.s4 { border-color: rgba(244,114,182,0.35); }
+  .stage-btn.s4:hover { background: rgba(244,114,182,0.06); }
+
+  .stage-num {
+    width: 40px; height: 40px; flex-shrink: 0;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Fredoka One', cursive; font-size: 20px;
+    color: #0f1729;
+  }
+  .stage-btn.s1 .stage-num { background: var(--green-light); }
+  .stage-btn.s2 .stage-num { background: var(--teal); }
+  .stage-btn.s3 .stage-num { background: var(--gold); }
+  .stage-btn.s4 .stage-num { background: var(--pink); }
+
+  .stage-info { flex: 1; }
+  .stage-name { font-family: 'Fredoka One', cursive; font-size: 16px; color: var(--text); letter-spacing: 0.3px; }
+  .stage-desc { font-size: 12px; color: var(--muted); font-weight: 600; margin-top: 2px; line-height: 1.3; }
+  .stage-stars { font-size: 12px; margin-top: 4px; letter-spacing: 2px; }
+  .stage-arrow { font-size: 20px; color: var(--muted); }
+
+  /* ═════════ GAME SCREEN ═════════ */
+  .game-hud { display: flex; flex-direction: column; gap: 8px; }
+  .hud-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .hud-label { font-size: 12px; font-weight: 800; color: var(--muted); letter-spacing: 0.5px; }
+  .stage-pill {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 4px 12px;
+    font-family: 'Fredoka One', cursive; font-size: 12px; color: var(--text);
+  }
+  .progress-wrap { width: 100%; background: var(--card); border-radius: 20px; height: 8px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--pink), var(--teal)); border-radius: 20px; transition: width 0.4s ease; width: 0%; }
+
+  .play-card {
+    background: var(--card);
+    border-radius: 24px;
+    padding: 24px 20px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    border: 1px solid var(--border);
+    display: flex; flex-direction: column; align-items: center; gap: 18px;
+  }
+  .question-text {
+    font-family: 'Fredoka One', cursive;
+    font-size: 22px; color: var(--text);
+    text-align: center; line-height: 1.3;
+  }
+  .question-text .frac-word { color: var(--pink); }
+  .question-sub { font-size: 13px; color: var(--muted); font-weight: 700; text-align: center; margin-top: -8px; }
+
+  /* SVG shape area */
+  .shape-area {
+    display: flex; flex-wrap: wrap; gap: 14px;
+    align-items: center; justify-content: center;
+    min-height: 180px; width: 100%;
+  }
+  svg { display: block; overflow: visible; }
+
+  .shape-part {
+    cursor: pointer;
+    transition: fill 0.2s, opacity 0.2s;
+    stroke: #0f1729;
+    stroke-width: 3;
+  }
+  .shape-part.unshaded { fill: var(--card2); }
+  .shape-part.shaded   { fill: var(--pink); }
+  .shape-part.locked   { cursor: default; }
+  .shape-part.eq-good  { fill: var(--green); }
+  .shape-part.eq-bad   { fill: var(--gold); }
+
+  /* group objects (stage 3 & 4) */
+  .group-area {
+    display: flex; flex-direction: column; gap: 14px;
+    align-items: center; width: 100%;
+  }
+  .group-bin {
+    display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;
+    padding: 10px; border-radius: 14px;
+    min-width: 60px; min-height: 56px;
+    border: 2px dashed transparent;
+    transition: all 0.3s;
+  }
+  .group-bin.split {
+    border-color: rgba(45,212,191,0.4);
+    background: rgba(45,212,191,0.05);
+  }
+  .group-bins-row { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; width: 100%; }
+  .obj { font-size: 30px; line-height: 1; transition: transform 0.3s; }
+
+  /* answer choices */
+  .choices { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; }
+  .choices.three { grid-template-columns: repeat(3, 1fr); }
+  .choice-btn {
+    background: var(--card2);
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 8px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 20px; color: var(--text);
+    cursor: pointer; transition: all 0.15s;
+  }
+  .choice-btn:hover { border-color: var(--pink); transform: translateY(-2px); }
+  .choice-btn.correct { background: rgba(22,163,74,0.2); border-color: var(--green); color: var(--green-light); }
+  .choice-btn.wrong   { background: rgba(220,38,38,0.2); border-color: var(--red); color: var(--red-light); }
+  .choice-btn:disabled { cursor: default; }
+
+  /* yes/no buttons */
+  .yesno { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; }
+  .yesno-btn {
+    border: none; border-radius: 16px; padding: 18px;
+    font-family: 'Fredoka One', cursive; font-size: 22px;
+    cursor: pointer; transition: all 0.15s; color: white;
+  }
+  .yesno-btn.yes { background: linear-gradient(135deg, var(--green), #15803d); box-shadow: 0 4px 0 #0f5132; }
+  .yesno-btn.no  { background: linear-gradient(135deg, var(--red), #b91c1c); box-shadow: 0 4px 0 #7f1d1d; }
+  .yesno-btn:active { transform: translateY(3px); box-shadow: none; }
+  .yesno-btn:disabled { opacity: 0.5; cursor: default; }
+
+  /* number entry (stage 4) */
+  .num-entry { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+  .num-input {
+    width: 120px; background: var(--card2);
+    border: 2px solid rgba(244,114,182,0.4);
+    border-radius: 16px; padding: 14px;
+    font-family: 'Fredoka One', cursive; font-size: 34px;
+    color: var(--pink); text-align: center; outline: none;
+    caret-color: var(--pink);
+  }
+  .num-input:focus { border-color: var(--pink); }
+  .num-input.correct { background: rgba(22,163,74,0.18); border-color: var(--green); color: var(--green-light); }
+  .num-input.wrong { background: rgba(220,38,38,0.18); border-color: var(--red); color: var(--red-light); }
+
+  /* action buttons */
+  .action-btn {
+    width: 100%; border: none; border-radius: 16px; padding: 15px;
+    font-family: 'Fredoka One', cursive; font-size: 19px;
+    cursor: pointer; transition: all 0.2s; letter-spacing: 0.5px;
+  }
+  .action-btn.primary { background: linear-gradient(135deg, var(--pink), #be185d); color: white; box-shadow: 0 4px 20px rgba(244,114,182,0.3); }
+  .action-btn.primary:hover { transform: scale(1.02); }
+  .action-btn.ghost { background: var(--card2); border: 2px solid var(--border); color: var(--text); }
+  .action-btn.ghost:hover { background: #2d3f60; }
+  .action-btn.teal { background: linear-gradient(135deg, var(--teal), #0d9488); color: #04201c; box-shadow: 0 4px 20px rgba(45,212,191,0.3); }
+  .action-btn:disabled { opacity: 0.4; cursor: default; transform: none; }
+
+  /* Show-me button (stage 4) */
+  .showme-btn {
+    background: transparent; border: 1.5px solid rgba(45,212,191,0.4);
+    color: var(--teal); font-family: 'Nunito', sans-serif;
+    font-size: 13px; font-weight: 800; padding: 8px 16px;
+    border-radius: 12px; cursor: pointer; transition: all 0.2s;
+  }
+  .showme-btn:hover { background: rgba(45,212,191,0.08); }
+
+  /* feedback */
+  .feedback {
+    width: 100%; border-radius: 16px; padding: 14px 18px;
+    display: none; align-items: center; gap: 12px;
+    border: 2px solid transparent;
+    animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  @keyframes popIn { from{transform:scale(0.85);opacity:0} to{transform:scale(1);opacity:1} }
+  .feedback.good { display: flex; border-color: var(--green); background: rgba(22,163,74,0.1); }
+  .feedback.bad  { display: flex; border-color: var(--gold); background: rgba(245,158,11,0.08); }
+  .fb-emoji { font-size: 26px; flex-shrink: 0; }
+  .fb-msg { font-size: 14px; font-weight: 800; flex: 1; line-height: 1.35; }
+  .feedback.good .fb-msg { color: var(--green-light); }
+  .feedback.bad  .fb-msg { color: var(--gold-light); }
+  .fb-next {
+    background: var(--card2); border: 2px solid rgba(255,255,255,0.1);
+    color: var(--text); font-family: 'Fredoka One', cursive;
+    font-size: 14px; padding: 10px 16px; border-radius: 12px;
+    cursor: pointer; white-space: nowrap; flex-shrink: 0;
+  }
+
+  /* ═════════ RESULTS ═════════ */
+  .results-card {
+    background: var(--card); border-radius: 24px; padding: 32px 24px;
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+    text-align: center; box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    border: 1px solid var(--border);
+  }
+  .results-emoji { font-size: 64px; animation: bob 2s ease-in-out infinite; }
+  .results-title { font-family: 'Fredoka One', cursive; font-size: 24px; color: var(--pink); }
+  .results-stars { font-size: 36px; letter-spacing: 6px; }
+  .results-msg { font-size: 14px; color: var(--muted); font-weight: 700; line-height: 1.4; }
+  .results-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  /* confetti */
+  .confetti-piece { position: fixed; pointer-events: none; z-index: 999; border-radius: 2px; animation: cfall linear forwards; }
+  @keyframes cfall { 0%{transform:translateY(-20px) rotate(0deg);opacity:1} 100%{transform:translateY(100vh) rotate(720deg);opacity:0} }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <div class="header">
+    <a href="index.html" class="back-btn" id="header-back-btn">← Home</a>
+    <div class="title-block">
+      <h1>🍕 Fraction Fun House</h1>
+      <p>FTS Learning HQ</p>
+    </div>
+    <button class="mute-btn" id="mute-btn" title="Sound on/off">🔊</button>
+  </div>
+
+  <!-- PICK SCREEN -->
+  <div id="pick-screen" class="screen active">
+    <div class="pick-hero">
+      <div class="pick-icon">🍕</div>
+      <div class="pick-title">Let's learn <span>fractions</span>, FTS!</div>
+      <div class="pick-sub">Start at Stage 1 and work your way up. Each stage builds on the last.</div>
+    </div>
+
+    <div class="stage-label">Choose a stage</div>
+
+    <button class="stage-btn s1" data-stage="1">
+      <div class="stage-num">1</div>
+      <div class="stage-info">
+        <div class="stage-name">Equal Parts</div>
+        <div class="stage-desc">Are the pieces the same size? Spot the equal parts.</div>
+        <div class="stage-stars" id="stars-1"></div>
+      </div>
+      <div class="stage-arrow">›</div>
+    </button>
+
+    <button class="stage-btn s2" data-stage="2">
+      <div class="stage-num">2</div>
+      <div class="stage-info">
+        <div class="stage-name">Name the Fraction</div>
+        <div class="stage-desc">Shade the shape and name the fraction.</div>
+        <div class="stage-stars" id="stars-2"></div>
+      </div>
+      <div class="stage-arrow">›</div>
+    </button>
+
+    <button class="stage-btn s3" data-stage="3">
+      <div class="stage-num">3</div>
+      <div class="stage-info">
+        <div class="stage-name">Fraction of a Group</div>
+        <div class="stage-desc">Share the footballs into equal groups.</div>
+        <div class="stage-stars" id="stars-3"></div>
+      </div>
+      <div class="stage-arrow">›</div>
+    </button>
+
+    <button class="stage-btn s4" data-stage="4">
+      <div class="stage-num">4</div>
+      <div class="stage-info">
+        <div class="stage-name">Fraction of a Number</div>
+        <div class="stage-desc">Like school! What is 1/4 of 16? Type the answer.</div>
+        <div class="stage-stars" id="stars-4"></div>
+      </div>
+      <div class="stage-arrow">›</div>
+    </button>
+  </div>
+
+  <!-- GAME SCREEN -->
+  <div id="game-screen" class="screen">
+    <div class="game-hud">
+      <div class="hud-row">
+        <div class="stage-pill" id="stage-pill">Stage 1</div>
+        <div class="hud-label" id="q-counter">1 of 6</div>
+      </div>
+      <div class="progress-wrap"><div class="progress-fill" id="progress-fill"></div></div>
+    </div>
+
+    <div class="play-card">
+      <div class="question-text" id="question-text"></div>
+      <div class="question-sub" id="question-sub"></div>
+      <div id="visual-area" style="width:100%;"></div>
+      <div id="controls-area" style="width:100%;"></div>
+    </div>
+
+    <div class="feedback" id="feedback">
+      <div class="fb-emoji" id="fb-emoji"></div>
+      <div class="fb-msg" id="fb-msg"></div>
+      <button class="fb-next" id="fb-next">Next →</button>
+    </div>
+  </div>
+
+  <!-- RESULTS SCREEN -->
+  <div id="results-screen" class="screen">
+    <div class="results-card">
+      <div class="results-emoji" id="res-emoji">🌟</div>
+      <div class="results-title" id="res-title">Great work!</div>
+      <div class="results-stars" id="res-stars"></div>
+      <div class="results-msg" id="res-msg"></div>
+    </div>
+    <div class="results-actions">
+      <button class="action-btn ghost" id="res-stages">↩ Stages</button>
+      <button class="action-btn primary" id="res-again">🔄 Again</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════
+// CONFIG & STATE
+// ═══════════════════════════════════════════════════════════════════════
+const QUESTIONS_PER_STAGE = 6;
+
+// Unit fractions we use, with their kid-friendly names
+const FRACTION_NAMES = {
+  2: 'half',
+  3: 'third',
+  4: 'quarter',
+  5: 'fifth',
+  6: 'sixth',
+  8: 'eighth',
+};
+// "1 half", "1 quarter" etc — for unit fractions
+function unitFractionName(denom) {
+  return `one ${FRACTION_NAMES[denom]}`;
+}
+
+let currentStage = 1;
+let qIdx = 0;
+let correctCount = 0;
+let currentQuestion = null;
+let answered = false;
+let muted = false;
+
+// ═══════════════════════════════════════════════════════════════════════
+// VOICE (iOS-safe)
+// ═══════════════════════════════════════════════════════════════════════
+let voiceCache = null;
+function loadVoices() {
+  if (typeof speechSynthesis === 'undefined') return;
+  const voices = speechSynthesis.getVoices();
+  voiceCache = voices.find(v => v.name === 'Karen')
+            || voices.find(v => v.lang === 'en-AU')
+            || voices.find(v => v.lang && v.lang.startsWith('en'))
+            || voices[0] || null;
+}
+if (typeof speechSynthesis !== 'undefined') {
+  speechSynthesis.onvoiceschanged = loadVoices;
+  loadVoices();
+}
+function say(text) {
+  if (muted || typeof speechSynthesis === 'undefined') return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  if (voiceCache) u.voice = voiceCache;
+  u.rate = 0.85; u.pitch = 1.05; u.lang = 'en-AU';
+  speechSynthesis.speak(u);
+}
+
+// Mute toggle (persisted)
+muted = localStorage.getItem('fraction_muted') === '1';
+const muteBtn = document.getElementById('mute-btn');
+function refreshMute() {
+  muteBtn.textContent = muted ? '🔇' : '🔊';
+  muteBtn.classList.toggle('muted', muted);
+}
+refreshMute();
+muteBtn.addEventListener('click', () => {
+  muted = !muted;
+  localStorage.setItem('fraction_muted', muted ? '1' : '0');
+  if (muted && typeof speechSynthesis !== 'undefined') speechSynthesis.cancel();
+  refreshMute();
+});
+
+// ═══════════════════════════════════════════════════════════════════════
+// STARS (per stage, best run, persisted)
+// ═══════════════════════════════════════════════════════════════════════
+function starsKey(stage) { return `fraction_stars_${stage}`; }
+function getStars(stage) { return parseInt(localStorage.getItem(starsKey(stage)) || '0', 10); }
+function setStars(stage, n) {
+  if (n > getStars(stage)) localStorage.setItem(starsKey(stage), String(n));
+}
+function refreshStageStars() {
+  for (let s = 1; s <= 4; s++) {
+    const el = document.getElementById('stars-' + s);
+    const n = getStars(s);
+    el.textContent = n > 0 ? '⭐'.repeat(n) + '☆'.repeat(3 - n) : '';
+  }
+}
+refreshStageStars();
+
+// ═══════════════════════════════════════════════════════════════════════
+// SCREENS
+// ═══════════════════════════════════════════════════════════════════════
+function showScreen(name) {
+  ['pick-screen','game-screen','results-screen'].forEach(id => {
+    document.getElementById(id).classList.toggle('active', id === name);
+  });
+  updateBackBtn();
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════════════════════════
+function randInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+
+// ═══════════════════════════════════════════════════════════════════════
+// SHAPE RENDERING (SVG)
+// ═══════════════════════════════════════════════════════════════════════
+// Returns an SVG string for a shape split into `parts` equal pieces.
+// shadedSet: a Set of part indices that are shaded.
+// interactive: if true, parts get data-idx for tap handling.
+// equalParts: if false, draws deliberately UNEQUAL parts (stage 1 "no" case).
+
+function renderCircle(parts, shadedSet, interactive, equalParts) {
+  const cx = 90, cy = 90, r = 82;
+  let paths = '';
+  if (equalParts === false) {
+    // Unequal pie slices — deliberately uneven angles
+    const angles = unevenAngles(parts);
+    let start = -90;
+    for (let i = 0; i < parts; i++) {
+      const sweep = angles[i];
+      const end = start + sweep;
+      paths += slicePath(cx, cy, r, start, end, i, shadedSet, interactive);
+      start = end;
+    }
+  } else {
+    const sweep = 360 / parts;
+    for (let i = 0; i < parts; i++) {
+      const start = -90 + i * sweep;
+      const end = start + sweep;
+      paths += slicePath(cx, cy, r, start, end, i, shadedSet, interactive);
+    }
+  }
+  return `<svg width="180" height="180" viewBox="0 0 180 180">${paths}</svg>`;
+}
+
+function slicePath(cx, cy, r, startDeg, endDeg, idx, shadedSet, interactive) {
+  const s = (startDeg) * Math.PI / 180;
+  const e = (endDeg) * Math.PI / 180;
+  const x1 = cx + r * Math.cos(s), y1 = cy + r * Math.sin(s);
+  const x2 = cx + r * Math.cos(e), y2 = cy + r * Math.sin(e);
+  const large = (endDeg - startDeg) > 180 ? 1 : 0;
+  const cls = shadedSet.has(idx) ? 'shaded' : 'unshaded';
+  const d = `M${cx},${cy} L${x1},${y1} A${r},${r} 0 ${large} 1 ${x2},${y2} Z`;
+  return `<path class="shape-part ${cls} ${interactive?'':'locked'}" data-idx="${idx}" d="${d}"/>`;
+}
+
+function renderRect(parts, shadedSet, interactive, equalParts, vertical) {
+  const W = 240, H = 120;
+  let cells = '';
+  if (equalParts === false) {
+    const widths = unevenWidths(parts, W);
+    let x = 0;
+    for (let i = 0; i < parts; i++) {
+      const w = widths[i];
+      const cls = shadedSet.has(i) ? 'shaded' : 'unshaded';
+      cells += `<rect class="shape-part ${cls} ${interactive?'':'locked'}" data-idx="${i}" x="${x}" y="0" width="${w}" height="${H}"/>`;
+      x += w;
+    }
+  } else {
+    const w = W / parts;
+    for (let i = 0; i < parts; i++) {
+      const cls = shadedSet.has(i) ? 'shaded' : 'unshaded';
+      cells += `<rect class="shape-part ${cls} ${interactive?'':'locked'}" data-idx="${i}" x="${i*w}" y="0" width="${w}" height="${H}"/>`;
+    }
+  }
+  return `<svg width="240" height="120" viewBox="0 0 240 120">${cells}</svg>`;
+}
+
+function renderSquare(parts, shadedSet, interactive, equalParts) {
+  // Square split into vertical strips (keeps it simple & always equal-able)
+  const S = 160;
+  let cells = '';
+  if (equalParts === false) {
+    const widths = unevenWidths(parts, S);
+    let x = 0;
+    for (let i = 0; i < parts; i++) {
+      const w = widths[i];
+      const cls = shadedSet.has(i) ? 'shaded' : 'unshaded';
+      cells += `<rect class="shape-part ${cls} ${interactive?'':'locked'}" data-idx="${i}" x="${x}" y="0" width="${w}" height="${S}"/>`;
+      x += w;
+    }
+  } else {
+    const w = S / parts;
+    for (let i = 0; i < parts; i++) {
+      const cls = shadedSet.has(i) ? 'shaded' : 'unshaded';
+      cells += `<rect class="shape-part ${cls} ${interactive?'':'locked'}" data-idx="${i}" x="${i*w}" y="0" width="${w}" height="${S}"/>`;
+    }
+  }
+  return `<svg width="160" height="160" viewBox="0 0 160 160">${cells}</svg>`;
+}
+
+// Generate uneven angle splits for the "not equal" case (sum to 360)
+function unevenAngles(parts) {
+  let raw = Array.from({length: parts}, () => randInt(2, 6));
+  const sum = raw.reduce((a,b)=>a+b,0);
+  // Ensure they're actually uneven (not accidentally all the same)
+  if (raw.every(v => v === raw[0])) raw[0] += 2;
+  const total = raw.reduce((a,b)=>a+b,0);
+  return raw.map(v => (v/total) * 360);
+}
+function unevenWidths(parts, total) {
+  let raw = Array.from({length: parts}, () => randInt(2, 6));
+  if (raw.every(v => v === raw[0])) raw[0] += 2;
+  const sum = raw.reduce((a,b)=>a+b,0);
+  return raw.map(v => (v/sum) * total);
+}
+
+// Shape dispatcher with shape name (for the shape-vocabulary tie-in)
+function renderShape(shapeType, parts, shadedSet, interactive, equalParts) {
+  if (shapeType === 'circle') return { svg: renderCircle(parts, shadedSet, interactive, equalParts), name: 'circle' };
+  if (shapeType === 'square') return { svg: renderSquare(parts, shadedSet, interactive, equalParts), name: 'square' };
+  return { svg: renderRect(parts, shadedSet, interactive, equalParts), name: 'rectangle' };
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// QUESTION GENERATION PER STAGE
+// ═══════════════════════════════════════════════════════════════════════
+const SHAPE_TYPES = ['circle', 'rectangle', 'square'];
+const DENOMS_EARLY = [2, 3, 4];          // stages 1-2 keep it gentle
+const DENOMS_MORE  = [2, 3, 4, 5, 6, 8]; // a touch more variety
+
+function genStage1() {
+  // Equal parts: yes or no
+  const shapeType = pick(SHAPE_TYPES);
+  const parts = pick([2, 3, 4, 6]);
+  const isEqual = Math.random() < 0.5;
+  return { stage: 1, shapeType, parts, isEqual };
+}
+
+function genStage2() {
+  // Two sub-types: "name the shaded fraction" or "shade the fraction"
+  const mode = Math.random() < 0.5 ? 'name' : 'shade';
+  const shapeType = pick(SHAPE_TYPES);
+  const denom = pick(DENOMS_EARLY);
+  return { stage: 2, mode, shapeType, denom };
+}
+
+function genStage3() {
+  // Fraction of a group of objects
+  const denom = pick([2, 3, 4]);
+  const perGroup = randInt(2, 4);
+  const totalObjects = denom * perGroup; // divides cleanly
+  return { stage: 3, denom, perGroup, totalObjects };
+}
+
+function genStage4() {
+  // Fraction of a number (school style)
+  const denom = pick([2, 3, 4, 5]);
+  const perGroup = randInt(2, 6);
+  const number = denom * perGroup;
+  return { stage: 4, denom, number, answer: perGroup };
+}
+
+function generateQuestion(stage) {
+  if (stage === 1) return genStage1();
+  if (stage === 2) return genStage2();
+  if (stage === 3) return genStage3();
+  return genStage4();
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// RENDER A QUESTION
+// ═══════════════════════════════════════════════════════════════════════
+let shadeState = new Set(); // for interactive shading in stage 2
+
+function renderQuestion() {
+  answered = false;
+  const q = currentQuestion;
+  const qText = document.getElementById('question-text');
+  const qSub = document.getElementById('question-sub');
+  const visual = document.getElementById('visual-area');
+  const controls = document.getElementById('controls-area');
+  visual.innerHTML = '';
+  controls.innerHTML = '';
+  qSub.textContent = '';
+
+  document.getElementById('feedback').className = 'feedback';
+
+  document.getElementById('stage-pill').textContent = 'Stage ' + currentStage;
+  document.getElementById('q-counter').textContent = `${qIdx + 1} of ${QUESTIONS_PER_STAGE}`;
+  document.getElementById('progress-fill').style.width = `${(qIdx / QUESTIONS_PER_STAGE) * 100}%`;
+
+  if (q.stage === 1) renderStage1(q, qText, qSub, visual, controls);
+  else if (q.stage === 2) renderStage2(q, qText, qSub, visual, controls);
+  else if (q.stage === 3) renderStage3(q, qText, qSub, visual, controls);
+  else renderStage4(q, qText, qSub, visual, controls);
+}
+
+// ── STAGE 1: Equal parts? ───────────────────────────────────────────────
+function renderStage1(q, qText, qSub, visual, controls) {
+  const shaded = new Set();
+  const { svg, name } = renderShape(q.shapeType, q.parts, shaded, false, q.isEqual);
+  qText.innerHTML = `Is this ${name} split into <span class="frac-word">equal parts</span>?`;
+  qSub.textContent = 'Equal parts are all exactly the same size.';
+  visual.innerHTML = `<div class="shape-area">${svg}</div>`;
+
+  const wrap = document.createElement('div');
+  wrap.className = 'yesno';
+  wrap.innerHTML = `
+    <button class="yesno-btn yes" data-ans="yes">✓ Yes</button>
+    <button class="yesno-btn no" data-ans="no">✗ No</button>`;
+  controls.appendChild(wrap);
+
+  say(`Is this ${name} split into equal parts?`);
+
+  wrap.querySelectorAll('.yesno-btn').forEach(b => {
+    b.addEventListener('click', () => {
+      if (answered) return;
+      const said = b.dataset.ans === 'yes';
+      const correct = said === q.isEqual;
+      wrap.querySelectorAll('.yesno-btn').forEach(x => x.disabled = true);
+      // Recolour the parts to show equal/unequal
+      visual.querySelectorAll('.shape-part').forEach(p => {
+        p.classList.remove('unshaded');
+        p.classList.add(q.isEqual ? 'eq-good' : 'eq-bad');
+      });
+      finishQuestion(correct,
+        q.isEqual ? 'Yes! Every part is the same size — equal parts!' :
+                    'These parts are different sizes, so they are NOT equal.',
+        q.isEqual ? 'Equal parts!' : 'Not equal — different sizes!');
+    });
+  });
+}
+
+// ── STAGE 2: Name / shade the fraction ──────────────────────────────────
+function renderStage2(q, qText, qSub, visual, controls) {
+  if (q.mode === 'name') {
+    // Show a shape with exactly 1 part shaded, ask which unit fraction
+    const shaded = new Set([randInt(0, q.denom - 1)]);
+    const { svg, name } = renderShape(q.shapeType, q.denom, shaded, false, true);
+    qText.innerHTML = `What fraction of the ${name} is <span class="frac-word">shaded</span>?`;
+    visual.innerHTML = `<div class="shape-area">${svg}</div>`;
+    say(`What fraction of the ${name} is shaded?`);
+
+    // Build choices: correct unit fraction + distractors
+    const correctName = unitFractionName(q.denom);
+    const options = new Set([correctName]);
+    DENOMS_EARLY.concat([5,6]).forEach(d => { if (options.size < 3) options.add(unitFractionName(d)); });
+    const choiceArr = shuffle([...options]).slice(0, 3);
+    if (!choiceArr.includes(correctName)) choiceArr[0] = correctName;
+
+    const grid = document.createElement('div');
+    grid.className = 'choices three';
+    shuffle(choiceArr).forEach(opt => {
+      const b = document.createElement('button');
+      b.className = 'choice-btn';
+      b.style.fontSize = '15px';
+      b.textContent = opt;
+      b.addEventListener('click', () => {
+        if (answered) return;
+        const correct = opt === correctName;
+        grid.querySelectorAll('.choice-btn').forEach(x => x.disabled = true);
+        b.classList.add(correct ? 'correct' : 'wrong');
+        if (!correct) {
+          [...grid.children].find(c => c.textContent === correctName)?.classList.add('correct');
+        }
+        finishQuestion(correct,
+          correct ? `Yes! One part out of ${q.denom} is ${correctName}.`
+                  : `This is ${correctName} — one part out of ${q.denom}.`,
+          correct ? 'Correct!' : `It's ${correctName}!`);
+      });
+      grid.appendChild(b);
+    });
+    controls.appendChild(grid);
+
+  } else {
+    // SHADE mode: ask him to shade "one quarter" by tapping parts
+    shadeState = new Set();
+    const { svg, name } = renderShape(q.shapeType, q.denom, shadeState, true, true);
+    const target = unitFractionName(q.denom);
+    qText.innerHTML = `Tap to shade <span class="frac-word">${target}</span> of the ${name}.`;
+    qSub.textContent = `That means shade 1 part out of ${q.denom}.`;
+    visual.innerHTML = `<div class="shape-area">${svg}</div>`;
+    say(`Tap to shade ${target} of the ${name}.`);
+
+    function bindParts() {
+      visual.querySelectorAll('.shape-part').forEach(p => {
+        p.addEventListener('click', () => {
+          if (answered) return;
+          const idx = parseInt(p.dataset.idx, 10);
+          if (shadeState.has(idx)) { shadeState.delete(idx); p.classList.remove('shaded'); p.classList.add('unshaded'); }
+          else { shadeState.add(idx); p.classList.add('shaded'); p.classList.remove('unshaded'); }
+        });
+      });
+    }
+    bindParts();
+
+    const checkBtn = document.createElement('button');
+    checkBtn.className = 'action-btn primary';
+    checkBtn.textContent = '✅ Check';
+    checkBtn.addEventListener('click', () => {
+      if (answered) return;
+      const correct = shadeState.size === 1;
+      visual.querySelectorAll('.shape-part').forEach(p => p.classList.add('locked'));
+      finishQuestion(correct,
+        correct ? `Perfect! 1 shaded part out of ${q.denom} is ${target}.`
+                : `You shaded ${shadeState.size}. ${target} means just 1 part out of ${q.denom}.`,
+        correct ? 'Nice shading!' : `${target} = 1 part!`);
+    });
+    controls.appendChild(checkBtn);
+  }
+}
+
+// ── STAGE 3: Fraction of a group ─────────────────────────────────────────
+function renderStage3(q, qText, qSub, visual, controls) {
+  const frac = unitFractionName(q.denom);
+  qText.innerHTML = `What is <span class="frac-word">${frac}</span> of ${q.totalObjects} footballs?`;
+  qSub.textContent = `Share them into ${q.denom} equal groups, then count one group.`;
+
+  // Initially show all objects in one bin
+  const area = document.createElement('div');
+  area.className = 'group-area';
+  area.innerHTML = `<div class="group-bin" id="single-bin">${'🏈'.repeat(q.totalObjects)}</div>`;
+  visual.appendChild(area);
+  say(`What is ${frac} of ${q.totalObjects} footballs? Press share to split them into ${q.denom} equal groups.`);
+
+  // "Share them out" button animates the split into bins
+  const shareBtn = document.createElement('button');
+  shareBtn.className = 'action-btn teal';
+  shareBtn.textContent = `🤝 Share into ${q.denom} groups`;
+  shareBtn.addEventListener('click', () => {
+    area.innerHTML = '';
+    const row = document.createElement('div');
+    row.className = 'group-bins-row';
+    for (let g = 0; g < q.denom; g++) {
+      const bin = document.createElement('div');
+      bin.className = 'group-bin split';
+      bin.innerHTML = '🏈'.repeat(q.perGroup);
+      row.appendChild(bin);
+    }
+    area.appendChild(row);
+    say(`Now there are ${q.denom} equal groups. How many footballs are in one group?`);
+    qSub.textContent = `Now count how many are in just ONE group.`;
+    shareBtn.remove();
+    showChoices();
+  });
+  controls.appendChild(shareBtn);
+
+  function showChoices() {
+    const grid = document.createElement('div');
+    grid.className = 'choices three';
+    const opts = new Set([q.perGroup]);
+    while (opts.size < 3) opts.add(randInt(1, Math.max(6, q.perGroup + 2)));
+    shuffle([...opts]).forEach(n => {
+      const b = document.createElement('button');
+      b.className = 'choice-btn';
+      b.textContent = n;
+      b.addEventListener('click', () => {
+        if (answered) return;
+        const correct = n === q.perGroup;
+        grid.querySelectorAll('.choice-btn').forEach(x => x.disabled = true);
+        b.classList.add(correct ? 'correct' : 'wrong');
+        if (!correct) [...grid.children].find(c => c.textContent == q.perGroup)?.classList.add('correct');
+        finishQuestion(correct,
+          correct ? `Yes! ${frac} of ${q.totalObjects} is ${q.perGroup}.`
+                  : `${frac} of ${q.totalObjects} is ${q.perGroup} — one group of ${q.perGroup}.`,
+          correct ? 'Brilliant!' : `It's ${q.perGroup}!`);
+      });
+      grid.appendChild(b);
+    });
+    controls.appendChild(grid);
+  }
+}
+
+// ── STAGE 4: Fraction of a number (school style) ─────────────────────────
+function renderStage4(q, qText, qSub, visual, controls) {
+  const frac = unitFractionName(q.denom);
+  qText.innerHTML = `What is <span class="frac-word">1/${q.denom}</span> of ${q.number}?`;
+  qSub.textContent = `Tip: 1/${q.denom} means split ${q.number} into ${q.denom} equal groups.`;
+
+  // Hidden visual, revealed by "show me"
+  const reveal = document.createElement('div');
+  reveal.id = 'reveal-area';
+  reveal.style.width = '100%';
+  visual.appendChild(reveal);
+
+  say(`What is one ${FRACTION_NAMES[q.denom]} of ${q.number}?`);
+
+  const entry = document.createElement('div');
+  entry.className = 'num-entry';
+  const input = document.createElement('input');
+  input.className = 'num-input';
+  input.type = 'text';
+  input.inputMode = 'numeric';
+  input.placeholder = '?';
+  // iOS-safe: select on focus
+  input.addEventListener('focus', e => setTimeout(() => { try { e.target.select(); } catch(_){} }, 0));
+  input.addEventListener('input', e => { e.target.value = e.target.value.replace(/\D/g, '').slice(0, 3); });
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') checkBtn.click(); });
+  entry.appendChild(input);
+
+  const showme = document.createElement('button');
+  showme.className = 'showme-btn';
+  showme.textContent = '👀 Show me how';
+  showme.addEventListener('click', () => {
+    reveal.innerHTML = '';
+    const area = document.createElement('div');
+    area.className = 'group-area';
+    const row = document.createElement('div');
+    row.className = 'group-bins-row';
+    for (let g = 0; g < q.denom; g++) {
+      const bin = document.createElement('div');
+      bin.className = 'group-bin split';
+      bin.innerHTML = '🏈'.repeat(q.answer);
+      row.appendChild(bin);
+    }
+    area.appendChild(row);
+    reveal.appendChild(area);
+    say(`Split ${q.number} into ${q.denom} equal groups. Count one group.`);
+    showme.remove();
+  });
+  entry.appendChild(showme);
+
+  const checkBtn = document.createElement('button');
+  checkBtn.className = 'action-btn primary';
+  checkBtn.textContent = '✅ Check My Answer';
+  checkBtn.addEventListener('click', () => {
+    if (answered) return;
+    if (input.value === '') { input.focus(); return; }
+    const val = parseInt(input.value, 10);
+    const correct = val === q.answer;
+    input.disabled = true;
+    input.classList.add(correct ? 'correct' : 'wrong');
+    if (!correct) input.value = q.answer;
+    finishQuestion(correct,
+      correct ? `Yes! 1/${q.denom} of ${q.number} is ${q.answer}.`
+              : `1/${q.denom} of ${q.number} is ${q.answer}. Split ${q.number} into ${q.denom} groups of ${q.answer}.`,
+      correct ? 'Spot on!' : `It's ${q.answer}!`);
+  });
+
+  controls.appendChild(entry);
+  controls.appendChild(checkBtn);
+  setTimeout(() => input.focus(), 80);
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// FINISH A QUESTION
+// ═══════════════════════════════════════════════════════════════════════
+function finishQuestion(correct, longMsg, shortVoice) {
+  answered = true;
+  if (correct) { correctCount++; confetti(12); }
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback ' + (correct ? 'good' : 'bad');
+  document.getElementById('fb-emoji').textContent = correct ? pick(['🌟','🎉','⭐','✨','🏆']) : '💡';
+  document.getElementById('fb-msg').textContent = longMsg;
+  say(shortVoice);
+}
+
+document.getElementById('fb-next').addEventListener('click', () => {
+  qIdx++;
+  if (qIdx >= QUESTIONS_PER_STAGE) { showResults(); return; }
+  currentQuestion = generateQuestion(currentStage);
+  renderQuestion();
+});
+
+// ═══════════════════════════════════════════════════════════════════════
+// RESULTS
+// ═══════════════════════════════════════════════════════════════════════
+function showResults() {
+  document.getElementById('progress-fill').style.width = '100%';
+  showScreen('results-screen');
+  const total = QUESTIONS_PER_STAGE;
+  const pct = correctCount / total;
+  let stars, emoji, title, msg;
+  if (pct >= 0.95)      { stars = 3; emoji = '🏆'; title = 'Superstar!'; msg = `You got all ${total}! You really understand this.`; }
+  else if (pct >= 0.7)  { stars = 2; emoji = '🌟'; title = 'Great work!'; msg = `${correctCount} out of ${total} — you're getting it!`; }
+  else if (pct >= 0.45) { stars = 1; emoji = '⭐'; title = 'Good try!'; msg = `${correctCount} out of ${total} — keep practising!`; }
+  else                  { stars = 0; emoji = '💪'; title = 'Keep going!'; msg = `Have another go — you'll get there!`; }
+
+  document.getElementById('res-emoji').textContent = emoji;
+  document.getElementById('res-title').textContent = title;
+  document.getElementById('res-stars').textContent = stars > 0 ? '⭐'.repeat(stars) + '☆'.repeat(3 - stars) : '☆☆☆';
+  document.getElementById('res-msg').textContent = msg;
+
+  setStars(currentStage, stars);
+  refreshStageStars();
+  if (stars === 3) { confetti(40); setTimeout(() => confetti(30), 400); }
+  say(title + ' ' + msg);
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// STAGE START / BUTTONS
+// ═══════════════════════════════════════════════════════════════════════
+function startStage(stage) {
+  currentStage = stage;
+  qIdx = 0;
+  correctCount = 0;
+  currentQuestion = generateQuestion(stage);
+  showScreen('game-screen');
+  renderQuestion();
+}
+
+document.querySelectorAll('.stage-btn').forEach(btn => {
+  btn.addEventListener('click', () => startStage(parseInt(btn.dataset.stage, 10)));
+});
+
+document.getElementById('res-stages').addEventListener('click', () => showScreen('pick-screen'));
+document.getElementById('res-again').addEventListener('click', () => startStage(currentStage));
+
+// ═══════════════════════════════════════════════════════════════════════
+// HEADER BACK BUTTON
+// ═══════════════════════════════════════════════════════════════════════
+const headerBackBtn = document.getElementById('header-back-btn');
+function updateBackBtn() {
+  const onPick = document.getElementById('pick-screen').classList.contains('active');
+  headerBackBtn.textContent = onPick ? '← Home' : '← Back';
+}
+headerBackBtn.addEventListener('click', e => {
+  const onPick = document.getElementById('pick-screen').classList.contains('active');
+  if (!onPick) {
+    e.preventDefault();
+    if (typeof speechSynthesis !== 'undefined') speechSynthesis.cancel();
+    showScreen('pick-screen');
+  }
+});
+updateBackBtn();
+
+// ═══════════════════════════════════════════════════════════════════════
+// CONFETTI
+// ═══════════════════════════════════════════════════════════════════════
+function confetti(count) {
+  const colors = ['#f472b6','#2dd4bf','#f59e0b','#3b82f6','#16a34a','#a78bfa'];
+  for (let i = 0; i < count; i++) {
+    setTimeout(() => {
+      const p = document.createElement('div');
+      p.className = 'confetti-piece';
+      p.style.cssText = `left:${Math.random()*100}vw;top:-10px;width:${8+Math.random()*8}px;height:${8+Math.random()*8}px;background:${colors[Math.floor(Math.random()*colors.length)]};border-radius:${Math.random()>.5?'50%':'2px'};animation-duration:${1.5+Math.random()*2}s;transform:rotate(${Math.random()*360}deg)`;
+      document.body.appendChild(p);
+      setTimeout(() => p.remove(), 4000);
+    }, i * 40);
+  }
+}
+
+// INIT
+showScreen('pick-screen');
+</script>
+</body>
+</html>
