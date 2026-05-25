@@ -23,6 +23,7 @@
     --muted: #94a3b8;
     --purple: #a78bfa;
     --pink: #f472b6;
+    --coral: #fb7185;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -151,6 +152,7 @@
     letter-spacing: 1px;
     text-transform: uppercase;
   }
+  .category-badge.are     { color: var(--coral); border-color: rgba(251,113,133,0.3); background: rgba(251,113,133,0.06); }
   .category-badge.air     { color: var(--pink);  border-color: rgba(244,114,182,0.3); background: rgba(244,114,182,0.06); }
   .category-badge.eer     { color: var(--gold);   border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.06); }
   .category-badge.ear     { color: var(--gold);   border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.06); }
@@ -262,8 +264,8 @@
 
   /* Rule reminder in feedback */
   .rule-reminder {
-    background: rgba(244,114,182,0.10);
-    border: 1px solid rgba(244,114,182,0.3);
+    background: rgba(251,113,133,0.10);
+    border: 1px solid rgba(251,113,133,0.3);
     border-radius: 12px;
     padding: 10px 14px;
     font-size: 13px;
@@ -272,7 +274,7 @@
     margin-top: 6px;
     line-height: 1.4;
   }
-  .rule-reminder strong { color: var(--pink); }
+  .rule-reminder strong { color: var(--coral); }
 
   .next-btn {
     width: 100%;
@@ -404,8 +406,8 @@
     color: var(--text);
   }
   .cat-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
-  .cat-btn.pattern { border-color: rgba(244,114,182,0.35); }
-  .cat-btn.pattern:hover { background: rgba(244,114,182,0.06); }
+  .cat-btn.pattern { border-color: rgba(251,113,133,0.35); }
+  .cat-btn.pattern:hover { background: rgba(251,113,133,0.06); }
   .cat-btn.tricky { border-color: rgba(167,139,250,0.35); }
   .cat-btn.tricky:hover { background: rgba(167,139,250,0.06); }
   .cat-btn.all    { border-color: rgba(59,130,246,0.35); }
@@ -420,8 +422,8 @@
   .rule-btn {
     width: 100%;
     background: transparent;
-    border: 1.5px solid rgba(244,114,182,0.3);
-    color: var(--pink);
+    border: 1.5px solid rgba(251,113,133,0.3);
+    color: var(--coral);
     font-family: 'Nunito', sans-serif;
     font-size: 14px;
     font-weight: 800;
@@ -431,7 +433,7 @@
     transition: all 0.2s;
     letter-spacing: 0.5px;
   }
-  .rule-btn:hover { background: rgba(244,114,182,0.08); }
+  .rule-btn:hover { background: rgba(251,113,133,0.08); }
 
   /* Rule teach screen */
   .rule-card {
@@ -447,7 +449,7 @@
   .rule-title {
     font-family: 'Fredoka One', cursive;
     font-size: 26px;
-    color: var(--pink);
+    color: var(--coral);
     line-height: 1.1;
   }
   .rule-sub { font-size: 14px; color: var(--muted); font-weight: 600; }
@@ -456,7 +458,7 @@
     background: var(--card2);
     border-radius: 16px;
     padding: 18px 18px;
-    display: flex; flex-direction: column; gap: 12px;
+    display: flex; flex-direction: column; gap: 14px;
     text-align: left;
   }
   .rule-line {
@@ -478,14 +480,28 @@
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
   }
-  .rule-chip.air { background: rgba(244,114,182,0.18); color: var(--pink); border: 1.5px solid rgba(244,114,182,0.4); }
-  .rule-line strong { color: var(--pink); }
+  .rule-chip.are { background: rgba(251,113,133,0.18); color: var(--coral); border: 1.5px solid rgba(251,113,133,0.4); }
+  .rule-chip.air { background: rgba(244,114,182,0.15); color: var(--pink); border: 1.5px solid rgba(244,114,182,0.35); }
+  .rule-line strong { color: var(--coral); }
   .rule-word { font-family: 'Fredoka One', cursive; color: var(--text); }
-  .rule-word strong { color: var(--pink); }
+  .rule-word strong { color: var(--coral); }
+  .rule-word .alt { color: var(--pink); }
+  .rule-note {
+    background: rgba(244,114,182,0.08);
+    border: 1px solid rgba(244,114,182,0.25);
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.45;
+    text-align: left;
+  }
+  .rule-note strong { color: var(--pink); }
 
   .rule-start-btn {
     width: 100%;
-    background: linear-gradient(135deg, var(--pink), #be185d);
+    background: linear-gradient(135deg, var(--coral), #be123c);
     border: none;
     color: white;
     font-family: 'Fredoka One', cursive;
@@ -493,7 +509,7 @@
     padding: 18px;
     border-radius: 16px;
     cursor: pointer;
-    box-shadow: 0 4px 20px rgba(244,114,182,0.35);
+    box-shadow: 0 4px 20px rgba(251,113,133,0.35);
     transition: all 0.2s;
     letter-spacing: 0.5px;
   }
@@ -551,17 +567,17 @@
     <div class="start-hero">
       <div class="bee-icon">🐝</div>
       <div class="start-title">Ready to spell,<br><span>FTS</span>?</div>
-      <div class="start-sub">This week's focus: the <strong style="color:var(--pink)">'air'</strong> spelling and tricky words.</div>
+      <div class="start-sub">This week's focus: the <strong style="color:var(--coral)">'are'</strong> spelling and a tricky word.</div>
       <button class="rule-btn" id="rule-btn">📖 Remind me of the pattern</button>
     </div>
 
     <div class="cat-section-label">Pick your practice</div>
 
     <button class="cat-btn pattern" data-cat="rule">
-      <div class="cat-icon">💨</div>
+      <div class="cat-icon">😱</div>
       <div class="cat-info">
         <div class="cat-name">This Week's Pattern</div>
-        <div class="cat-desc">Words with the 'air' spelling — 10 words</div>
+        <div class="cat-desc">Words with the 'are' spelling — 11 words</div>
       </div>
       <div class="cat-arrow">›</div>
     </button>
@@ -570,7 +586,7 @@
       <div class="cat-icon">🧠</div>
       <div class="cat-info">
         <div class="cat-name">Tricky Words</div>
-        <div class="cat-desc">Words that don't follow any rule — <span id="tricky-count">2</span> words</div>
+        <div class="cat-desc">Words that don't follow any rule — <span id="tricky-count">1</span> word</div>
       </div>
       <div class="cat-arrow">›</div>
     </button>
@@ -588,18 +604,25 @@
   <!-- RULE TEACH SCREEN -->
   <div id="rule-screen" class="hidden" style="width:100%;display:none;flex-direction:column;gap:16px;">
     <div class="rule-card">
-      <div class="rule-title">The <span style="color:var(--text)">'air'</span> spelling!</div>
-      <div class="rule-sub">This week's words use <strong style="color:var(--pink)">a-i-r</strong> to make the /air/ sound.</div>
+      <div class="rule-title">The <span style="color:var(--text)">'are'</span> spelling!</div>
+      <div class="rule-sub">Another way to make the /air/ sound you already know.</div>
 
       <div class="rule-panel">
         <div class="rule-line">
+          <div class="rule-chip are">are</div>
+          <div>This week's words use <strong>a-r-e</strong> to make the /air/ sound.<br>
+          <span class="rule-word">sc<strong>are</strong> · sp<strong>are</strong> · h<strong>are</strong> · r<strong>are</strong></span></div>
+        </div>
+        <div class="rule-line">
           <div class="rule-chip air">air</div>
-          <div>The three letters <strong>a</strong>, <strong>i</strong>, <strong>r</strong> work as a team to make the /air/ sound.<br>
-          <span class="rule-word"><strong>air</strong> · f<strong>air</strong> · h<strong>air</strong> · st<strong>air</strong>s</span></div>
+          <div>A few weeks ago, words used <span class="alt"><strong>a-i-r</strong></span> for the same sound.<br>
+          <span class="rule-word"><span class="alt">f<strong>air</strong> · h<strong>air</strong> · ch<strong>air</strong></span></span></div>
         </div>
       </div>
 
-      <div class="rule-sub">Listen for the /air/ sound — like in fair, chair, pair!</div>
+      <div class="rule-note">
+        🧐 <strong>The tricky part:</strong> 'are' and 'air' sound exactly the same! There's no rule for which to use — you just have to learn each word. Listen for the meaning in the sentence to help you remember.
+      </div>
 
       <button class="rule-start-btn" id="rule-start-btn">🎯 I'm Ready!</button>
       <button class="rule-back-btn" id="rule-back-btn">← Back</button>
@@ -620,7 +643,7 @@
 
     <div class="game-card">
       <div class="bee-icon" id="bee-anim">🐝</div>
-      <div class="category-badge" id="category-badge">air pattern</div>
+      <div class="category-badge" id="category-badge">are pattern</div>
       <div class="prompt-text" id="prompt-text">Listen carefully, then type the word!</div>
 
       <button class="speak-btn" id="speak-btn">
@@ -680,9 +703,7 @@ localStorage.removeItem('spelling_bee_words');
 //   word     — the spelling
 //   sentence — used in context (TTS reads this; word is masked in hint)
 //   cat      — category code, drives the rule reminder shown after each answer
-//              Current categories: 'air', 'eer', 'ear', 'ck', 'k', 'tricky'
-//              Add new ones as new phonics rules come up — also extend
-//              CATEGORY_LABELS and showRuleReminder() below to match.
+//              Categories: 'are', 'air', 'eer', 'ear', 'ck', 'k', 'tricky'
 //
 // FOUR ARRAYS:
 //   CURRENT_PATTERN — this week's pattern words (used by "This Week's Pattern")
@@ -690,45 +711,43 @@ localStorage.removeItem('spelling_bee_words');
 //   ARCHIVE_PATTERN — all previous weeks' pattern words (used by "Everything Mixed")
 //   ARCHIVE_TRICKY  — all previous weeks' tricky words  (used by "Everything Mixed")
 //
-// "Everything Mixed" pulls 10 random words from the entire pool
-// (current + archive, pattern + tricky) — true random, not a deliberate split.
+// "Everything Mixed" pulls 10 random words from the entire pool (true random).
 //
 // ══════════════════════════════════════════════════════════════════════════
 //   WEEKLY UPDATE WORKFLOW
 // ══════════════════════════════════════════════════════════════════════════
-//   1. Move all CURRENT_PATTERN entries into ARCHIVE_PATTERN (append).
-//   2. Move all CURRENT_TRICKY  entries into ARCHIVE_TRICKY  (append).
-//   3. Replace CURRENT_PATTERN with this week's new pattern words.
-//   4. Replace CURRENT_TRICKY  with this week's new tricky words.
-//   5. Update the rule teach screen text + start hero copy + showRuleReminder
-//      to reflect the new week's pattern.
-//   6. Update CATEGORY_LABELS if you add a new category code.
-//   7. Add a category-badge CSS rule if you add a new category code.
+//   1. Move CURRENT_PATTERN entries into ARCHIVE_PATTERN (append).
+//   2. Move CURRENT_TRICKY  entries into ARCHIVE_TRICKY  (append).
+//   3. Replace CURRENT_PATTERN / CURRENT_TRICKY with this week's words.
+//   4. Update rule teach screen + start hero copy + showRuleReminder.
+//   5. Update CATEGORY_LABELS + add a category-badge CSS rule if new category.
 // ══════════════════════════════════════════════════════════════════════════
 
-// ── CURRENT WEEK (Week 4: 'air' spelling for the /air/ sound) ────────────
+// ── CURRENT WEEK (Week 5: 'are' spelling for the /air/ sound) ────────────
+// NOTE: several of these are homophones of 'air' words or others
+// (hare/hair, flare/flair, bare/bear, stare/stair, square/...). Sentences
+// are written to make the meaning unmistakable since the TTS can't.
 const CURRENT_PATTERN = [
-  { word: "air",      sentence: "FTS filled the balloon with air until it was big.",      cat: 'air' },
-  { word: "fair",     sentence: "FTS rode the rollercoaster at the fair on the weekend.", cat: 'air' },
-  { word: "hair",     sentence: "FTS brushed his hair before going to school.",           cat: 'air' },
-  { word: "stairs",   sentence: "FTS ran up the stairs to his bedroom.",                  cat: 'air' },
-  { word: "chair",    sentence: "FTS sat on the chair at the kitchen table.",             cat: 'air' },
-  { word: "pair",     sentence: "FTS put on a clean pair of socks.",                      cat: 'air' },
-  { word: "stair",    sentence: "FTS tripped on the last stair and laughed.",             cat: 'air' },
-  { word: "repair",   sentence: "Dad will repair the broken gate this weekend.",          cat: 'air' },
-  { word: "airport",  sentence: "FTS waved from the window at the busy airport.",         cat: 'air' },
-  { word: "unfair",   sentence: "FTS thought it was unfair that his sister got the last biscuit.", cat: 'air' },
+  { word: "scare",  sentence: "The spooky mask gave FTS a big scare.",            cat: 'are' },
+  { word: "spare",  sentence: "FTS kept a spare pencil in his bag.",              cat: 'are' },
+  { word: "hare",   sentence: "The hare hopped quickly across the field.",        cat: 'are' },
+  { word: "rare",   sentence: "It is rare to see a shooting star.",               cat: 'are' },
+  { word: "flare",  sentence: "The bright flare lit up the night sky.",           cat: 'are' },
+  { word: "care",   sentence: "FTS takes good care of his pet.",                  cat: 'are' },
+  { word: "share",  sentence: "FTS likes to share his snacks with friends.",      cat: 'are' },
+  { word: "bare",   sentence: "FTS ran across the sand with bare feet.",          cat: 'are' },
+  { word: "dare",   sentence: "FTS did not dare to look down from the tall slide.",cat: 'are' },
+  { word: "stare",  sentence: "It is rude to stare at people.",                   cat: 'are' },
+  { word: "square", sentence: "FTS drew a square with four equal sides.",         cat: 'are' },
 ];
 
 const CURRENT_TRICKY = [
-  { word: "another", sentence: "FTS asked for another piece of toast.",          cat: 'tricky' },
-  { word: "water",   sentence: "FTS drank a big glass of cold water after footy.", cat: 'tricky' },
+  { word: "walk", sentence: "FTS likes to walk the dog around the block.", cat: 'tricky' },
 ];
 
 // ── ARCHIVE (previous weeks) ─────────────────────────────────────────────
-// As each week ends, move that week's words from CURRENT into here.
 const ARCHIVE_PATTERN = [
-  // ─── Week 1: ck rule (short vowel + ck) ────────────────────────────────
+  // ─── Week 1: ck rule ───────────────────────────────────────────────────
   { word: "duck",  sentence: "The duck swam across the pond.",              cat: 'ck' },
   { word: "rock",  sentence: "FTS picked up a smooth rock at the beach.",   cat: 'ck' },
   { word: "sack",  sentence: "Dad carried the sack of potatoes inside.",    cat: 'ck' },
@@ -744,7 +763,7 @@ const ARCHIVE_PATTERN = [
   { word: "black", sentence: "The Crows wear black and red.",               cat: 'ck' },
   { word: "pick",  sentence: "FTS could pick any flavour he wanted.",       cat: 'ck' },
   { word: "sock",  sentence: "FTS could only find one sock under the bed.", cat: 'ck' },
-  // Week 1 — k contrast words (these explain WHY they use k not ck)
+  // Week 1 — k contrast words
   { word: "milk",  sentence: "FTS poured milk on his cereal.",              cat: 'k', reason: "consonant before k (L)" },
   { word: "desk",  sentence: "FTS tidied up his desk at school.",           cat: 'k', reason: "consonant before k (S)" },
   { word: "mask",  sentence: "FTS wore a superhero mask.",                  cat: 'k', reason: "consonant before k (S)" },
@@ -752,7 +771,7 @@ const ARCHIVE_PATTERN = [
   { word: "bark",  sentence: "The tree had rough brown bark.",              cat: 'k', reason: "consonant before k (R)" },
   { word: "book",  sentence: "FTS read his book before bed.",               cat: 'k', reason: "vowel team (oo)" },
   { word: "look",  sentence: "FTS had a good look at the map.",             cat: 'k', reason: "vowel team (oo)" },
-  // ─── Week 2: 'ear' pattern for the /ear/ sound ─────────────────────────
+  // ─── Week 2: 'ear' pattern (/ear/ sound) ───────────────────────────────
   { word: "near",   sentence: "FTS sat near the window to read his book.",     cat: 'ear' },
   { word: "dear",   sentence: "Mum wrote 'Dear Grandma' at the top of the letter.", cat: 'ear' },
   { word: "year",   sentence: "FTS turned seven last year.",                    cat: 'ear' },
@@ -764,7 +783,7 @@ const ARCHIVE_PATTERN = [
   { word: "gear",   sentence: "FTS packed all his gear for the camping trip.",  cat: 'ear' },
   { word: "rear",   sentence: "FTS sat in the rear seat of the car.",           cat: 'ear' },
   { word: "smear",  sentence: "FTS had a smear of jam on his cheek.",           cat: 'ear' },
-  // ─── Week 3: 'eer' spelling for the /ear/ sound ────────────────────────
+  // ─── Week 3: 'eer' spelling (/ear/ sound) ──────────────────────────────
   { word: "cheer",  sentence: "FTS gave a loud cheer when the Crows kicked a goal.", cat: 'eer' },
   { word: "deer",   sentence: "A deer stood quietly at the edge of the forest.",     cat: 'eer' },
   { word: "peer",   sentence: "FTS had to peer through the window to see who was there.", cat: 'eer' },
@@ -772,6 +791,17 @@ const ARCHIVE_PATTERN = [
   { word: "sneer",  sentence: "The villain had a nasty sneer on his face.",          cat: 'eer' },
   { word: "steer",  sentence: "FTS helped Dad steer the boat across the lake.",      cat: 'eer' },
   { word: "career", sentence: "When FTS grows up, he can pick any career he wants.", cat: 'eer' },
+  // ─── Week 4: 'air' spelling (/air/ sound) ──────────────────────────────
+  { word: "air",      sentence: "FTS filled the balloon with air until it was big.",      cat: 'air' },
+  { word: "fair",     sentence: "FTS rode the rollercoaster at the fair on the weekend.", cat: 'air' },
+  { word: "hair",     sentence: "FTS brushed his hair before going to school.",           cat: 'air' },
+  { word: "stairs",   sentence: "FTS ran up the stairs to his bedroom.",                  cat: 'air' },
+  { word: "chair",    sentence: "FTS sat on the chair at the kitchen table.",             cat: 'air' },
+  { word: "pair",     sentence: "FTS put on a clean pair of socks.",                      cat: 'air' },
+  { word: "stair",    sentence: "FTS tripped on the last stair and laughed.",             cat: 'air' },
+  { word: "repair",   sentence: "Dad will repair the broken gate this weekend.",          cat: 'air' },
+  { word: "airport",  sentence: "FTS waved from the window at the busy airport.",         cat: 'air' },
+  { word: "unfair",   sentence: "FTS thought it was unfair that his sister got the last biscuit.", cat: 'air' },
 ];
 
 const ARCHIVE_TRICKY = [
@@ -783,10 +813,14 @@ const ARCHIVE_TRICKY = [
   { word: "open",   sentence: "FTS will open his presents on his birthday.",    cat: 'tricky' },
   // Week 3
   { word: "other", sentence: "FTS wanted the other piece of cake, not this one.", cat: 'tricky' },
+  // Week 4
+  { word: "another", sentence: "FTS asked for another piece of toast.",          cat: 'tricky' },
+  { word: "water",   sentence: "FTS drank a big glass of cold water after footy.", cat: 'tricky' },
 ];
 
 // ── CATEGORY LABELS (for the badge above each word in the game) ──────────
 const CATEGORY_LABELS = {
+  are:    "'are' spelling word",
   air:    "'air' spelling word",
   eer:    "'eer' spelling word",
   ear:    "'ear' spelling word",
@@ -819,7 +853,7 @@ let currentIndex = 0;
 let currentWord = null;
 let answered = false;
 let correctThisSession = 0;
-let currentCategory = 'rule'; // 'rule' | 'tricky' | 'all'
+let currentCategory = 'rule';
 
 // Voice caching (iOS Safari)
 let voiceCache = null;
@@ -1037,8 +1071,10 @@ function checkAnswer() {
 function showRuleReminder(word) {
   const ruleDiv = document.getElementById('rule-reminder');
   let html = '';
-  if (word.cat === 'air') {
-    html = `💡 <strong>${word.word}</strong> uses <strong>a-i-r</strong> for the /air/ sound.`;
+  if (word.cat === 'are') {
+    html = `💡 <strong>${word.word}</strong> uses <strong>a-r-e</strong> for the /air/ sound — not 'air'.`;
+  } else if (word.cat === 'air') {
+    html = `💡 <strong>${word.word}</strong> uses <strong>a-i-r</strong> for the /air/ sound — not 'are'.`;
   } else if (word.cat === 'eer') {
     html = `💡 <strong>${word.word}</strong> uses <strong>e-e-r</strong> for the /ear/ sound — not 'ear'.`;
   } else if (word.cat === 'ear') {
@@ -1140,8 +1176,8 @@ function triggerConfetti() {
 document.querySelectorAll('.cat-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     const cat = btn.dataset.cat;
-    if (cat === 'rule' && !sessionStorage.getItem('rule_seen_air')) {
-      sessionStorage.setItem('rule_seen_air', '1');
+    if (cat === 'rule' && !sessionStorage.getItem('rule_seen_are')) {
+      sessionStorage.setItem('rule_seen_are', '1');
       sessionStorage.setItem('pending_cat', cat);
       showScreen('rule-screen');
     } else {
