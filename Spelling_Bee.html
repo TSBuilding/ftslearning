@@ -24,6 +24,8 @@
     --purple: #a78bfa;
     --pink: #f472b6;
     --coral: #fb7185;
+    --cyan: #06b6d4;
+    --cyan-dark: #0891b2;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -152,13 +154,14 @@
     letter-spacing: 1px;
     text-transform: uppercase;
   }
-  .category-badge.are     { color: var(--coral); border-color: rgba(251,113,133,0.3); background: rgba(251,113,133,0.06); }
-  .category-badge.air     { color: var(--pink);  border-color: rgba(244,114,182,0.3); background: rgba(244,114,182,0.06); }
-  .category-badge.eer     { color: var(--gold);   border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.06); }
-  .category-badge.ear     { color: var(--gold);   border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.06); }
-  .category-badge.ck      { color: var(--gold);   border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.06); }
-  .category-badge.k       { color: var(--blue-light); border-color: rgba(59,130,246,0.3); background: rgba(59,130,246,0.06); }
-  .category-badge.tricky  { color: var(--purple); border-color: rgba(167,139,250,0.3); background: rgba(167,139,250,0.06); }
+  .category-badge.soft_c { color: var(--cyan);  border-color: rgba(6,182,212,0.35); background: rgba(6,182,212,0.06); }
+  .category-badge.are    { color: var(--coral); border-color: rgba(251,113,133,0.3); background: rgba(251,113,133,0.06); }
+  .category-badge.air    { color: var(--pink);  border-color: rgba(244,114,182,0.3); background: rgba(244,114,182,0.06); }
+  .category-badge.eer    { color: var(--gold);  border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.06); }
+  .category-badge.ear    { color: var(--gold);  border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.06); }
+  .category-badge.ck     { color: var(--gold);  border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.06); }
+  .category-badge.k      { color: var(--blue-light); border-color: rgba(59,130,246,0.3); background: rgba(59,130,246,0.06); }
+  .category-badge.tricky { color: var(--purple); border-color: rgba(167,139,250,0.3); background: rgba(167,139,250,0.06); }
 
   /* Speak button */
   .speak-btn {
@@ -264,8 +267,8 @@
 
   /* Rule reminder in feedback */
   .rule-reminder {
-    background: rgba(251,113,133,0.10);
-    border: 1px solid rgba(251,113,133,0.3);
+    background: rgba(6,182,212,0.10);
+    border: 1px solid rgba(6,182,212,0.3);
     border-radius: 12px;
     padding: 10px 14px;
     font-size: 13px;
@@ -274,7 +277,7 @@
     margin-top: 6px;
     line-height: 1.4;
   }
-  .rule-reminder strong { color: var(--coral); }
+  .rule-reminder strong { color: var(--cyan); }
 
   .next-btn {
     width: 100%;
@@ -406,8 +409,8 @@
     color: var(--text);
   }
   .cat-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
-  .cat-btn.pattern { border-color: rgba(251,113,133,0.35); }
-  .cat-btn.pattern:hover { background: rgba(251,113,133,0.06); }
+  .cat-btn.pattern { border-color: rgba(6,182,212,0.4); }
+  .cat-btn.pattern:hover { background: rgba(6,182,212,0.06); }
   .cat-btn.tricky { border-color: rgba(167,139,250,0.35); }
   .cat-btn.tricky:hover { background: rgba(167,139,250,0.06); }
   .cat-btn.all    { border-color: rgba(59,130,246,0.35); }
@@ -422,8 +425,8 @@
   .rule-btn {
     width: 100%;
     background: transparent;
-    border: 1.5px solid rgba(251,113,133,0.3);
-    color: var(--coral);
+    border: 1.5px solid rgba(6,182,212,0.35);
+    color: var(--cyan);
     font-family: 'Nunito', sans-serif;
     font-size: 14px;
     font-weight: 800;
@@ -433,7 +436,7 @@
     transition: all 0.2s;
     letter-spacing: 0.5px;
   }
-  .rule-btn:hover { background: rgba(251,113,133,0.08); }
+  .rule-btn:hover { background: rgba(6,182,212,0.08); }
 
   /* Rule teach screen */
   .rule-card {
@@ -449,7 +452,7 @@
   .rule-title {
     font-family: 'Fredoka One', cursive;
     font-size: 26px;
-    color: var(--coral);
+    color: var(--cyan);
     line-height: 1.1;
   }
   .rule-sub { font-size: 14px; color: var(--muted); font-weight: 600; }
@@ -473,22 +476,24 @@
   }
   .rule-chip {
     font-family: 'Fredoka One', cursive;
-    font-size: 22px;
-    width: 60px;
+    font-size: 18px;
+    width: 64px;
     height: 52px;
     border-radius: 12px;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
+    text-align: center;
   }
-  .rule-chip.are { background: rgba(251,113,133,0.18); color: var(--coral); border: 1.5px solid rgba(251,113,133,0.4); }
-  .rule-chip.air { background: rgba(244,114,182,0.15); color: var(--pink); border: 1.5px solid rgba(244,114,182,0.35); }
-  .rule-line strong { color: var(--coral); }
+  .rule-chip.soft_c { background: rgba(6,182,212,0.18); color: var(--cyan); border: 1.5px solid rgba(6,182,212,0.4); }
+  .rule-chip.hard_c { background: rgba(148,163,184,0.12); color: var(--muted); border: 1.5px solid rgba(148,163,184,0.3); }
+  .rule-line strong { color: var(--cyan); }
   .rule-word { font-family: 'Fredoka One', cursive; color: var(--text); }
-  .rule-word strong { color: var(--coral); }
-  .rule-word .alt { color: var(--pink); }
+  .rule-word strong { color: var(--cyan); }
+  .rule-word .alt { color: var(--muted); }
+
   .rule-note {
-    background: rgba(244,114,182,0.08);
-    border: 1px solid rgba(244,114,182,0.25);
+    background: rgba(34,197,94,0.08);
+    border: 1px solid rgba(34,197,94,0.25);
     border-radius: 12px;
     padding: 12px 14px;
     font-size: 13px;
@@ -497,19 +502,19 @@
     line-height: 1.45;
     text-align: left;
   }
-  .rule-note strong { color: var(--pink); }
+  .rule-note strong { color: #4ade80; }
 
   .rule-start-btn {
     width: 100%;
-    background: linear-gradient(135deg, var(--coral), #be123c);
+    background: linear-gradient(135deg, var(--cyan), var(--cyan-dark));
     border: none;
-    color: white;
+    color: #04212a;
     font-family: 'Fredoka One', cursive;
     font-size: 22px;
     padding: 18px;
     border-radius: 16px;
     cursor: pointer;
-    box-shadow: 0 4px 20px rgba(251,113,133,0.35);
+    box-shadow: 0 4px 20px rgba(6,182,212,0.35);
     transition: all 0.2s;
     letter-spacing: 0.5px;
   }
@@ -567,17 +572,17 @@
     <div class="start-hero">
       <div class="bee-icon">🐝</div>
       <div class="start-title">Ready to spell,<br><span>FTS</span>?</div>
-      <div class="start-sub">This week's focus: the <strong style="color:var(--coral)">'are'</strong> spelling and a tricky word.</div>
-      <button class="rule-btn" id="rule-btn">📖 Remind me of the pattern</button>
+      <div class="start-sub">This week's focus: the <strong style="color:var(--cyan)">soft C</strong> rule and tricky words.</div>
+      <button class="rule-btn" id="rule-btn">📖 Learn the soft C rule</button>
     </div>
 
     <div class="cat-section-label">Pick your practice</div>
 
     <button class="cat-btn pattern" data-cat="rule">
-      <div class="cat-icon">😱</div>
+      <div class="cat-icon">🐍</div>
       <div class="cat-info">
         <div class="cat-name">This Week's Pattern</div>
-        <div class="cat-desc">Words with the 'are' spelling — 11 words</div>
+        <div class="cat-desc">Soft C words — C that sounds like /s/ — 10 words</div>
       </div>
       <div class="cat-arrow">›</div>
     </button>
@@ -586,7 +591,7 @@
       <div class="cat-icon">🧠</div>
       <div class="cat-info">
         <div class="cat-name">Tricky Words</div>
-        <div class="cat-desc">Words that don't follow any rule — <span id="tricky-count">1</span> word</div>
+        <div class="cat-desc">Words that don't follow any rule — <span id="tricky-count">2</span> words</div>
       </div>
       <div class="cat-arrow">›</div>
     </button>
@@ -604,24 +609,26 @@
   <!-- RULE TEACH SCREEN -->
   <div id="rule-screen" class="hidden" style="width:100%;display:none;flex-direction:column;gap:16px;">
     <div class="rule-card">
-      <div class="rule-title">The <span style="color:var(--text)">'are'</span> spelling!</div>
-      <div class="rule-sub">Another way to make the /air/ sound you already know.</div>
+      <div class="rule-title">The <span style="color:var(--text)">Soft C</span> Rule!</div>
+      <div class="rule-sub">A real rule you can use to read new words. Look at the letter after the C.</div>
 
       <div class="rule-panel">
         <div class="rule-line">
-          <div class="rule-chip are">are</div>
-          <div>This week's words use <strong>a-r-e</strong> to make the /air/ sound.<br>
-          <span class="rule-word">sc<strong>are</strong> · sp<strong>are</strong> · h<strong>are</strong> · r<strong>are</strong></span></div>
+          <div class="rule-chip soft_c">c<br>+e i y</div>
+          <div><strong>Soft C</strong> = sounds like <strong>/s/</strong>.<br>
+          When C is followed by <strong>e</strong>, <strong>i</strong>, or <strong>y</strong>.<br>
+          <span class="rule-word"><strong>c</strong>ent · <strong>c</strong>ity · <strong>c</strong>ycle</span></div>
         </div>
         <div class="rule-line">
-          <div class="rule-chip air">air</div>
-          <div>A few weeks ago, words used <span class="alt"><strong>a-i-r</strong></span> for the same sound.<br>
-          <span class="rule-word"><span class="alt">f<strong>air</strong> · h<strong>air</strong> · ch<strong>air</strong></span></span></div>
+          <div class="rule-chip hard_c">c<br>+a o u</div>
+          <div><span class="alt"><strong>Hard C</strong> = sounds like /k/.<br>
+          When C is followed by <strong>a</strong>, <strong>o</strong>, <strong>u</strong>, or a consonant.</span><br>
+          <span class="rule-word"><span class="alt"><strong>c</strong>at · <strong>c</strong>up · <strong>c</strong>lock</span></span></div>
         </div>
       </div>
 
       <div class="rule-note">
-        🧐 <strong>The tricky part:</strong> 'are' and 'air' sound exactly the same! There's no rule for which to use — you just have to learn each word. Listen for the meaning in the sentence to help you remember.
+        🎯 <strong>The good news:</strong> this rule is reliable! Once you know it, you can work out lots of new words on your own — just look at what letter comes after the C.
       </div>
 
       <button class="rule-start-btn" id="rule-start-btn">🎯 I'm Ready!</button>
@@ -643,7 +650,7 @@
 
     <div class="game-card">
       <div class="bee-icon" id="bee-anim">🐝</div>
-      <div class="category-badge" id="category-badge">are pattern</div>
+      <div class="category-badge" id="category-badge">soft c</div>
       <div class="prompt-text" id="prompt-text">Listen carefully, then type the word!</div>
 
       <button class="speak-btn" id="speak-btn">
@@ -703,7 +710,7 @@ localStorage.removeItem('spelling_bee_words');
 //   word     — the spelling
 //   sentence — used in context (TTS reads this; word is masked in hint)
 //   cat      — category code, drives the rule reminder shown after each answer
-//              Categories: 'are', 'air', 'eer', 'ear', 'ck', 'k', 'tricky'
+//              Categories: 'soft_c', 'are', 'air', 'eer', 'ear', 'ck', 'k', 'tricky'
 //
 // FOUR ARRAYS:
 //   CURRENT_PATTERN — this week's pattern words (used by "This Week's Pattern")
@@ -723,26 +730,24 @@ localStorage.removeItem('spelling_bee_words');
 //   5. Update CATEGORY_LABELS + add a category-badge CSS rule if new category.
 // ══════════════════════════════════════════════════════════════════════════
 
-// ── CURRENT WEEK (Week 5: 'are' spelling for the /air/ sound) ────────────
-// NOTE: several of these are homophones of 'air' words or others
-// (hare/hair, flare/flair, bare/bear, stare/stair, square/...). Sentences
-// are written to make the meaning unmistakable since the TTS can't.
+// ── CURRENT WEEK (Week 6: soft C rule — C followed by e/i/y makes /s/) ───
 const CURRENT_PATTERN = [
-  { word: "scare",  sentence: "The spooky mask gave FTS a big scare.",            cat: 'are' },
-  { word: "spare",  sentence: "FTS kept a spare pencil in his bag.",              cat: 'are' },
-  { word: "hare",   sentence: "The hare hopped quickly across the field.",        cat: 'are' },
-  { word: "rare",   sentence: "It is rare to see a shooting star.",               cat: 'are' },
-  { word: "flare",  sentence: "The bright flare lit up the night sky.",           cat: 'are' },
-  { word: "care",   sentence: "FTS takes good care of his pet.",                  cat: 'are' },
-  { word: "share",  sentence: "FTS likes to share his snacks with friends.",      cat: 'are' },
-  { word: "bare",   sentence: "FTS ran across the sand with bare feet.",          cat: 'are' },
-  { word: "dare",   sentence: "FTS did not dare to look down from the tall slide.",cat: 'are' },
-  { word: "stare",  sentence: "It is rude to stare at people.",                   cat: 'are' },
-  { word: "square", sentence: "FTS drew a square with four equal sides.",         cat: 'are' },
+  { word: "city",    sentence: "FTS visited the big city to see the tall buildings.", cat: 'soft_c' },
+  { word: "circle",  sentence: "FTS drew a circle around the right answer.",          cat: 'soft_c' },
+  { word: "cent",    sentence: "FTS found a shiny cent on the footpath.",             cat: 'soft_c' },
+  { word: "pencil",  sentence: "FTS sharpened his pencil before starting his work.",  cat: 'soft_c' },
+  { word: "cereal",  sentence: "FTS had cereal for breakfast this morning.",          cat: 'soft_c' },
+  { word: "face",    sentence: "FTS put a big smile on his face.",                    cat: 'soft_c' },
+  { word: "race",    sentence: "FTS won the race at school sports day.",              cat: 'soft_c' },
+  { word: "place",   sentence: "FTS knew the perfect place to hide the present.",     cat: 'soft_c' },
+  { word: "ice",     sentence: "FTS put ice in his drink to cool it down.",           cat: 'soft_c' },
+  { word: "mice",    sentence: "Three little mice ran across the floor.",             cat: 'soft_c' },
+  { word: "dance",   sentence: "FTS likes to dance when his favourite song plays.",   cat: 'soft_c' },
 ];
 
 const CURRENT_TRICKY = [
-  { word: "walk", sentence: "FTS likes to walk the dog around the block.", cat: 'tricky' },
+  { word: "talk", sentence: "FTS likes to talk about footy with his Dad.", cat: 'tricky' },
+  { word: "know", sentence: "FTS wanted to know what time the game starts.", cat: 'tricky' },
 ];
 
 // ── ARCHIVE (previous weeks) ─────────────────────────────────────────────
@@ -802,6 +807,18 @@ const ARCHIVE_PATTERN = [
   { word: "repair",   sentence: "Dad will repair the broken gate this weekend.",          cat: 'air' },
   { word: "airport",  sentence: "FTS waved from the window at the busy airport.",         cat: 'air' },
   { word: "unfair",   sentence: "FTS thought it was unfair that his sister got the last biscuit.", cat: 'air' },
+  // ─── Week 5: 'are' spelling (/air/ sound) ──────────────────────────────
+  { word: "scare",  sentence: "The spooky mask gave FTS a big scare.",            cat: 'are' },
+  { word: "spare",  sentence: "FTS kept a spare pencil in his bag.",              cat: 'are' },
+  { word: "hare",   sentence: "The hare hopped quickly across the field.",        cat: 'are' },
+  { word: "rare",   sentence: "It is rare to see a shooting star.",               cat: 'are' },
+  { word: "flare",  sentence: "The bright flare lit up the night sky.",           cat: 'are' },
+  { word: "care",   sentence: "FTS takes good care of his pet.",                  cat: 'are' },
+  { word: "share",  sentence: "FTS likes to share his snacks with friends.",      cat: 'are' },
+  { word: "bare",   sentence: "FTS ran across the sand with bare feet.",          cat: 'are' },
+  { word: "dare",   sentence: "FTS did not dare to look down from the tall slide.",cat: 'are' },
+  { word: "stare",  sentence: "It is rude to stare at people.",                   cat: 'are' },
+  { word: "square", sentence: "FTS drew a square with four equal sides.",         cat: 'are' },
 ];
 
 const ARCHIVE_TRICKY = [
@@ -816,10 +833,13 @@ const ARCHIVE_TRICKY = [
   // Week 4
   { word: "another", sentence: "FTS asked for another piece of toast.",          cat: 'tricky' },
   { word: "water",   sentence: "FTS drank a big glass of cold water after footy.", cat: 'tricky' },
+  // Week 5
+  { word: "walk", sentence: "FTS likes to walk the dog around the block.", cat: 'tricky' },
 ];
 
 // ── CATEGORY LABELS (for the badge above each word in the game) ──────────
 const CATEGORY_LABELS = {
+  soft_c: 'soft C word — C sounds like /s/',
   are:    "'are' spelling word",
   air:    "'air' spelling word",
   eer:    "'eer' spelling word",
@@ -831,6 +851,7 @@ const CATEGORY_LABELS = {
 
 // Session sizes
 const ALL_SESSION_SIZE = 10;
+const RULE_SESSION_SIZE = 10; // pick 10 of the 11 current pattern words each round
 
 // ──────────────────────────────────────────────────────────────────────────
 // Tricky count for the picker
@@ -896,7 +917,7 @@ function buildSession(category) {
 
   if (category === 'rule') {
     const shuffled = [...CURRENT_PATTERN].sort(() => Math.random() - 0.5);
-    pool = shuffled.slice(0, Math.min(10, shuffled.length));
+    pool = shuffled.slice(0, Math.min(RULE_SESSION_SIZE, shuffled.length));
   } else if (category === 'tricky') {
     pool = [...CURRENT_TRICKY].sort(() => Math.random() - 0.5);
   } else { // 'all'
@@ -1068,10 +1089,22 @@ function checkAnswer() {
 }
 
 // Per-category rule reminder.
+// For soft C, identify which vowel follows the C in this specific word
+// to make the rule visible: "C followed by E sounds /s/" etc.
 function showRuleReminder(word) {
   const ruleDiv = document.getElementById('rule-reminder');
   let html = '';
-  if (word.cat === 'are') {
+  if (word.cat === 'soft_c') {
+    // Find the soft C in the word: the first C that's followed by e, i, or y
+    const w = word.word.toLowerCase();
+    let following = '';
+    for (let i = 0; i < w.length - 1; i++) {
+      if (w[i] === 'c' && 'eiy'.includes(w[i+1])) { following = w[i+1].toUpperCase(); break; }
+    }
+    html = following
+      ? `💡 <strong>${word.word}</strong> — the C is followed by <strong>${following}</strong>, so it makes the <strong>/s/</strong> sound (soft C).`
+      : `💡 <strong>${word.word}</strong> uses the soft C rule — C followed by E, I or Y sounds like /s/.`;
+  } else if (word.cat === 'are') {
     html = `💡 <strong>${word.word}</strong> uses <strong>a-r-e</strong> for the /air/ sound — not 'air'.`;
   } else if (word.cat === 'air') {
     html = `💡 <strong>${word.word}</strong> uses <strong>a-i-r</strong> for the /air/ sound — not 'are'.`;
@@ -1151,7 +1184,7 @@ function showResults() {
 // CONFETTI
 // ──────────────────────────────────────────────────────────────────────────
 function triggerConfetti() {
-  const colors = ['#f59e0b','#3b82f6','#16a34a','#ec4899','#8b5cf6','#ef4444'];
+  const colors = ['#f59e0b','#3b82f6','#16a34a','#ec4899','#8b5cf6','#ef4444','#06b6d4'];
   for (let i = 0; i < 40; i++) {
     setTimeout(() => {
       const p = document.createElement('div');
@@ -1176,8 +1209,8 @@ function triggerConfetti() {
 document.querySelectorAll('.cat-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     const cat = btn.dataset.cat;
-    if (cat === 'rule' && !sessionStorage.getItem('rule_seen_are')) {
-      sessionStorage.setItem('rule_seen_are', '1');
+    if (cat === 'rule' && !sessionStorage.getItem('rule_seen_soft_c')) {
+      sessionStorage.setItem('rule_seen_soft_c', '1');
       sessionStorage.setItem('pending_cat', cat);
       showScreen('rule-screen');
     } else {
