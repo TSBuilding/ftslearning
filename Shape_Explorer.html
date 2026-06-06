@@ -24,6 +24,7 @@
     --purple: #a78bfa;
     --teal: #2dd4bf;
     --orange: #fb923c;
+    --pink: #f472b6;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -81,50 +82,68 @@
   .start-hero {
     background: var(--card);
     border-radius: 24px;
-    padding: 32px 24px 24px;
-    display: flex; flex-direction: column; align-items: center; gap: 14px;
+    padding: 28px 24px 22px;
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
     box-shadow: 0 8px 32px rgba(0,0,0,0.4);
     border: 1px solid var(--border);
     text-align: center;
   }
-  .start-icon { font-size: 56px; animation: bob 2.5s ease-in-out infinite; }
+  .start-icon { font-size: 52px; animation: bob 2.5s ease-in-out infinite; }
   @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
   .start-title { font-family: 'Fredoka One', cursive; font-size: 22px; color: var(--text); line-height: 1.3; }
   .start-title span { color: var(--teal); }
-  .start-sub { font-size: 14px; color: var(--muted); font-weight: 600; line-height: 1.5; }
+  .start-sub { font-size: 13px; color: var(--muted); font-weight: 600; line-height: 1.5; }
 
-  /* Shape gallery preview on start screen */
-  .shape-gallery { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 4px; }
+  /* Shape gallery preview */
+  .shape-gallery { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 4px; }
   .gallery-item {
-    width: 56px; height: 56px;
+    width: 48px; height: 48px;
     display: flex; align-items: center; justify-content: center;
-    background: var(--card2); border-radius: 12px;
+    background: var(--card2); border-radius: 10px;
     border: 1px solid var(--border);
   }
-  .gallery-item svg { width: 38px; height: 38px; }
+  .gallery-item svg { width: 32px; height: 32px; }
 
-  .start-btn {
+  .mode-section-label {
+    font-size: 12px; font-weight: 800; color: var(--muted);
+    letter-spacing: 1px; text-transform: uppercase;
+    padding: 4px 4px 0;
+  }
+
+  .mode-btn {
     width: 100%;
-    background: linear-gradient(135deg, var(--teal), #0d9488);
-    border: none; color: #04201c;
-    font-family: 'Fredoka One', cursive; font-size: 22px;
-    padding: 18px; border-radius: 16px;
-    cursor: pointer; letter-spacing: 0.5px;
-    box-shadow: 0 4px 20px rgba(45,212,191,0.35);
-    transition: all 0.2s;
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: 18px;
+    padding: 16px 18px;
+    display: flex; align-items: center; gap: 14px;
+    cursor: pointer; transition: all 0.2s;
+    text-align: left; color: var(--text);
   }
-  .start-btn:hover { transform: scale(1.02); }
+  .mode-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+  .mode-btn.explorer { border-color: rgba(45,212,191,0.35); }
+  .mode-btn.explorer:hover { background: rgba(45,212,191,0.06); }
+  .mode-btn.master   { border-color: rgba(244,114,182,0.4); }
+  .mode-btn.master:hover   { background: rgba(244,114,182,0.06); }
 
-  .best-pill {
-    background: var(--card2); border-radius: 12px;
-    padding: 8px 16px; font-size: 13px; font-weight: 700;
-    color: var(--gold);
-  }
+  .mode-icon { font-size: 34px; flex-shrink: 0; }
+  .mode-info { flex: 1; }
+  .mode-name { font-family: 'Fredoka One', cursive; font-size: 17px; color: var(--text); letter-spacing: 0.5px; }
+  .mode-desc { font-size: 12px; color: var(--muted); font-weight: 600; margin-top: 2px; line-height: 1.3; }
+  .mode-best { font-size: 11px; color: var(--gold); font-weight: 800; margin-top: 4px; letter-spacing: 0.5px; }
+  .mode-arrow { font-size: 20px; color: var(--muted); }
 
   /* ═════════ GAME SCREEN ═════════ */
   .game-hud { display: flex; flex-direction: column; gap: 8px; }
   .hud-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
   .hud-label { font-size: 12px; font-weight: 800; color: var(--muted); letter-spacing: 0.5px; }
+  .mode-pill {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 4px 12px;
+    font-family: 'Fredoka One', cursive; font-size: 12px;
+  }
+  .mode-pill.explorer { color: var(--teal); border-color: rgba(45,212,191,0.3); }
+  .mode-pill.master   { color: var(--pink); border-color: rgba(244,114,182,0.3); }
   .score-pill {
     background: var(--card); border: 1px solid rgba(245,158,11,0.3);
     border-radius: 14px; padding: 5px 12px;
@@ -132,6 +151,7 @@
   }
   .progress-wrap { width: 100%; background: var(--card); border-radius: 20px; height: 8px; overflow: hidden; }
   .progress-fill { height: 100%; background: linear-gradient(90deg, var(--teal), var(--blue)); border-radius: 20px; transition: width 0.4s ease; width: 0%; }
+  .progress-fill.master { background: linear-gradient(90deg, var(--pink), var(--purple)); }
 
   .play-card {
     background: var(--card);
@@ -147,35 +167,39 @@
     text-align: center; line-height: 1.3;
   }
   .question-text .hl { color: var(--teal); }
+  .master-mode .question-text .hl { color: var(--pink); }
 
   /* Shape display */
   .shape-stage {
     display: flex; align-items: center; justify-content: center;
     min-height: 170px; width: 100%;
   }
-  .shape-stage svg { width: 150px; height: 150px; }
+  .shape-stage svg { width: 150px; height: 150px; overflow: visible; }
   .poly { fill: var(--card2); stroke: var(--teal); stroke-width: 5; stroke-linejoin: round; }
-  .poly.accent { stroke: var(--orange); }
+  .master-mode .poly { stroke: var(--pink); }
 
-  /* For "pick the shape" questions — a row of small shapes */
+  /* "pick the shape" / property question grid */
   .shape-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; width: 100%; }
   .shape-option {
     background: var(--card2); border: 2px solid var(--border);
     border-radius: 16px; padding: 14px;
     display: flex; align-items: center; justify-content: center;
     cursor: pointer; transition: all 0.15s;
+    min-height: 100px;
   }
-  .shape-option svg { width: 70px; height: 70px; }
+  .shape-option svg { width: 70px; height: 70px; overflow: visible; }
   .shape-option:hover { border-color: var(--teal); transform: translateY(-2px); }
+  .master-mode .shape-option:hover { border-color: var(--pink); }
   .shape-option.correct { background: rgba(22,163,74,0.2); border-color: var(--green); }
   .shape-option.wrong   { background: rgba(220,38,38,0.2); border-color: var(--red); }
   .shape-option .poly { stroke: var(--text); fill: rgba(255,255,255,0.06); }
   .shape-option.correct .poly { stroke: var(--green-light); }
   .shape-option.wrong .poly { stroke: var(--red-light); }
 
-  /* text/number answer choices */
+  /* number answer choices */
   .choices { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; }
   .choices.three { grid-template-columns: repeat(3, 1fr); }
+  .choices.four { grid-template-columns: repeat(2, 1fr); }
   .choice-btn {
     background: var(--card2); border: 2px solid var(--border);
     border-radius: 14px; padding: 16px 8px;
@@ -183,11 +207,12 @@
     cursor: pointer; transition: all 0.15s;
   }
   .choice-btn:hover { border-color: var(--teal); transform: translateY(-2px); }
+  .master-mode .choice-btn:hover { border-color: var(--pink); }
   .choice-btn.correct { background: rgba(22,163,74,0.2); border-color: var(--green); color: var(--green-light); }
   .choice-btn.wrong   { background: rgba(220,38,38,0.2); border-color: var(--red); color: var(--red-light); }
   .choice-btn:disabled { cursor: default; }
 
-  /* feedback (this is where the LEARNING happens) */
+  /* feedback (where the LEARNING happens) */
   .feedback {
     width: 100%; border-radius: 16px; padding: 16px 18px;
     display: none; flex-direction: column; gap: 10px;
@@ -211,11 +236,17 @@
     padding: 12px 14px;
     display: flex; gap: 12px; align-items: center;
   }
+  .master-mode .fact-panel {
+    background: rgba(244,114,182,0.06);
+    border-color: rgba(244,114,182,0.25);
+  }
   .fact-shape { flex-shrink: 0; }
-  .fact-shape svg { width: 50px; height: 50px; }
+  .fact-shape svg { width: 50px; height: 50px; overflow: visible; }
   .fact-shape .poly { stroke: var(--teal); stroke-width: 6; fill: rgba(45,212,191,0.1); }
+  .master-mode .fact-shape .poly { stroke: var(--pink); fill: rgba(244,114,182,0.1); }
   .fact-text { font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.45; }
   .fact-text strong { color: var(--teal); }
+  .master-mode .fact-text strong { color: var(--pink); }
   .fact-facts { font-size: 12px; color: var(--muted); margin-top: 3px; }
 
   .fb-next {
@@ -236,6 +267,7 @@
   }
   .results-emoji { font-size: 64px; animation: bob 2s ease-in-out infinite; }
   .results-title { font-family: 'Fredoka One', cursive; font-size: 24px; color: var(--teal); }
+  .master-mode .results-title { color: var(--pink); }
   .results-score { font-family: 'Fredoka One', cursive; font-size: 48px; color: white; line-height: 1; }
   .results-score span { font-size: 22px; color: var(--muted); }
   .results-msg { font-size: 14px; color: var(--muted); font-weight: 700; line-height: 1.4; }
@@ -247,6 +279,7 @@
     cursor: pointer; transition: all 0.2s;
   }
   .action-btn.primary { background: linear-gradient(135deg, var(--teal), #0d9488); color: #04201c; }
+  .action-btn.primary.master { background: linear-gradient(135deg, var(--pink), #be185d); color: white; }
   .action-btn.primary:hover { transform: scale(1.02); }
   .action-btn.ghost { background: var(--card); border: 2px solid var(--border); color: var(--text); }
   .action-btn.ghost:hover { background: var(--card2); }
@@ -271,22 +304,43 @@
   <div id="start-screen" class="screen active">
     <div class="start-hero">
       <div class="start-icon">🔷</div>
-      <div class="start-title">Become a <span>Shape Master</span>, FTS!</div>
+      <div class="start-title">Choose your <span>challenge</span>, FTS!</div>
       <div class="start-sub">Learn the shapes, their sides and corners, and what they look like in real life — as you play!</div>
       <div class="shape-gallery" id="shape-gallery"></div>
-      <div class="best-pill" id="best-pill" style="display:none"></div>
     </div>
-    <button class="start-btn" id="start-btn">🚀 Start Exploring!</button>
+
+    <div class="mode-section-label">Pick a mode</div>
+
+    <button class="mode-btn explorer" data-mode="explorer">
+      <div class="mode-icon">🔷</div>
+      <div class="mode-info">
+        <div class="mode-name">Explorer</div>
+        <div class="mode-desc">6 classic shapes. Friendly distractors. Build your foundations.</div>
+        <div class="mode-best" id="best-explorer"></div>
+      </div>
+      <div class="mode-arrow">›</div>
+    </button>
+
+    <button class="mode-btn master" data-mode="master">
+      <div class="mode-icon">🌟</div>
+      <div class="mode-info">
+        <div class="mode-name">Master</div>
+        <div class="mode-desc">10 shapes including oval, octagon, rhombus and star. Shapes can be rotated. Trickier questions.</div>
+        <div class="mode-best" id="best-master"></div>
+      </div>
+      <div class="mode-arrow">›</div>
+    </button>
   </div>
 
   <!-- GAME SCREEN -->
   <div id="game-screen" class="screen">
     <div class="game-hud">
       <div class="hud-row">
-        <div class="hud-label" id="q-counter">Question 1 of 10</div>
+        <div class="mode-pill" id="mode-pill">Explorer</div>
         <div class="score-pill" id="score-pill">⭐ 0 / 10</div>
       </div>
       <div class="progress-wrap"><div class="progress-fill" id="progress-fill"></div></div>
+      <div class="hud-label" id="q-counter">Question 1 of 10</div>
     </div>
 
     <div class="play-card">
@@ -320,7 +374,7 @@
       <div class="results-best" id="res-best" style="display:none"></div>
     </div>
     <div class="results-actions">
-      <button class="action-btn ghost" id="res-home">🏠 HQ</button>
+      <button class="action-btn ghost" id="res-modes">↩ Modes</button>
       <button class="action-btn primary" id="res-again">🔄 Play Again</button>
     </div>
   </div>
@@ -329,54 +383,97 @@
 
 <script>
 // ═══════════════════════════════════════════════════════════════════════
-// SHAPE DATA
+// SHAPE DEFINITIONS
 // ═══════════════════════════════════════════════════════════════════════
-// Each shape: name, sides, corners, equalSides (true/false/null for circle),
-// realLife anchor, and an SVG generator.
+// Each shape's `svg(cls, rotation)` returns a complete SVG string.
+// Rotation (in degrees) is optional — used in Master mode to test recognition
+// regardless of orientation. Centre of rotation is (60, 60).
+// SVG viewBox is "0 0 120 120"; CSS sets overflow:visible so rotated shapes
+// can spill slightly outside without clipping.
+
+const SVG_BOX = '<svg viewBox="0 0 120 120">';
+function wrap(inner, rot) {
+  const content = rot ? `<g transform="rotate(${rot} 60 60)">${inner}</g>` : inner;
+  return SVG_BOX + content + '</svg>';
+}
+
 const SHAPES = {
+  // ─── Original 6 (Explorer set) ──────────────────────────────────────────
   circle: {
     name: 'circle', sides: 0, corners: 0, equalSides: null,
     realLife: 'a clock or a ball',
-    svg: (cls) => `<svg viewBox="0 0 120 120"><circle class="${cls}" cx="60" cy="60" r="50"/></svg>`,
+    svg: (cls, rot = 0) => wrap(`<circle class="${cls}" cx="60" cy="60" r="50"/>`, 0), // rotation has no effect
     factText: (s) => `A <strong>circle</strong> is one smooth curve — no straight sides and no corners! It's round like ${s.realLife}.`,
   },
   triangle: {
     name: 'triangle', sides: 3, corners: 3, equalSides: true,
     realLife: 'a slice of pizza or a roof',
-    svg: (cls) => `<svg viewBox="0 0 120 120"><polygon class="${cls}" points="60,12 108,104 12,104"/></svg>`,
+    svg: (cls, rot = 0) => wrap(`<polygon class="${cls}" points="60,12 105,100 15,100"/>`, rot),
     factText: (s) => `A <strong>triangle</strong> has <strong>3 sides</strong> and <strong>3 corners</strong> — like ${s.realLife}.`,
   },
   square: {
     name: 'square', sides: 4, corners: 4, equalSides: true,
     realLife: 'a window or a cracker',
-    svg: (cls) => `<svg viewBox="0 0 120 120"><rect class="${cls}" x="16" y="16" width="88" height="88" rx="3"/></svg>`,
+    svg: (cls, rot = 0) => wrap(`<rect class="${cls}" x="20" y="20" width="80" height="80" rx="3"/>`, rot),
     factText: (s) => `A <strong>square</strong> has <strong>4 sides</strong> that are all the <strong>same length</strong>, and 4 corners — like ${s.realLife}.`,
   },
   rectangle: {
     name: 'rectangle', sides: 4, corners: 4, equalSides: false,
     realLife: 'a door or a footy field',
-    svg: (cls) => `<svg viewBox="0 0 120 120"><rect class="${cls}" x="8" y="30" width="104" height="60" rx="3"/></svg>`,
+    svg: (cls, rot = 0) => wrap(`<rect class="${cls}" x="10" y="32" width="100" height="56" rx="3"/>`, rot),
     factText: (s) => `A <strong>rectangle</strong> has <strong>4 corners</strong> like a square, but two long sides and two short sides — like ${s.realLife}.`,
   },
   pentagon: {
     name: 'pentagon', sides: 5, corners: 5, equalSides: true,
     realLife: 'a house shape or a soccer ball patch',
-    svg: (cls) => `<svg viewBox="0 0 120 120"><polygon class="${cls}" points="60,10 106,44 88,100 32,100 14,44"/></svg>`,
+    svg: (cls, rot = 0) => wrap(`<polygon class="${cls}" points="60,12 105,46 88,100 32,100 15,46"/>`, rot),
     factText: (s) => `A <strong>pentagon</strong> has <strong>5 sides</strong> and <strong>5 corners</strong> — like ${s.realLife}.`,
   },
   hexagon: {
     name: 'hexagon', sides: 6, corners: 6, equalSides: true,
     realLife: 'a honeycomb',
-    svg: (cls) => `<svg viewBox="0 0 120 120"><polygon class="${cls}" points="60,10 102,35 102,85 60,110 18,85 18,35"/></svg>`,
+    svg: (cls, rot = 0) => wrap(`<polygon class="${cls}" points="60,12 100,36 100,84 60,108 20,84 20,36"/>`, rot),
     factText: (s) => `A <strong>hexagon</strong> has <strong>6 sides</strong> and <strong>6 corners</strong> — like ${s.realLife}.`,
   },
+
+  // ─── 4 added shapes (Master set) ────────────────────────────────────────
+  octagon: {
+    name: 'octagon', sides: 8, corners: 8, equalSides: true,
+    realLife: 'a stop sign',
+    svg: (cls, rot = 0) => wrap(`<polygon class="${cls}" points="42,10 78,10 110,42 110,78 78,110 42,110 10,78 10,42"/>`, rot),
+    factText: (s) => `An <strong>octagon</strong> has <strong>8 sides</strong> and <strong>8 corners</strong> — like ${s.realLife}.`,
+  },
+  oval: {
+    name: 'oval', sides: 0, corners: 0, equalSides: null,
+    realLife: 'an egg or a running track',
+    svg: (cls, rot = 0) => wrap(`<ellipse class="${cls}" cx="60" cy="60" rx="50" ry="35"/>`, rot),
+    factText: (s) => `An <strong>oval</strong> is like a circle that's been stretched. It has <strong>no straight sides and no corners</strong>, but it's not round all the way like ${s.realLife}.`,
+  },
+  rhombus: {
+    name: 'rhombus', sides: 4, corners: 4, equalSides: true,
+    realLife: 'a diamond on a playing card',
+    // Wider than tall — clearly distinct from a square (rotated or otherwise)
+    svg: (cls, rot = 0) => wrap(`<polygon class="${cls}" points="60,28 108,60 60,92 12,60"/>`, rot),
+    factText: (s) => `A <strong>rhombus</strong> has <strong>4 equal sides</strong> like a square, but it's slanted — the corners aren't square corners. Like ${s.realLife}.`,
+  },
+  star: {
+    name: 'star', sides: 10, corners: 10, equalSides: true,
+    realLife: 'a star sticker or a sheriff badge',
+    // 5-point star: alternating outer and inner vertices. 10 sides, 10 corners.
+    svg: (cls, rot = 0) => wrap(`<polygon class="${cls}" points="60,8 73,42 110,43 81,67 92,104 60,82 28,104 39,67 10,43 47,42"/>`, rot),
+    factText: (s) => `A 5-point <strong>star</strong> has <strong>10 sides</strong> and <strong>10 corners</strong> when you count around the points carefully! Like ${s.realLife}.`,
+  },
 };
-const SHAPE_KEYS = Object.keys(SHAPES);
+
+const EXPLORER_KEYS = ['circle','triangle','square','rectangle','pentagon','hexagon'];
+const MASTER_KEYS   = [...EXPLORER_KEYS, 'octagon', 'oval', 'rhombus', 'star'];
 
 // ═══════════════════════════════════════════════════════════════════════
 // CONFIG & STATE
 // ═══════════════════════════════════════════════════════════════════════
 const QUESTIONS_PER_SESSION = 10;
+let mode = 'explorer'; // 'explorer' | 'master'
+let activeKeys = EXPLORER_KEYS;
 let questions = [];
 let qIdx = 0;
 let score = 0;
@@ -413,16 +510,26 @@ muteBtn.addEventListener('click', () => {
 });
 
 // ═══════════════════════════════════════════════════════════════════════
-// PERSONAL BEST
+// PERSONAL BEST (per mode, with one-time migration from legacy key)
 // ═══════════════════════════════════════════════════════════════════════
-function getBest() { const v = localStorage.getItem('shape_best'); return v ? parseInt(v,10) : null; }
-function setBest(s) { const c = getBest(); if (c === null || s > c) { localStorage.setItem('shape_best', s); return true; } return false; }
-function refreshBestPill() {
-  const b = getBest();
-  const pill = document.getElementById('best-pill');
-  if (b !== null) { pill.style.display = 'block'; pill.textContent = `🏆 Best: ${b}/${QUESTIONS_PER_SESSION}`; }
+(function migrateLegacyBest() {
+  const legacy = localStorage.getItem('shape_best');
+  const existing = localStorage.getItem('shape_best_explorer');
+  if (legacy && !existing) {
+    localStorage.setItem('shape_best_explorer', legacy);
+  }
+})();
+function bestKey(m) { return `shape_best_${m}`; }
+function getBest(m) { const v = localStorage.getItem(bestKey(m)); return v ? parseInt(v, 10) : null; }
+function setBest(m, s) { const c = getBest(m); if (c === null || s > c) { localStorage.setItem(bestKey(m), s); return true; } return false; }
+function refreshBests() {
+  ['explorer', 'master'].forEach(m => {
+    const el = document.getElementById('best-' + m);
+    const v = getBest(m);
+    el.textContent = v !== null ? `🏆 Best: ${v}/${QUESTIONS_PER_SESSION}` : '';
+  });
 }
-refreshBestPill();
+refreshBests();
 
 // ═══════════════════════════════════════════════════════════════════════
 // SCREENS
@@ -431,6 +538,8 @@ function showScreen(name) {
   ['start-screen','game-screen','results-screen'].forEach(id => {
     document.getElementById(id).classList.toggle('active', id === name);
   });
+  // Toggle master-mode class on body for themed styling
+  document.body.classList.toggle('master-mode', mode === 'master' && name !== 'start-screen');
   updateBackBtn();
 }
 
@@ -441,15 +550,28 @@ function randInt(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
 function pick(a){return a[Math.floor(Math.random()*a.length)];}
 function shuffle(a){return [...a].sort(()=>Math.random()-0.5);}
 
+// Master mode rotation — random angle. 15% chance of upright for variety.
+function masterRot() {
+  if (mode !== 'master') return 0;
+  if (Math.random() < 0.15) return 0;
+  return pick([30, 45, 60, 75, 90, 120, 135, 150]);
+}
+
+// Distractor spread — wider in Explorer, tighter in Master
+function distractorOffsets() {
+  return mode === 'master' ? [-1, 1] : [-2, -1, 1, 2];
+}
+
 // ═══════════════════════════════════════════════════════════════════════
 // POPULATE START GALLERY
 // ═══════════════════════════════════════════════════════════════════════
 (function fillGallery(){
   const g = document.getElementById('shape-gallery');
-  SHAPE_KEYS.forEach(k => {
+  // Show all 10 shapes in gallery so he sees what Master offers
+  MASTER_KEYS.forEach(k => {
     const item = document.createElement('div');
     item.className = 'gallery-item';
-    item.innerHTML = SHAPES[k].svg('poly');
+    item.innerHTML = SHAPES[k].svg('poly', 0);
     g.appendChild(item);
   });
 })();
@@ -457,31 +579,50 @@ function shuffle(a){return [...a].sort(()=>Math.random()-0.5);}
 // ═══════════════════════════════════════════════════════════════════════
 // QUESTION GENERATION
 // ═══════════════════════════════════════════════════════════════════════
-// Four question types:
-//   'name'    — show a shape, "what shape is this?" (pick name)
-//   'sides'   — show a shape, "how many sides?" (pick number)
-//   'corners' — show a shape, "how many corners?" (pick number)
-//   'pick'    — "which one is a hexagon?" (pick shape from options)
-// Circle is excluded from 'sides'/'corners' counting questions (0 is a weird
-// answer to quiz) but included in 'name' and 'pick'.
+// Question types:
+//   'name'     — show a shape, "what shape is this?" (pick from text options)
+//   'sides'    — show a shape, "how many sides?" (pick number)
+//   'corners'  — show a shape, "how many corners?" (pick number)
+//   'pick'     — "which one is a hexagon?" (pick shape from 4 options)
+//   'property' — Master only: "which shape has X sides?" (pick shape from 4)
 
 function buildSession() {
   questions = [];
-  const types = ['name','sides','corners','pick'];
-  // Ensure a spread: cycle through types, random shape each time.
+  const types = mode === 'master'
+    ? ['name','sides','corners','pick','property']
+    : ['name','sides','corners','pick'];
+
   for (let i = 0; i < QUESTIONS_PER_SESSION; i++) {
     const type = types[i % types.length];
-    let shapeKey;
-    if (type === 'sides' || type === 'corners') {
-      // exclude circle from counting questions
-      shapeKey = pick(SHAPE_KEYS.filter(k => k !== 'circle'));
-    } else {
-      shapeKey = pick(SHAPE_KEYS);
-    }
-    questions.push({ type, shapeKey });
+    questions.push(makeQuestion(type));
   }
   questions = shuffle(questions);
   qIdx = 0; score = 0;
+}
+
+function makeQuestion(type) {
+  if (type === 'property') {
+    // Pick a target side count that uniquely identifies one shape in activeKeys
+    const sideCounts = {};
+    activeKeys.forEach(k => {
+      const n = SHAPES[k].sides;
+      sideCounts[n] = (sideCounts[n] || []).concat(k);
+    });
+    // Eligible: side counts with exactly one shape AND >= 3 (skip 0)
+    const eligible = Object.entries(sideCounts)
+      .filter(([n, ks]) => ks.length === 1 && parseInt(n, 10) >= 3)
+      .map(([n, ks]) => ({ targetSides: parseInt(n, 10), shapeKey: ks[0] }));
+    const chosen = pick(eligible);
+    return { type: 'property', targetSides: chosen.targetSides, shapeKey: chosen.shapeKey };
+  }
+  let shapeKey;
+  if (type === 'sides' || type === 'corners') {
+    // Skip round shapes (0 corners is an awkward quiz answer)
+    shapeKey = pick(activeKeys.filter(k => SHAPES[k].sides > 0));
+  } else {
+    shapeKey = pick(activeKeys);
+  }
+  return { type, shapeKey };
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -499,24 +640,27 @@ function renderQuestion() {
 
   document.getElementById('q-counter').textContent = `Question ${qIdx+1} of ${QUESTIONS_PER_SESSION}`;
   document.getElementById('score-pill').textContent = `⭐ ${score} / ${QUESTIONS_PER_SESSION}`;
-  document.getElementById('progress-fill').style.width = `${(qIdx/QUESTIONS_PER_SESSION)*100}%`;
+  const pf = document.getElementById('progress-fill');
+  pf.style.width = `${(qIdx/QUESTIONS_PER_SESSION)*100}%`;
+  pf.className = 'progress-fill' + (mode === 'master' ? ' master' : '');
 
   if (q.type === 'name')         renderName(q, shape, qText, visual, controls);
   else if (q.type === 'sides')   renderCount(q, shape, qText, visual, controls, 'sides');
   else if (q.type === 'corners') renderCount(q, shape, qText, visual, controls, 'corners');
-  else                           renderPick(q, shape, qText, visual, controls);
+  else if (q.type === 'pick')    renderPick(q, shape, qText, visual, controls);
+  else                           renderProperty(q, shape, qText, visual, controls);
 }
 
 function renderName(q, shape, qText, visual, controls) {
   qText.innerHTML = `What <span class="hl">shape</span> is this?`;
-  visual.innerHTML = `<div class="shape-stage">${shape.svg('poly')}</div>`;
+  visual.innerHTML = `<div class="shape-stage">${shape.svg('poly', masterRot())}</div>`;
   say('What shape is this?');
 
   const correct = shape.name;
   const options = new Set([correct]);
-  while (options.size < 4) options.add(SHAPES[pick(SHAPE_KEYS)].name);
+  while (options.size < 4) options.add(SHAPES[pick(activeKeys)].name);
   const grid = document.createElement('div');
-  grid.className = 'choices';
+  grid.className = 'choices four';
   shuffle([...options]).forEach(opt => {
     const b = document.createElement('button');
     b.className = 'choice-btn'; b.style.textTransform = 'capitalize'; b.textContent = opt;
@@ -536,13 +680,19 @@ function renderName(q, shape, qText, visual, controls) {
 function renderCount(q, shape, qText, visual, controls, which) {
   const label = which === 'sides' ? 'sides' : 'corners';
   qText.innerHTML = `How many <span class="hl">${label}</span> does this shape have?`;
-  visual.innerHTML = `<div class="shape-stage">${shape.svg('poly')}</div>`;
+  visual.innerHTML = `<div class="shape-stage">${shape.svg('poly', masterRot())}</div>`;
   say(`How many ${label} does this shape have?`);
 
   const correct = which === 'sides' ? shape.sides : shape.corners;
+  const offsets = distractorOffsets();
   const options = new Set([correct]);
-  while (options.size < 3) {
-    const cand = correct + pick([-2,-1,1,2]);
+  // Always at least 3 options. In Master we may add a 4th to fit the grid better,
+  // but 3 works fine.
+  const targetCount = 3;
+  let attempts = 0;
+  while (options.size < targetCount && attempts < 40) {
+    attempts++;
+    const cand = correct + pick(offsets);
     if (cand >= 3) options.add(cand);
   }
   const grid = document.createElement('div');
@@ -571,14 +721,14 @@ function renderPick(q, shape, qText, visual, controls) {
 
   const correctKey = q.shapeKey;
   const options = new Set([correctKey]);
-  while (options.size < 4) options.add(pick(SHAPE_KEYS));
+  while (options.size < 4) options.add(pick(activeKeys));
   const grid = document.createElement('div');
   grid.className = 'shape-options';
   shuffle([...options]).forEach(key => {
     const opt = document.createElement('div');
     opt.className = 'shape-option';
     opt.dataset.key = key;
-    opt.innerHTML = SHAPES[key].svg('poly');
+    opt.innerHTML = SHAPES[key].svg('poly', masterRot());
     opt.addEventListener('click', () => {
       if (answered) return;
       const ok = key === correctKey;
@@ -595,8 +745,47 @@ function renderPick(q, shape, qText, visual, controls) {
   controls.appendChild(grid);
 }
 
+// MASTER ONLY: property question — "Which shape has X sides?"
+function renderProperty(q, shape, qText, visual, controls) {
+  qText.innerHTML = `Which shape has <span class="hl">${q.targetSides} sides</span>?`;
+  say(`Which shape has ${q.targetSides} sides?`);
+
+  const correctKey = q.shapeKey;
+  const options = new Set([correctKey]);
+  // Distractors: shapes that DON'T have the target sides count
+  const candidates = activeKeys.filter(k => k !== correctKey && SHAPES[k].sides !== q.targetSides);
+  const shuffledCandidates = shuffle(candidates);
+  for (const c of shuffledCandidates) {
+    if (options.size >= 4) break;
+    options.add(c);
+  }
+  const grid = document.createElement('div');
+  grid.className = 'shape-options';
+  shuffle([...options]).forEach(key => {
+    const opt = document.createElement('div');
+    opt.className = 'shape-option';
+    opt.dataset.key = key;
+    opt.innerHTML = SHAPES[key].svg('poly', masterRot());
+    opt.addEventListener('click', () => {
+      if (answered) return;
+      const ok = key === correctKey;
+      grid.querySelectorAll('.shape-option').forEach(x => x.style.pointerEvents = 'none');
+      opt.classList.add(ok ? 'correct' : 'wrong');
+      if (!ok) {
+        const right = grid.querySelector(`.shape-option[data-key="${correctKey}"]`);
+        if (right) right.classList.add('correct');
+      }
+      finish(ok, shape,
+        ok ? `Yes — a ${shape.name} has ${q.targetSides} sides!`
+           : `The ${shape.name} has ${q.targetSides} sides.`);
+    });
+    grid.appendChild(opt);
+  });
+  controls.appendChild(grid);
+}
+
 // ═══════════════════════════════════════════════════════════════════════
-// FINISH — show feedback + the teaching fact (the "learn as you test" bit)
+// FINISH — show feedback + teaching fact
 // ═══════════════════════════════════════════════════════════════════════
 function finish(correct, shape, headline) {
   answered = true;
@@ -607,14 +796,13 @@ function finish(correct, shape, headline) {
   document.getElementById('fb-emoji').textContent = correct ? pick(['🌟','🎉','⭐','✨','🏆']) : '💡';
   document.getElementById('fb-headline').textContent = headline;
 
-  // The fact panel always teaches, win or lose
-  document.getElementById('fact-shape').innerHTML = shape.svg('poly');
+  // Fact panel always teaches (always shows the upright shape for clarity)
+  document.getElementById('fact-shape').innerHTML = shape.svg('poly', 0);
   document.getElementById('fact-text').innerHTML = shape.factText(shape);
 
-  // Build a quick facts line
   let facts;
-  if (shape.name === 'circle') {
-    facts = '0 straight sides · 0 corners · round all the way';
+  if (shape.sides === 0) {
+    facts = '0 straight sides · 0 corners · curved';
   } else {
     const eq = shape.equalSides ? 'all sides equal' : 'sides not all equal';
     facts = `${shape.sides} sides · ${shape.corners} corners · ${eq}`;
@@ -623,7 +811,6 @@ function finish(correct, shape, headline) {
 
   document.getElementById('score-pill').textContent = `⭐ ${score} / ${QUESTIONS_PER_SESSION}`;
 
-  // Voice teaches the fact (strip HTML tags)
   const spoken = shape.factText(shape).replace(/<[^>]+>/g, '');
   say(spoken);
 }
@@ -643,7 +830,7 @@ function showResults() {
   const total = QUESTIONS_PER_SESSION;
   const pct = score/total;
   let emoji, title, msg;
-  if (score === total)   { emoji='🏆'; title='Shape Master!'; msg='Every single one correct — amazing!'; confetti(40); setTimeout(()=>confetti(30),400); }
+  if (score === total)   { emoji='🏆'; title=(mode==='master'?'Shape Grandmaster!':'Shape Master!'); msg='Every single one correct — amazing!'; confetti(40); setTimeout(()=>confetti(30),400); }
   else if (pct >= 0.8)   { emoji='🌟'; title='Brilliant!'; msg=`${score} out of ${total} — you really know your shapes!`; }
   else if (pct >= 0.6)   { emoji='⭐'; title='Great effort!'; msg=`${score} out of ${total} — getting better every time!`; }
   else if (pct >= 0.4)   { emoji='💪'; title='Good try!'; msg=`${score} out of ${total} — keep exploring!`; }
@@ -654,22 +841,39 @@ function showResults() {
   document.getElementById('res-score').innerHTML = `${score} <span>/ ${total}</span>`;
   document.getElementById('res-msg').textContent = msg;
 
-  const isNew = setBest(score);
-  const best = getBest();
+  const isNew = setBest(mode, score);
+  const best = getBest(mode);
   const bestEl = document.getElementById('res-best');
   if (isNew) { bestEl.style.display='block'; bestEl.textContent = `⭐ New personal best: ${best}/${total}!`; setTimeout(()=>confetti(20),200); }
   else if (best !== null) { bestEl.style.display='block'; bestEl.textContent = `Personal best: ${best}/${total}`; }
-  refreshBestPill();
+  refreshBests();
+
+  // Theme the play-again button to match the mode
+  const playBtn = document.getElementById('res-again');
+  playBtn.classList.toggle('master', mode === 'master');
+
   say(title + ' ' + msg);
 }
 
 // ═══════════════════════════════════════════════════════════════════════
-// BUTTONS
+// MODE START
 // ═══════════════════════════════════════════════════════════════════════
-function startGame() { buildSession(); showScreen('game-screen'); renderQuestion(); }
-document.getElementById('start-btn').addEventListener('click', startGame);
-document.getElementById('res-again').addEventListener('click', startGame);
-document.getElementById('res-home').addEventListener('click', () => { window.location.href = 'index.html'; });
+function startMode(m) {
+  mode = m;
+  activeKeys = (m === 'master') ? MASTER_KEYS : EXPLORER_KEYS;
+  const pill = document.getElementById('mode-pill');
+  pill.className = 'mode-pill ' + m;
+  pill.textContent = m === 'master' ? '🌟 Master — 10 shapes' : '🔷 Explorer — 6 shapes';
+  buildSession();
+  showScreen('game-screen');
+  renderQuestion();
+}
+
+document.querySelectorAll('.mode-btn').forEach(btn => {
+  btn.addEventListener('click', () => startMode(btn.dataset.mode));
+});
+document.getElementById('res-again').addEventListener('click', () => startMode(mode));
+document.getElementById('res-modes').addEventListener('click', () => showScreen('start-screen'));
 
 // ═══════════════════════════════════════════════════════════════════════
 // HEADER BACK BUTTON
@@ -681,7 +885,11 @@ function updateBackBtn() {
 }
 headerBackBtn.addEventListener('click', e => {
   const onStart = document.getElementById('start-screen').classList.contains('active');
-  if (!onStart) { e.preventDefault(); if (typeof speechSynthesis!=='undefined') speechSynthesis.cancel(); showScreen('start-screen'); }
+  if (!onStart) {
+    e.preventDefault();
+    if (typeof speechSynthesis !== 'undefined') speechSynthesis.cancel();
+    showScreen('start-screen');
+  }
 });
 updateBackBtn();
 
@@ -689,7 +897,9 @@ updateBackBtn();
 // CONFETTI
 // ═══════════════════════════════════════════════════════════════════════
 function confetti(count) {
-  const colors = ['#2dd4bf','#3b82f6','#f59e0b','#16a34a','#a78bfa','#fb923c'];
+  const colors = mode === 'master'
+    ? ['#f472b6','#a78bfa','#fb923c','#f59e0b','#06b6d4','#2dd4bf']
+    : ['#2dd4bf','#3b82f6','#f59e0b','#16a34a','#a78bfa','#fb923c'];
   for (let i=0;i<count;i++){
     setTimeout(()=>{
       const p=document.createElement('div'); p.className='confetti-piece';
