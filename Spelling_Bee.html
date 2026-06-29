@@ -270,8 +270,8 @@
 
   /* Rule reminder in feedback */
   .rule-reminder {
-    background: rgba(132,204,22,0.10);
-    border: 1px solid rgba(132,204,22,0.3);
+    background: rgba(245,158,11,0.10);
+    border: 1px solid rgba(245,158,11,0.3);
     border-radius: 12px;
     padding: 10px 14px;
     font-size: 13px;
@@ -280,7 +280,7 @@
     margin-top: 6px;
     line-height: 1.4;
   }
-  .rule-reminder strong { color: var(--lime); }
+  .rule-reminder strong { color: var(--gold); }
 
   .next-btn {
     width: 100%;
@@ -416,8 +416,8 @@
   .cat-btn.pattern:hover { background: rgba(132,204,22,0.06); }
   .cat-btn.tricky { border-color: rgba(167,139,250,0.35); }
   .cat-btn.tricky:hover { background: rgba(167,139,250,0.06); }
-  .cat-btn.all    { border-color: rgba(59,130,246,0.35); }
-  .cat-btn.all:hover    { background: rgba(59,130,246,0.06); }
+  .cat-btn.review { border-color: rgba(59,130,246,0.4); }
+  .cat-btn.review:hover { background: rgba(59,130,246,0.06); }
 
   .cat-icon { font-size: 36px; flex-shrink: 0; }
   .cat-info { flex: 1; }
@@ -537,6 +537,61 @@
   }
   .rule-back-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
 
+  /* ── PATTERN REVIEW PICKER ──────────────────────────────────────────── */
+  .review-intro {
+    width: 100%;
+    background: var(--card);
+    border-radius: 20px;
+    padding: 22px 22px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .review-intro h2 { font-family: 'Fredoka One', cursive; font-size: 22px; color: var(--blue-light); }
+  .review-intro p  { font-size: 14px; color: var(--muted); font-weight: 600; margin-top: 6px; line-height: 1.45; }
+
+  .review-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .review-card {
+    background: var(--card);
+    border: 2px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 16px 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .review-card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
+  .review-card .rc-name { font-family: 'Fredoka One', cursive; font-size: 17px; letter-spacing: 0.5px; }
+  .review-card .rc-desc { font-size: 11px; color: var(--muted); font-weight: 700; line-height: 1.3; }
+  .review-card .rc-count { font-size: 10px; color: var(--muted); font-weight: 700; margin-top: 2px; opacity: 0.8; }
+
+  /* per-pattern accent colours on the review cards */
+  .review-card.ck     { border-color: rgba(245,158,11,0.4); }
+  .review-card.ck .rc-name     { color: var(--gold); }
+  .review-card.ear    { border-color: rgba(245,158,11,0.4); }
+  .review-card.ear .rc-name    { color: var(--gold); }
+  .review-card.eer    { border-color: rgba(245,158,11,0.4); }
+  .review-card.eer .rc-name    { color: var(--gold); }
+  .review-card.air    { border-color: rgba(244,114,182,0.45); }
+  .review-card.air .rc-name    { color: var(--pink); }
+  .review-card.are    { border-color: rgba(251,113,133,0.45); }
+  .review-card.are .rc-name    { color: var(--coral); }
+  .review-card.soft_c { border-color: rgba(6,182,212,0.45); }
+  .review-card.soft_c .rc-name { color: var(--cyan); }
+  .review-card.dge    { border-color: rgba(132,204,22,0.45); }
+  .review-card.dge .rc-name    { color: var(--lime); }
+  .review-card.tricky { border-color: rgba(167,139,250,0.45); }
+  .review-card.tricky .rc-name { color: var(--purple); }
+
   /* Sentence hint */
   .sentence-hint {
     font-size: 14px; color: var(--muted); font-style: italic; font-weight: 600;
@@ -599,14 +654,24 @@
       <div class="cat-arrow">›</div>
     </button>
 
-    <button class="cat-btn all" data-cat="all">
-      <div class="cat-icon">⭐</div>
+    <button class="cat-btn review" data-cat="review">
+      <div class="cat-icon">📚</div>
       <div class="cat-info">
-        <div class="cat-name">Everything Mixed</div>
-        <div class="cat-desc">10 random words from all the weeks so far</div>
+        <div class="cat-name">Pattern Review</div>
+        <div class="cat-desc">Go back and practise any pattern from the whole term</div>
       </div>
       <div class="cat-arrow">›</div>
     </button>
+  </div>
+
+  <!-- PATTERN REVIEW PICKER -->
+  <div id="review-screen" class="hidden" style="width:100%;display:none;flex-direction:column;gap:16px;">
+    <div class="review-intro">
+      <h2>📚 Pattern Review</h2>
+      <p>Pick a pattern to practise. Each one gives you up to 10 words from that week.</p>
+    </div>
+    <div class="review-grid" id="review-grid"><!-- filled by JS --></div>
+    <button class="rule-back-btn" id="review-back-btn">← Back</button>
   </div>
 
   <!-- RULE TEACH SCREEN -->
@@ -716,10 +781,15 @@ localStorage.removeItem('spelling_bee_words');
 // FOUR ARRAYS:
 //   CURRENT_PATTERN — this week's pattern words (used by "This Week's Pattern")
 //   CURRENT_TRICKY  — this week's tricky words  (used by "Tricky Words")
-//   ARCHIVE_PATTERN — all previous weeks' pattern words (used by "Everything Mixed")
-//   ARCHIVE_TRICKY  — all previous weeks' tricky words  (used by "Everything Mixed")
+//   ARCHIVE_PATTERN — all previous weeks' pattern words (used by Pattern Review)
+//   ARCHIVE_TRICKY  — all previous weeks' tricky words  (used by Pattern Review)
 //
-// "Everything Mixed" pulls 10 random words from the entire pool (true random).
+// ── PATTERN REVIEW ──────────────────────────────────────────────────────
+// Replaces the old "Everything Mixed". Lets FTS pick a single pattern
+// (ck, ear, eer, air, are, soft C, dge, or tricky) and practise up to 10
+// words drawn ONLY from that pattern — across BOTH current and archive.
+// One pattern at a time keeps each rule clean and protects confidence.
+// The 'k' contrast words are folded into the 'ck' review (taught together).
 //
 // ══════════════════════════════════════════════════════════════════════════
 //   WEEKLY UPDATE WORKFLOW
@@ -729,6 +799,7 @@ localStorage.removeItem('spelling_bee_words');
 //   3. Replace CURRENT_PATTERN / CURRENT_TRICKY with this week's words.
 //   4. Update rule teach screen + start hero copy + showRuleReminder.
 //   5. Update CATEGORY_LABELS + add a category-badge CSS rule if new category.
+//   6. Add the new pattern to REVIEW_PATTERNS so it appears in Pattern Review.
 // ══════════════════════════════════════════════════════════════════════════
 
 // ── CURRENT WEEK (Week 7: 'dge' = /j/ sound after a short vowel) ─────────
@@ -769,7 +840,7 @@ const ARCHIVE_PATTERN = [
   { word: "black", sentence: "The Crows wear black and red.",               cat: 'ck' },
   { word: "pick",  sentence: "FTS could pick any flavour he wanted.",       cat: 'ck' },
   { word: "sock",  sentence: "FTS could only find one sock under the bed.", cat: 'ck' },
-  // Week 1 — k contrast words
+  // Week 1 — k contrast words (folded into 'ck' review)
   { word: "milk",  sentence: "FTS poured milk on his cereal.",              cat: 'k', reason: "consonant before k (L)" },
   { word: "desk",  sentence: "FTS tidied up his desk at school.",           cat: 'k', reason: "consonant before k (S)" },
   { word: "mask",  sentence: "FTS wore a superhero mask.",                  cat: 'k', reason: "consonant before k (S)" },
@@ -866,20 +937,61 @@ const CATEGORY_LABELS = {
   tricky: "tricky word — just memorise!",
 };
 
+// ── PATTERN REVIEW DEFINITIONS ───────────────────────────────────────────
+// Each entry defines one reviewable pattern card. `cats` lists which category
+// codes belong to it (ck folds in the k-contrast words). Order = teaching order.
+const REVIEW_PATTERNS = [
+  { key: 'ck',     name: 'ck rule',  desc: 'Short-vowel ck words', cats: ['ck','k'] },
+  { key: 'ear',    name: "'ear'",    desc: 'The /ear/ sound',      cats: ['ear'] },
+  { key: 'eer',    name: "'eer'",    desc: 'The /ear/ sound',      cats: ['eer'] },
+  { key: 'air',    name: "'air'",    desc: 'The /air/ sound',      cats: ['air'] },
+  { key: 'are',    name: "'are'",    desc: 'The /air/ sound',      cats: ['are'] },
+  { key: 'soft_c', name: 'Soft C',   desc: 'C that sounds like /s/', cats: ['soft_c'] },
+  { key: 'dge',    name: "'dge'",    desc: '/j/ after a short vowel', cats: ['dge'] },
+  { key: 'tricky', name: 'Tricky',   desc: 'No-rule words to memorise', cats: ['tricky'] },
+];
+
 // Session sizes
-const ALL_SESSION_SIZE = 10;
-const RULE_SESSION_SIZE = 10; // pick 10 of the current pattern words each round
+const RULE_SESSION_SIZE = 10;   // current pattern
+const REVIEW_SESSION_SIZE = 10; // per-pattern review
+
+// Pool of every word (current + archive), used by Pattern Review
+function allWords() {
+  return [...CURRENT_PATTERN, ...CURRENT_TRICKY, ...ARCHIVE_PATTERN, ...ARCHIVE_TRICKY];
+}
 
 // ──────────────────────────────────────────────────────────────────────────
 // Tricky count for the picker
 // ──────────────────────────────────────────────────────────────────────────
 (function setTrickyLabel() {
   const n = CURRENT_TRICKY.length;
-  document.getElementById('tricky-count').textContent = n;
+  const span = document.getElementById('tricky-count');
+  if (span) span.textContent = n;
   const btn = document.querySelector('.cat-btn.tricky .cat-desc');
   if (btn) {
     btn.innerHTML = `Words that don't follow any rule — <span id="tricky-count">${n}</span> ${n === 1 ? 'word' : 'words'}`;
   }
+})();
+
+// ──────────────────────────────────────────────────────────────────────────
+// BUILD THE PATTERN REVIEW PICKER CARDS
+// ──────────────────────────────────────────────────────────────────────────
+(function buildReviewCards() {
+  const grid = document.getElementById('review-grid');
+  const pool = allWords();
+  REVIEW_PATTERNS.forEach(p => {
+    const count = pool.filter(w => p.cats.includes(w.cat)).length;
+    if (count === 0) return;
+    const card = document.createElement('button');
+    card.className = 'review-card ' + p.key;
+    card.dataset.review = p.key;
+    card.innerHTML = `
+      <div class="rc-name">${p.name}</div>
+      <div class="rc-desc">${p.desc}</div>
+      <div class="rc-count">${count} word${count === 1 ? '' : 's'}</div>`;
+    card.addEventListener('click', () => startReview(p.key));
+    grid.appendChild(card);
+  });
 })();
 
 // ──────────────────────────────────────────────────────────────────────────
@@ -891,7 +1003,8 @@ let currentIndex = 0;
 let currentWord = null;
 let answered = false;
 let correctThisSession = 0;
-let currentCategory = 'rule';
+let currentCategory = 'rule';      // 'rule' | 'tricky' | 'review'
+let currentReviewKey = null;       // which pattern, when in review mode
 
 // Voice caching (iOS Safari)
 let voiceCache = null;
@@ -913,7 +1026,7 @@ if (typeof speechSynthesis !== 'undefined') {
 // SCREEN MANAGEMENT
 // ──────────────────────────────────────────────────────────────────────────
 function showScreen(name) {
-  ['start-screen','rule-screen','game-screen','results-screen'].forEach(id => {
+  ['start-screen','review-screen','rule-screen','game-screen','results-screen'].forEach(id => {
     const el = document.getElementById(id);
     if (id === name) {
       el.style.display = 'flex';
@@ -937,12 +1050,10 @@ function buildSession(category) {
     pool = shuffled.slice(0, Math.min(RULE_SESSION_SIZE, shuffled.length));
   } else if (category === 'tricky') {
     pool = [...CURRENT_TRICKY].sort(() => Math.random() - 0.5);
-  } else { // 'all'
-    const combined = [
-      ...CURRENT_PATTERN, ...CURRENT_TRICKY,
-      ...ARCHIVE_PATTERN, ...ARCHIVE_TRICKY,
-    ];
-    pool = combined.sort(() => Math.random() - 0.5).slice(0, ALL_SESSION_SIZE);
+  } else if (category === 'review') {
+    const def = REVIEW_PATTERNS.find(p => p.key === currentReviewKey);
+    const matching = allWords().filter(w => def.cats.includes(w.cat));
+    pool = matching.sort(() => Math.random() - 0.5).slice(0, REVIEW_SESSION_SIZE);
   }
 
   sessionQueue = pool;
@@ -1225,7 +1336,9 @@ function triggerConfetti() {
 document.querySelectorAll('.cat-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     const cat = btn.dataset.cat;
-    if (cat === 'rule' && !sessionStorage.getItem('rule_seen_dge')) {
+    if (cat === 'review') {
+      showScreen('review-screen');
+    } else if (cat === 'rule' && !sessionStorage.getItem('rule_seen_dge')) {
       sessionStorage.setItem('rule_seen_dge', '1');
       sessionStorage.setItem('pending_cat', cat);
       showScreen('rule-screen');
@@ -1240,6 +1353,17 @@ function startSession(cat) {
   showScreen('game-screen');
   loadWord(0);
 }
+
+function startReview(patternKey) {
+  currentReviewKey = patternKey;
+  buildSession('review');
+  showScreen('game-screen');
+  loadWord(0);
+}
+
+document.getElementById('review-back-btn').addEventListener('click', () => {
+  showScreen('start-screen');
+});
 
 document.getElementById('rule-btn').addEventListener('click', () => {
   sessionStorage.removeItem('pending_cat');
@@ -1271,10 +1395,13 @@ document.getElementById('spelling-input').addEventListener('keydown', e => {
 document.getElementById('next-btn').addEventListener('click', nextWord);
 
 document.getElementById('play-again-btn').addEventListener('click', () => {
-  startSession(currentCategory);
+  if (currentCategory === 'review') startReview(currentReviewKey);
+  else startSession(currentCategory);
 });
 document.getElementById('back-to-start-btn').addEventListener('click', () => {
-  showScreen('start-screen');
+  // Return to the review picker if we came from there, else the main start screen
+  if (currentCategory === 'review') showScreen('review-screen');
+  else showScreen('start-screen');
 });
 
 // ──────────────────────────────────────────────────────────────────────────
