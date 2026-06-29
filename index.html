@@ -56,16 +56,17 @@
 
   .card { position: relative; border-radius: 20px; padding: 24px 18px 20px; cursor: pointer; text-decoration: none; display: block; overflow: hidden; border: 3px solid rgba(255,255,255,0.15); transition: transform 0.15s, box-shadow 0.15s; animation: cardPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
   .card:nth-child(1)  { animation-delay: 0.12s; background: linear-gradient(135deg, #E63946, #c1121f); box-shadow: 0 8px 0 #7d0d14; }
-  .card:nth-child(2)  { animation-delay: 0.17s; background: linear-gradient(135deg, #db2777, #831843); box-shadow: 0 8px 0 #4a0d28; }
-  .card:nth-child(3)  { animation-delay: 0.22s; background: linear-gradient(135deg, #0d9488, #134e4a); box-shadow: 0 8px 0 #052e2a; }
-  .card:nth-child(4)  { animation-delay: 0.27s; background: linear-gradient(135deg, #2196F3, #1565C0); box-shadow: 0 8px 0 #0d3c6e; }
-  .card:nth-child(5)  { animation-delay: 0.32s; background: linear-gradient(135deg, #FF9800, #E65100); box-shadow: 0 8px 0 #7f2900; }
-  .card:nth-child(6)  { animation-delay: 0.37s; background: linear-gradient(135deg, #00BCD4, #006064); box-shadow: 0 8px 0 #003033; }
-  .card:nth-child(7)  { animation-delay: 0.42s; background: linear-gradient(135deg, #4CAF50, #1B5E20); box-shadow: 0 8px 0 #0a2e0c; }
-  .card:nth-child(8)  { animation-delay: 0.47s; background: linear-gradient(135deg, #F59E0B, #92400e); box-shadow: 0 8px 0 #4a1f00; }
-  .card:nth-child(9)  { animation-delay: 0.52s; background: linear-gradient(135deg, #7c3aed, #4c1d95); box-shadow: 0 8px 0 #2e1065; }
+  .card:nth-child(2)  { animation-delay: 0.17s; background: linear-gradient(135deg, #7c3aed, #4c1d95); box-shadow: 0 8px 0 #2e1065; }
+  .card:nth-child(3)  { animation-delay: 0.22s; background: linear-gradient(135deg, #db2777, #831843); box-shadow: 0 8px 0 #4a0d28; }
+  .card:nth-child(4)  { animation-delay: 0.27s; background: linear-gradient(135deg, #0d9488, #134e4a); box-shadow: 0 8px 0 #052e2a; }
+  .card:nth-child(5)  { animation-delay: 0.32s; background: linear-gradient(135deg, #2196F3, #1565C0); box-shadow: 0 8px 0 #0d3c6e; }
+  .card:nth-child(6)  { animation-delay: 0.37s; background: linear-gradient(135deg, #FF9800, #E65100); box-shadow: 0 8px 0 #7f2900; }
+  .card:nth-child(7)  { animation-delay: 0.42s; background: linear-gradient(135deg, #00BCD4, #006064); box-shadow: 0 8px 0 #003033; }
+  .card:nth-child(8)  { animation-delay: 0.47s; background: linear-gradient(135deg, #4CAF50, #1B5E20); box-shadow: 0 8px 0 #0a2e0c; }
+  .card:nth-child(9)  { animation-delay: 0.52s; background: linear-gradient(135deg, #F59E0B, #92400e); box-shadow: 0 8px 0 #4a1f00; }
   .card:nth-child(10) { animation-delay: 0.57s; background: linear-gradient(135deg, #2563eb, #1e3a8a); box-shadow: 0 8px 0 #0f1f50; }
   .card:nth-child(11) { animation-delay: 0.62s; background: linear-gradient(135deg, #E91E63, #880E4F); box-shadow: 0 8px 0 #4a0028; }
+  .card:nth-child(12) { animation-delay: 0.67s; background: linear-gradient(135deg, #16a34a, #14532d); box-shadow: 0 8px 0 #0a2e0c; }
 
   @keyframes cardPop { from { transform: scale(0.7) translateY(30px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
 
@@ -163,6 +164,13 @@
       <div class="card-desc">Stack the numbers, carry and borrow — add and subtract big sums!</div>
     </a>
 
+    <a class="card" href="Maths_Challenge.html">
+      <span class="new-badge">New</span>
+      <span class="card-icon">🎯</span>
+      <div class="card-title">Maths Challenge</div>
+      <div class="card-desc">10 mixed questions from everything — test yourself!</div>
+    </a>
+
     <a class="card" href="Fraction_Fun_House.html">
       <span class="card-icon">🍕</span>
       <div class="card-title">Fraction Fun House</div>
@@ -170,7 +178,6 @@
     </a>
 
     <a class="card" href="Shape_Explorer.html">
-      <span class="new-badge">New</span>
       <span class="card-icon">🔷</span>
       <div class="card-title">Shape Explorer</div>
       <div class="card-desc">Name the shapes, count their sides and corners!</div>
