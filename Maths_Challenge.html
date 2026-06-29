@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Maths Challenge — FTS Learning HQ</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1729;
+    --card: #1e2d4a;
+    --card2: #243459;
+    --border: rgba(255,255,255,0.08);
+    --text: #f0f4ff;
+    --muted: #94a3b8;
+    --gold: #f59e0b;
+    --gold-light: #fde68a;
+    --blue: #3b82f6;
+    --blue-deep: #2563eb;
+    --green: #16a34a;
+    --green-light: #4ade80;
+    --red: #dc2626;
+    --red-light: #f87171;
+    --purple: #a78bfa;
+    --purple-deep: #7c3aed;
+    --teal: #2dd4bf;
+    --orange: #fb923c;
+    --pink: #f472b6;
+    /* per-skill accent colours */
+    --c-arith: #3b82f6;
+    --c-column: #f59e0b;
+    --c-times: #a78bfa;
+    --c-frac: #f472b6;
+    --c-shape: #2dd4bf;
+    --c-money: #4ade80;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html { height: 100%; }
+  body {
+    background: var(--bg);
+    font-family: 'Nunito', sans-serif;
+    color: var(--text);
+    min-height: 100%;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 15%, rgba(124,58,237,0.08) 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 85%, rgba(245,158,11,0.06) 0%, transparent 55%);
+    pointer-events: none; z-index: 0;
+  }
+
+  .wrapper {
+    position: relative; z-index: 1;
+    max-width: 600px; margin: 0 auto;
+    padding: 16px 16px 48px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+
+  /* HEADER */
+  .header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 0; }
+  .back-btn {
+    background: var(--card); border: none; color: var(--muted);
+    font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 700;
+    padding: 8px 16px; border-radius: 20px; cursor: pointer;
+    text-decoration: none; transition: all 0.2s; flex-shrink: 0;
+  }
+  .back-btn:hover { background: var(--card2); color: var(--text); }
+  .title-block { text-align: center; flex: 1; }
+  .title-block h1 { font-family: 'Fredoka One', cursive; font-size: 22px; color: var(--purple); letter-spacing: 1px; line-height: 1; }
+  .title-block p { font-size: 11px; color: var(--muted); font-weight: 700; margin-top: 2px; }
+  .mute-btn {
+    background: var(--card); border: 1px solid var(--border);
+    color: var(--muted); font-size: 18px;
+    width: 38px; height: 38px; border-radius: 12px;
+    cursor: pointer; transition: all 0.2s; flex-shrink: 0;
+  }
+  .mute-btn:hover { background: var(--card2); }
+  .mute-btn.muted { color: var(--red-light); border-color: rgba(220,38,38,0.3); }
+
+  /* SCREENS */
+  .screen { display: none; flex-direction: column; gap: 16px; }
+  .screen.active { display: flex; }
+
+  /* ═════════ START ═════════ */
+  .start-hero {
+    background: var(--card);
+    border-radius: 24px;
+    padding: 30px 24px 24px;
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    border: 1px solid var(--border);
+    text-align: center;
+  }
+  .start-icon { font-size: 56px; animation: bob 2.5s ease-in-out infinite; }
+  @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+  .start-title { font-family: 'Fredoka One', cursive; font-size: 23px; color: var(--text); line-height: 1.3; }
+  .start-title span { color: var(--purple); }
+  .start-sub { font-size: 14px; color: var(--muted); font-weight: 600; line-height: 1.5; }
+
+  .skill-chips { display: flex; flex-wrap: wrap; gap: 7px; justify-content: center; margin-top: 4px; }
+  .skill-chip {
+    font-size: 11px; font-weight: 800; padding: 5px 11px; border-radius: 20px;
+    border: 1px solid var(--border); background: var(--card2); letter-spacing: 0.3px;
+  }
+  .skill-chip.arith  { color: var(--c-arith);  border-color: rgba(59,130,246,0.3); }
+  .skill-chip.column { color: var(--c-column); border-color: rgba(245,158,11,0.3); }
+  .skill-chip.times  { color: var(--c-times);  border-color: rgba(167,139,250,0.3); }
+  .skill-chip.frac   { color: var(--c-frac);   border-color: rgba(244,114,182,0.3); }
+  .skill-chip.shape  { color: var(--c-shape);  border-color: rgba(45,212,191,0.3); }
+  .skill-chip.money  { color: var(--c-money);  border-color: rgba(74,222,128,0.3); }
+
+  .best-pill { background: var(--card2); border-radius: 12px; padding: 8px 16px; font-size: 13px; font-weight: 700; color: var(--gold); }
+
+  .start-btn {
+    width: 100%;
+    background: linear-gradient(135deg, var(--purple), var(--purple-deep));
+    border: none; color: white;
+    font-family: 'Fredoka One', cursive; font-size: 22px;
+    padding: 18px; border-radius: 16px;
+    cursor: pointer; letter-spacing: 0.5px;
+    box-shadow: 0 4px 20px rgba(124,58,237,0.35);
+    transition: all 0.2s;
+  }
+  .start-btn:hover { transform: scale(1.02); }
+
+  /* ═════════ GAME ═════════ */
+  .game-hud { display: flex; flex-direction: column; gap: 8px; }
+  .hud-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .hud-label { font-size: 12px; font-weight: 800; color: var(--muted); letter-spacing: 0.5px; }
+  .skill-pill {
+    border-radius: 14px; padding: 4px 12px;
+    font-family: 'Fredoka One', cursive; font-size: 12px;
+    border: 1px solid var(--border); background: var(--card);
+  }
+  .score-pill {
+    background: var(--card); border: 1px solid rgba(245,158,11,0.3);
+    border-radius: 14px; padding: 5px 12px;
+    font-family: 'Fredoka One', cursive; font-size: 14px; color: var(--gold);
+  }
+  .progress-wrap { width: 100%; background: var(--card); border-radius: 20px; height: 8px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--purple), var(--blue)); border-radius: 20px; transition: width 0.4s ease; width: 0%; }
+
+  .play-card {
+    background: var(--card);
+    border-radius: 24px;
+    padding: 26px 20px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    border: 1px solid var(--border);
+    display: flex; flex-direction: column; align-items: center; gap: 18px;
+  }
+
+  /* the little skill tag above each question */
+  .q-skill-tag {
+    font-size: 11px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
+    padding: 4px 12px; border-radius: 16px; border: 1px solid var(--border);
+    background: var(--card2);
+  }
+  .q-skill-tag.arith  { color: var(--c-arith); }
+  .q-skill-tag.column { color: var(--c-column); }
+  .q-skill-tag.times  { color: var(--c-times); }
+  .q-skill-tag.frac   { color: var(--c-frac); }
+  .q-skill-tag.shape  { color: var(--c-shape); }
+  .q-skill-tag.money  { color: var(--c-money); }
+
+  .question-text {
+    font-family: 'Fredoka One', cursive;
+    font-size: 26px; color: var(--text);
+    text-align: center; line-height: 1.3;
+  }
+  .question-sub { font-size: 13px; color: var(--muted); font-weight: 700; text-align: center; margin-top: -8px; }
+
+  .shape-stage { display: flex; align-items: center; justify-content: center; min-height: 140px; }
+  .shape-stage svg { width: 130px; height: 130px; }
+  .poly { fill: var(--card2); stroke: var(--c-shape); stroke-width: 5; stroke-linejoin: round; }
+
+  /* number choice buttons */
+  .choices { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; }
+  .choices.three { grid-template-columns: repeat(3, 1fr); }
+  .choice-btn {
+    background: var(--card2); border: 2px solid var(--border);
+    border-radius: 14px; padding: 18px 8px;
+    font-family: 'Fredoka One', cursive; font-size: 22px; color: var(--text);
+    cursor: pointer; transition: all 0.15s;
+  }
+  .choice-btn:hover { border-color: var(--purple); transform: translateY(-2px); }
+  .choice-btn.correct { background: rgba(22,163,74,0.2); border-color: var(--green); color: var(--green-light); }
+  .choice-btn.wrong   { background: rgba(220,38,38,0.2); border-color: var(--red); color: var(--red-light); }
+  .choice-btn:disabled { cursor: default; }
+
+  /* typed number entry */
+  .num-entry { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+  .num-input {
+    width: 140px; background: var(--card2);
+    border: 2px solid rgba(124,58,237,0.4);
+    border-radius: 16px; padding: 14px;
+    font-family: 'Fredoka One', cursive; font-size: 34px;
+    color: var(--purple); text-align: center; outline: none;
+    caret-color: var(--purple);
+  }
+  .num-input:focus { border-color: var(--purple); }
+  .num-input.correct { background: rgba(22,163,74,0.18); border-color: var(--green); color: var(--green-light); }
+  .num-input.wrong { background: rgba(220,38,38,0.18); border-color: var(--red); color: var(--red-light); }
+
+  /* ── COLUMN SUM GRID (mirrors Maths Blaster) ───────────────────────── */
+  .column-wrap {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    font-family: 'Fredoka One', cursive;
+    background: var(--card2); border-radius: 16px; padding: 18px 22px;
+  }
+  .col-row { display: flex; justify-content: flex-end; gap: 6px; }
+  .col-op { font-size: 30px; color: var(--c-column); align-self: center; margin-right: 4px; }
+  .col-cell {
+    width: 42px; height: 50px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 30px; color: var(--text);
+  }
+  .col-cell.place-u { color: var(--gold); }
+  .col-cell.place-t { color: var(--green-light); }
+  .col-cell.place-h { color: var(--pink); }
+  .col-line { width: 100%; height: 4px; background: var(--c-column); border-radius: 2px; margin: 4px 0; }
+  .col-scratch { display: flex; justify-content: flex-end; gap: 6px; min-height: 24px; }
+  .col-scratch .col-cell { height: 24px; font-size: 16px; color: var(--muted); }
+  .col-answer-cell {
+    width: 42px; height: 52px;
+    background: var(--bg); border: 2px solid rgba(255,255,255,0.15);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 30px; color: var(--text); outline: none;
+    caret-color: var(--gold); padding: 0;
+  }
+  .col-answer-cell:focus { border-color: var(--gold); }
+  .col-answer-cell.correct { border-color: var(--green); background: rgba(22,163,74,0.12); color: var(--green-light); }
+  .col-answer-cell.wrong { border-color: var(--red); background: rgba(220,38,38,0.12); color: var(--red-light); }
+
+  /* action buttons */
+  .action-btn {
+    width: 100%; border: none; border-radius: 16px; padding: 15px;
+    font-family: 'Fredoka One', cursive; font-size: 19px;
+    cursor: pointer; transition: all 0.2s; letter-spacing: 0.5px;
+  }
+  .action-btn.primary { background: linear-gradient(135deg, var(--purple), var(--purple-deep)); color: white; box-shadow: 0 4px 20px rgba(124,58,237,0.3); }
+  .action-btn.primary:hover { transform: scale(1.02); }
+  .action-btn:disabled { opacity: 0.4; cursor: default; transform: none; }
+
+  /* feedback */
+  .feedback {
+    width: 100%; border-radius: 16px; padding: 16px 18px;
+    display: none; flex-direction: column; gap: 10px;
+    border: 2px solid transparent;
+    animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  @keyframes popIn { from{transform:scale(0.85);opacity:0} to{transform:scale(1);opacity:1} }
+  .feedback.good { display: flex; border-color: var(--green); background: rgba(22,163,74,0.1); }
+  .feedback.bad  { display: flex; border-color: var(--gold); background: rgba(245,158,11,0.08); }
+  .fb-top { display: flex; align-items: center; gap: 10px; }
+  .fb-emoji { font-size: 26px; flex-shrink: 0; }
+  .fb-msg { font-size: 15px; font-weight: 800; flex: 1; line-height: 1.35; }
+  .feedback.good .fb-msg { color: var(--green-light); }
+  .feedback.bad  .fb-msg { color: var(--gold-light); }
+
+  /* "go practise in X tool" prompt — only on wrong answers */
+  .tool-prompt {
+    background: rgba(59,130,246,0.08);
+    border: 1px solid rgba(59,130,246,0.3);
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 13px; font-weight: 700; color: var(--text);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .tool-prompt .tp-icon { font-size: 18px; }
+  .tool-prompt strong { color: var(--blue); }
+
+  .fb-next {
+    width: 100%;
+    background: var(--card2); border: 2px solid rgba(255,255,255,0.1);
+    color: var(--text); font-family: 'Fredoka One', cursive;
+    font-size: 16px; padding: 12px; border-radius: 12px;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .fb-next:hover { background: #2d3f60; }
+
+  /* ═════════ RESULTS ═════════ */
+  .results-card {
+    background: var(--card); border-radius: 24px; padding: 32px 24px;
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+    text-align: center; box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    border: 1px solid var(--border);
+  }
+  .results-emoji { font-size: 64px; animation: bob 2s ease-in-out infinite; }
+  .results-title { font-family: 'Fredoka One', cursive; font-size: 24px; color: var(--purple); }
+  .results-score { font-family: 'Fredoka One', cursive; font-size: 48px; color: white; line-height: 1; }
+  .results-score span { font-size: 22px; color: var(--muted); }
+  .results-msg { font-size: 14px; color: var(--muted); font-weight: 700; line-height: 1.4; }
+  .results-best { background: var(--card2); border-radius: 12px; padding: 10px 14px; font-size: 13px; font-weight: 700; color: var(--gold); }
+
+  /* per-skill breakdown on results — which tools to revisit */
+  .revisit-panel {
+    width: 100%;
+    background: rgba(59,130,246,0.06);
+    border: 1px solid rgba(59,130,246,0.25);
+    border-radius: 16px;
+    padding: 14px 16px;
+    display: none; flex-direction: column; gap: 8px;
+    text-align: left;
+  }
+  .revisit-panel h3 { font-size: 12px; font-weight: 800; color: var(--blue); text-transform: uppercase; letter-spacing: 1px; }
+  .revisit-item { font-size: 13px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px; }
+  .revisit-item .ri-icon { font-size: 16px; }
+
+  .results-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .res-btn {
+    border: none; border-radius: 14px; padding: 14px;
+    font-family: 'Fredoka One', cursive; font-size: 15px;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .res-btn.primary { background: linear-gradient(135deg, var(--purple), var(--purple-deep)); color: white; }
+  .res-btn.primary:hover { transform: scale(1.02); }
+  .res-btn.ghost { background: var(--card); border: 2px solid var(--border); color: var(--text); }
+  .res-btn.ghost:hover { background: var(--card2); }
+
+  .confetti-piece { position: fixed; pointer-events: none; z-index: 999; border-radius: 2px; animation: cfall linear forwards; }
+  @keyframes cfall { 0%{transform:translateY(-20px) rotate(0deg);opacity:1} 100%{transform:translateY(100vh) rotate(720deg);opacity:0} }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <div class="header">
+    <a href="index.html" class="back-btn" id="header-back-btn">← Home</a>
+    <div class="title-block">
+      <h1>🎯 Maths Challenge</h1>
+      <p>FTS Learning HQ</p>
+    </div>
+    <button class="mute-btn" id="mute-btn" title="Sound on/off">🔊</button>
+  </div>
+
+  <!-- START -->
+  <div id="start-screen" class="screen active">
+    <div class="start-hero">
+      <div class="start-icon">🎯</div>
+      <div class="start-title">The big <span>mix-up</span>, FTS!</div>
+      <div class="start-sub">10 questions from everything you've learned — all jumbled together. Can you spot what kind of question each one is?</div>
+      <div class="skill-chips">
+        <span class="skill-chip arith">➕ Adding</span>
+        <span class="skill-chip column">🔢 Column sums</span>
+        <span class="skill-chip times">✖️ Times tables</span>
+        <span class="skill-chip frac">🍕 Fractions</span>
+        <span class="skill-chip shape">🔷 Shapes</span>
+        <span class="skill-chip money">💰 Money</span>
+      </div>
+      <div class="best-pill" id="best-pill" style="display:none"></div>
+    </div>
+    <button class="start-btn" id="start-btn">🚀 Start the Challenge!</button>
+  </div>
+
+  <!-- GAME -->
+  <div id="game-screen" class="screen">
+    <div class="game-hud">
+      <div class="hud-row">
+        <div class="skill-pill" id="skill-pill">Question</div>
+        <div class="score-pill" id="score-pill">⭐ 0 / 10</div>
+      </div>
+      <div class="progress-wrap"><div class="progress-fill" id="progress-fill"></div></div>
+      <div class="hud-label" id="q-counter">Question 1 of 10</div>
+    </div>
+
+    <div class="play-card">
+      <div class="q-skill-tag" id="q-skill-tag">Adding</div>
+      <div class="question-text" id="question-text"></div>
+      <div class="question-sub" id="question-sub"></div>
+      <div id="visual-area" style="width:100%;"></div>
+      <div id="controls-area" style="width:100%;"></div>
+      <div class="feedback" id="feedback">
+        <div class="fb-top">
+          <div class="fb-emoji" id="fb-emoji"></div>
+          <div class="fb-msg" id="fb-msg"></div>
+        </div>
+        <div class="tool-prompt" id="tool-prompt" style="display:none">
+          <span class="tp-icon">💡</span>
+          <span id="tool-prompt-text"></span>
+        </div>
+        <button class="fb-next" id="fb-next">Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results-screen" class="screen">
+    <div class="results-card">
+      <div class="results-emoji" id="res-emoji">🏆</div>
+      <div class="results-title" id="res-title">Challenge complete!</div>
+      <div class="results-score" id="res-score">0 <span>/ 10</span></div>
+      <div class="results-msg" id="res-msg"></div>
+      <div class="results-best" id="res-best" style="display:none"></div>
+      <div class="revisit-panel" id="revisit-panel">
+        <h3>Worth another look</h3>
+        <div id="revisit-list"></div>
+      </div>
+    </div>
+    <div class="results-actions">
+      <button class="res-btn ghost" id="res-home">🏠 HQ</button>
+      <button class="res-btn primary" id="res-again">🔄 New Challenge</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════
+// SKILL DEFINITIONS — each maps to a full tool to revisit if he struggles
+// ═══════════════════════════════════════════════════════════════════════
+const SKILLS = {
+  arith:  { label: 'Adding',        tag: 'arith',  tool: 'Maths Blaster',      file: 'Maths_Practice.html' },
+  column: { label: 'Column Sum',    tag: 'column', tool: 'Maths Blaster',      file: 'Maths_Practice.html' },
+  times:  { label: 'Times Tables',  tag: 'times',  tool: 'Times Tables',       file: 'Times_Tables.html' },
+  frac:   { label: 'Fractions',     tag: 'frac',   tool: 'Fraction Fun House', file: 'Fraction_Fun_House.html' },
+  shape:  { label: 'Shapes',        tag: 'shape',  tool: 'Shape Explorer',     file: 'Shape_Explorer.html' },
+  money:  { label: 'Money',         tag: 'money',  tool: 'Crows Cash',         file: 'Crows_Cash.html' },
+};
+
+const QUESTIONS_PER_SESSION = 10;
+
+// ═══════════════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════════════
+let questions = [];
+let qIdx = 0;
+let score = 0;
+let answered = false;
+let muted = false;
+let missedSkills = {}; // skill -> count of wrong answers
+
+// ═══════════════════════════════════════════════════════════════════════
+// VOICE
+// ═══════════════════════════════════════════════════════════════════════
+let voiceCache = null;
+function loadVoices() {
+  if (typeof speechSynthesis === 'undefined') return;
+  const v = speechSynthesis.getVoices();
+  voiceCache = v.find(x => x.name === 'Karen') || v.find(x => x.lang === 'en-AU')
+            || v.find(x => x.lang && x.lang.startsWith('en')) || v[0] || null;
+}
+if (typeof speechSynthesis !== 'undefined') { speechSynthesis.onvoiceschanged = loadVoices; loadVoices(); }
+function say(t) {
+  if (muted || typeof speechSynthesis === 'undefined') return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(t);
+  if (voiceCache) u.voice = voiceCache;
+  u.rate = 0.85; u.pitch = 1.05; u.lang = 'en-AU';
+  speechSynthesis.speak(u);
+}
+muted = localStorage.getItem('mathschal_muted') === '1';
+const muteBtn = document.getElementById('mute-btn');
+function refreshMute() { muteBtn.textContent = muted ? '🔇' : '🔊'; muteBtn.classList.toggle('muted', muted); }
+refreshMute();
+muteBtn.addEventListener('click', () => {
+  muted = !muted; localStorage.setItem('mathschal_muted', muted ? '1' : '0');
+  if (muted && typeof speechSynthesis !== 'undefined') speechSynthesis.cancel();
+  refreshMute();
+});
+
+// ═══════════════════════════════════════════════════════════════════════
+// PERSONAL BEST
+// ═══════════════════════════════════════════════════════════════════════
+function getBest() { const v = localStorage.getItem('mathschal_best'); return v ? parseInt(v,10) : null; }
+function setBest(s) { const c = getBest(); if (c === null || s > c) { localStorage.setItem('mathschal_best', s); return true; } return false; }
+function refreshBestPill() {
+  const b = getBest(); const pill = document.getElementById('best-pill');
+  if (b !== null) { pill.style.display = 'block'; pill.textContent = `🏆 Best: ${b}/${QUESTIONS_PER_SESSION}`; }
+}
+refreshBestPill();
+
+// ═══════════════════════════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════════════════════════
+function randInt(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+function shuffle(a){return [...a].sort(()=>Math.random()-0.5);}
+
+function showScreen(name) {
+  ['start-screen','game-screen','results-screen'].forEach(id => {
+    document.getElementById(id).classList.toggle('active', id === name);
+  });
+  updateBackBtn();
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// QUESTION GENERATORS — each returns a question object with a `check`-able answer
+// ═══════════════════════════════════════════════════════════════════════
+
+// Mental arithmetic (quick add/subtract, no column procedure)
+function genArith() {
+  const isAdd = Math.random() < 0.5;
+  let a, b, text, answer;
+  if (isAdd) {
+    a = randInt(5, 30); b = randInt(3, 20);
+    answer = a + b; text = `${a} + ${b} = ?`;
+  } else {
+    a = randInt(10, 35); b = randInt(2, a - 1);
+    answer = a - b; text = `${a} − ${b} = ?`;
+  }
+  return { skill: 'arith', kind: 'choice', text, answer,
+           choices: numChoices(answer, 3) };
+}
+
+// Column sum — full stacked grid with carry/borrow (the priority skill).
+// `force` can be 'add' or 'sub' to lock the operation; otherwise random.
+function genColumn(force) {
+  const isAdd = force === 'add' ? true : force === 'sub' ? false : Math.random() < 0.55;
+  let top, bottom;
+  if (isAdd) {
+    // 2 or 3-digit, biased to force at least one carry
+    top = randInt(24, 698); bottom = randInt(15, 299);
+  } else {
+    top = randInt(132, 845); bottom = randInt(18, top - 10);
+  }
+  const answer = isAdd ? top + bottom : top - bottom;
+  return { skill: 'column', kind: 'column', isAdd, top, bottom, answer };
+}
+
+// Times tables — single fact
+function genTimes() {
+  const a = randInt(2, 10), b = randInt(2, 10);
+  const answer = a * b;
+  return { skill: 'times', kind: 'choice', text: `${a} × ${b} = ?`, answer,
+           choices: numChoices(answer, 3, true) };
+}
+
+// Fractions — 1/n of a number (clean dividing), unit fractions
+function genFrac() {
+  const denom = pick([2, 3, 4, 5]);
+  const per = randInt(2, 6);
+  const number = denom * per;
+  const answer = per;
+  return { skill: 'frac', kind: 'choice',
+           text: `What is 1/${denom} of ${number}?`,
+           sub: `Split ${number} into ${denom} equal groups.`,
+           answer, choices: numChoices(answer, 3) };
+}
+
+// Shapes — name / sides / corners
+const SHAPE_DATA = [
+  { name: 'triangle',  sides: 3, svg: '<polygon class="poly" points="60,12 105,100 15,100"/>' },
+  { name: 'square',    sides: 4, svg: '<rect class="poly" x="20" y="20" width="80" height="80" rx="3"/>' },
+  { name: 'rectangle', sides: 4, svg: '<rect class="poly" x="10" y="32" width="100" height="56" rx="3"/>' },
+  { name: 'pentagon',  sides: 5, svg: '<polygon class="poly" points="60,12 105,46 88,100 32,100 15,46"/>' },
+  { name: 'hexagon',   sides: 6, svg: '<polygon class="poly" points="60,12 100,36 100,84 60,108 20,36"/>' },
+];
+function genShape() {
+  const s = pick(SHAPE_DATA);
+  const askSides = Math.random() < 0.5;
+  if (askSides) {
+    return { skill: 'shape', kind: 'choice-visual',
+             svg: `<svg viewBox="0 0 120 120">${s.svg}</svg>`,
+             text: 'How many sides?', answer: s.sides,
+             choices: numChoices(s.sides, 3) };
+  } else {
+    const names = shuffle(SHAPE_DATA.map(x => x.name)).slice(0, 4);
+    if (!names.includes(s.name)) names[0] = s.name;
+    return { skill: 'shape', kind: 'choice-visual',
+             svg: `<svg viewBox="0 0 120 120">${s.svg}</svg>`,
+             text: 'What shape is this?', answer: s.name,
+             choices: shuffle([...new Set([s.name, ...names])].slice(0, 4)), isText: true };
+  }
+}
+
+// Money — simple change
+function genMoney() {
+  const paid = pick([20, 50, 100]);
+  const spent = randInt(5, paid - 5);
+  // keep to round 5s for clean mental change
+  const spentRounded = Math.round(spent / 5) * 5 || 5;
+  const answer = paid - spentRounded;
+  return { skill: 'money', kind: 'choice',
+           text: `You have ${paid}c and spend ${spentRounded}c. How much change?`,
+           answer, choices: numChoices(answer, 3, false, 'c') };
+}
+
+// Build numeric multiple-choice options around a correct answer
+function numChoices(correct, count, tight, suffix) {
+  const opts = new Set([correct]);
+  const spread = tight ? [-2,-1,1,2,3] : [-3,-2,-1,1,2,3,4];
+  let guard = 0;
+  while (opts.size < count && guard < 60) {
+    guard++;
+    const cand = correct + pick(spread);
+    if (cand >= 0) opts.add(cand);
+  }
+  return shuffle([...opts]).map(n => suffix ? `${n}${suffix}` : n);
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// SESSION BUILD — interleaved, experience-led (allows a soft pair or two)
+// ═══════════════════════════════════════════════════════════════════════
+function buildSession() {
+  missedSkills = {};
+  const gens = {
+    arith: genArith, column: genColumn, times: genTimes,
+    frac: genFrac, shape: genShape, money: genMoney,
+  };
+
+  // Plan the skill sequence first, THEN generate.
+  // Rule: exactly 1-2 column questions; rest spread across the other 5 skills.
+  // GUARANTEE: at least one column question is SUBTRACTION every session,
+  // since the borrow procedure is the priority skill to consolidate.
+  const columnCount = pick([1, 2]);
+  const otherSkills = ['arith', 'times', 'frac', 'shape', 'money'];
+
+  // Decide the operation for each column slot.
+  // 1 column  → it's a subtraction.
+  // 2 columns → one subtraction, one addition (subtraction guaranteed).
+  let columnOps;
+  if (columnCount === 1) {
+    columnOps = ['sub'];
+  } else {
+    columnOps = shuffle(['sub', 'add']);
+  }
+
+  // Build the plan as objects so column slots carry their forced operation.
+  let plan = [];
+  columnOps.forEach(op => plan.push({ skill: 'column', force: op }));
+  // Fill the rest, cycling through other skills for even-ish coverage
+  let poolCycle = shuffle(otherSkills);
+  let ci = 0;
+  while (plan.length < QUESTIONS_PER_SESSION) {
+    if (ci >= poolCycle.length) { poolCycle = shuffle(otherSkills); ci = 0; }
+    plan.push({ skill: poolCycle[ci++] });
+  }
+
+  // Shuffle, but keep column sums away from position 0 (gentle warm-up first)
+  plan = shuffle(plan);
+  if (plan[0].skill === 'column') {
+    const swapWith = plan.findIndex((s, i) => i > 0 && s.skill !== 'column');
+    if (swapWith > 0) { [plan[0], plan[swapWith]] = [plan[swapWith], plan[0]]; }
+  }
+
+  // Experience-led touch: with ~40% chance, create ONE deliberate gentle pair
+  // by making a random non-column question repeat its skill in the next slot.
+  if (Math.random() < 0.4) {
+    const i = randInt(1, QUESTIONS_PER_SESSION - 2);
+    if (plan[i].skill !== 'column' && plan[i+1].skill !== 'column') {
+      plan[i+1] = { skill: plan[i].skill };
+    }
+  }
+
+  questions = plan.map(slot =>
+    slot.skill === 'column' ? genColumn(slot.force) : gens[slot.skill]()
+  );
+  qIdx = 0; score = 0;
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════════════════════
+function renderQuestion() {
+  answered = false;
+  const q = questions[qIdx];
+  const skillDef = SKILLS[q.skill];
+  const tag = document.getElementById('q-skill-tag');
+  const qText = document.getElementById('question-text');
+  const qSub = document.getElementById('question-sub');
+  const visual = document.getElementById('visual-area');
+  const controls = document.getElementById('controls-area');
+  visual.innerHTML = ''; controls.innerHTML = ''; qSub.textContent = '';
+  document.getElementById('feedback').className = 'feedback';
+  document.getElementById('tool-prompt').style.display = 'none';
+
+  tag.className = 'q-skill-tag ' + skillDef.tag;
+  tag.textContent = skillDef.label;
+  document.getElementById('skill-pill').textContent = skillDef.label;
+  document.getElementById('skill-pill').style.color = `var(--c-${q.skill})`;
+  document.getElementById('q-counter').textContent = `Question ${qIdx+1} of ${QUESTIONS_PER_SESSION}`;
+  document.getElementById('score-pill').textContent = `⭐ ${score} / ${QUESTIONS_PER_SESSION}`;
+  document.getElementById('progress-fill').style.width = `${(qIdx/QUESTIONS_PER_SESSION)*100}%`;
+
+  if (q.kind === 'column') { renderColumn(q, qText, qSub, visual, controls); return; }
+
+  // visual (shape) questions
+  if (q.kind === 'choice-visual') {
+    visual.innerHTML = `<div class="shape-stage">${q.svg}</div>`;
+  }
+  qText.textContent = q.text;
+  if (q.sub) qSub.textContent = q.sub;
+  say(q.text);
+
+  // choice buttons
+  const grid = document.createElement('div');
+  grid.className = 'choices' + (q.choices.length === 3 ? ' three' : '');
+  q.choices.forEach(opt => {
+    const b = document.createElement('button');
+    b.className = 'choice-btn';
+    if (q.isText) b.style.textTransform = 'capitalize';
+    b.textContent = opt;
+    b.addEventListener('click', () => {
+      if (answered) return;
+      const ok = String(opt) === String(q.answer);
+      grid.querySelectorAll('.choice-btn').forEach(x => x.disabled = true);
+      b.classList.add(ok ? 'correct' : 'wrong');
+      if (!ok) {
+        [...grid.children].find(c => String(c.textContent) === String(q.answer))?.classList.add('correct');
+      }
+      finishQuestion(ok, q, `The answer is ${q.answer}.`);
+    });
+    grid.appendChild(b);
+  });
+  controls.appendChild(grid);
+}
+
+// Column sum render — stacked grid, typed answer per column
+function renderColumn(q, qText, qSub, visual, controls) {
+  qText.textContent = q.isAdd ? 'Add these up!' : 'Take it away!';
+  qSub.textContent = 'Work column by column, right to left. Carry or borrow if you need to.';
+  say(q.isAdd ? 'Add these up.' : 'Take it away.');
+
+  const topStr = String(q.top);
+  const botStr = String(q.bottom);
+  const ansStr = String(q.answer);
+  const width = Math.max(topStr.length, botStr.length, ansStr.length);
+
+  const padLeft = (s) => s.padStart(width, ' ');
+  const topP = padLeft(topStr), botP = padLeft(botStr);
+
+  const placeClass = (posFromRight) => posFromRight === 0 ? 'place-u' : posFromRight === 1 ? 'place-t' : 'place-h';
+
+  const wrap = document.createElement('div');
+  wrap.className = 'column-wrap';
+
+  // top number row
+  let topRow = '<div class="col-row">';
+  for (let i = 0; i < width; i++) {
+    const ch = topP[i];
+    const posFromRight = width - 1 - i;
+    topRow += `<div class="col-cell ${ch===' '?'':placeClass(posFromRight)}">${ch===' '?'':ch}</div>`;
+  }
+  topRow += '</div>';
+
+  // bottom number row with operator
+  let botRow = `<div class="col-row"><div class="col-op">${q.isAdd?'+':'−'}</div>`;
+  for (let i = 0; i < width; i++) {
+    const ch = botP[i];
+    const posFromRight = width - 1 - i;
+    botRow += `<div class="col-cell ${ch===' '?'':placeClass(posFromRight)}">${ch===' '?'':ch}</div>`;
+  }
+  botRow += '</div>';
+
+  // answer row — one input per column
+  let ansRow = '<div class="col-row">';
+  for (let i = 0; i < width; i++) {
+    ansRow += `<input class="col-answer-cell" inputmode="numeric" maxlength="1" data-col="${i}">`;
+  }
+  ansRow += '</div>';
+
+  wrap.innerHTML = topRow + botRow + '<div class="col-line"></div>' + ansRow;
+  visual.appendChild(wrap);
+
+  // input behaviour — iOS-safe (select on focus, single digit, auto-advance left)
+  const inputs = [...wrap.querySelectorAll('.col-answer-cell')];
+  inputs.forEach((inp, i) => {
+    inp.addEventListener('focus', e => setTimeout(() => { try { e.target.select(); } catch(_){} }, 0));
+    inp.addEventListener('input', e => {
+      e.target.value = e.target.value.replace(/\D/g, '').slice(-1);
+      if (e.target.value && i > 0) inputs[i-1].focus(); // move leftward
+    });
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') checkBtn.click(); });
+  });
+  // focus the rightmost (units) column first
+  setTimeout(() => inputs[inputs.length - 1].focus(), 80);
+
+  const checkBtn = document.createElement('button');
+  checkBtn.className = 'action-btn primary';
+  checkBtn.textContent = '✅ Check My Answer';
+  checkBtn.addEventListener('click', () => {
+    if (answered) return;
+    const typed = inputs.map(x => x.value || '').join('').replace(/^0+(?=\d)/, '');
+    if (inputs.some(x => x.value === '')) {
+      // require all columns filled (allow leading blank columns to be 0)
+      // Actually: pad typed to compare; treat empty leading as nothing
+    }
+    const typedNum = parseInt(inputs.map(x => x.value || '0').join(''), 10);
+    const ok = typedNum === q.answer;
+    inputs.forEach(x => x.disabled = true);
+    // colour the answer cells
+    const ansPadded = padLeft(ansStr);
+    inputs.forEach((x, idx) => {
+      const expected = ansPadded[idx] === ' ' ? '' : ansPadded[idx];
+      const got = x.value || '';
+      x.classList.add(got === expected ? 'correct' : 'wrong');
+    });
+    checkBtn.disabled = true;
+    finishQuestion(ok, q, `${q.top} ${q.isAdd?'+':'−'} ${q.bottom} = ${q.answer}.`);
+  });
+  controls.appendChild(checkBtn);
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// FINISH QUESTION
+// ═══════════════════════════════════════════════════════════════════════
+function finishQuestion(correct, q, answerLine) {
+  answered = true;
+  if (correct) { score++; confetti(12); }
+  else { missedSkills[q.skill] = (missedSkills[q.skill] || 0) + 1; }
+
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback ' + (correct ? 'good' : 'bad');
+  document.getElementById('fb-emoji').textContent = correct ? pick(['🌟','🎉','⭐','✨','🏆']) : '💡';
+  document.getElementById('fb-msg').textContent = correct
+    ? pick(['Nailed it!','Brilliant!','Spot on!','You got it!','Great work!'])
+    : `Not quite — ${answerLine}`;
+
+  // Tool prompt ONLY on wrong answers — the "go back and practise" signpost
+  if (!correct) {
+    const skillDef = SKILLS[q.skill];
+    const tp = document.getElementById('tool-prompt');
+    document.getElementById('tool-prompt-text').innerHTML =
+      `Want more of these? Try <strong>${skillDef.tool}</strong> back at HQ!`;
+    tp.style.display = 'flex';
+  }
+
+  document.getElementById('score-pill').textContent = `⭐ ${score} / ${QUESTIONS_PER_SESSION}`;
+  say(correct ? 'Correct!' : answerLine);
+}
+
+document.getElementById('fb-next').addEventListener('click', () => {
+  qIdx++;
+  if (qIdx >= QUESTIONS_PER_SESSION) showResults();
+  else renderQuestion();
+});
+
+// ═══════════════════════════════════════════════════════════════════════
+// RESULTS
+// ═══════════════════════════════════════════════════════════════════════
+function showResults() {
+  document.getElementById('progress-fill').style.width = '100%';
+  showScreen('results-screen');
+  const total = QUESTIONS_PER_SESSION;
+  const pct = score/total;
+  let emoji, title, msg;
+  if (score === total)   { emoji='🏆'; title='Perfect Challenge!'; msg='Every single one — you\'re on fire!'; confetti(40); setTimeout(()=>confetti(30),400); }
+  else if (pct >= 0.8)   { emoji='🌟'; title='Brilliant!'; msg=`${score} out of ${total} — superb mixed maths!`; }
+  else if (pct >= 0.6)   { emoji='⭐'; title='Great effort!'; msg=`${score} out of ${total} — really good going!`; }
+  else if (pct >= 0.4)   { emoji='💪'; title='Good try!'; msg=`${score} out of ${total} — keep at it!`; }
+  else                   { emoji='📚'; title='Keep practising!'; msg='Have another go — every try helps!'; }
+
+  document.getElementById('res-emoji').textContent = emoji;
+  document.getElementById('res-title').textContent = title;
+  document.getElementById('res-score').innerHTML = `${score} <span>/ ${total}</span>`;
+  document.getElementById('res-msg').textContent = msg;
+
+  const isNew = setBest(score);
+  const best = getBest();
+  const bestEl = document.getElementById('res-best');
+  if (isNew && score > 0) { bestEl.style.display='block'; bestEl.textContent = `⭐ New personal best: ${best}/${total}!`; setTimeout(()=>confetti(20),200); }
+  else if (best !== null) { bestEl.style.display='block'; bestEl.textContent = `Personal best: ${best}/${total}`; }
+  refreshBestPill();
+
+  // Revisit panel — which tools to go back to, based on what he missed
+  const revisitPanel = document.getElementById('revisit-panel');
+  const revisitList = document.getElementById('revisit-list');
+  revisitList.innerHTML = '';
+  const missedToolNames = [...new Set(Object.keys(missedSkills).map(sk => SKILLS[sk].tool))];
+  if (missedToolNames.length > 0) {
+    revisitPanel.style.display = 'flex';
+    const iconFor = { 'Maths Blaster':'🔢','Times Tables':'✖️','Fraction Fun House':'🍕','Shape Explorer':'🔷','Crows Cash':'💰' };
+    missedToolNames.forEach(tool => {
+      const div = document.createElement('div');
+      div.className = 'revisit-item';
+      div.innerHTML = `<span class="ri-icon">${iconFor[tool]||'📘'}</span> ${tool}`;
+      revisitList.appendChild(div);
+    });
+  } else {
+    revisitPanel.style.display = 'none';
+  }
+
+  say(title + ' ' + msg);
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// BUTTONS
+// ═══════════════════════════════════════════════════════════════════════
+function startGame() { buildSession(); showScreen('game-screen'); renderQuestion(); }
+document.getElementById('start-btn').addEventListener('click', startGame);
+document.getElementById('res-again').addEventListener('click', startGame);
+document.getElementById('res-home').addEventListener('click', () => { window.location.href = 'index.html'; });
+
+// ═══════════════════════════════════════════════════════════════════════
+// HEADER BACK
+// ═══════════════════════════════════════════════════════════════════════
+const headerBackBtn = document.getElementById('header-back-btn');
+function updateBackBtn() {
+  const onStart = document.getElementById('start-screen').classList.contains('active');
+  headerBackBtn.textContent = onStart ? '← Home' : '← Back';
+}
+headerBackBtn.addEventListener('click', e => {
+  const onStart = document.getElementById('start-screen').classList.contains('active');
+  if (!onStart) { e.preventDefault(); if (typeof speechSynthesis!=='undefined') speechSynthesis.cancel(); showScreen('start-screen'); }
+});
+updateBackBtn();
+
+// ═══════════════════════════════════════════════════════════════════════
+// CONFETTI
+// ═══════════════════════════════════════════════════════════════════════
+function confetti(count) {
+  const colors = ['#7c3aed','#3b82f6','#f59e0b','#16a34a','#f472b6','#2dd4bf'];
+  for (let i=0;i<count;i++){
+    setTimeout(()=>{
+      const p=document.createElement('div'); p.className='confetti-piece';
+      p.style.cssText=`left:${Math.random()*100}vw;top:-10px;width:${8+Math.random()*8}px;height:${8+Math.random()*8}px;background:${colors[Math.floor(Math.random()*colors.length)]};border-radius:${Math.random()>.5?'50%':'2px'};animation-duration:${1.5+Math.random()*2}s;transform:rotate(${Math.random()*360}deg)`;
+      document.body.appendChild(p); setTimeout(()=>p.remove(),4000);
+    }, i*40);
+  }
+}
+
+// INIT
+showScreen('start-screen');
+</script>
+</body>
+</html>
