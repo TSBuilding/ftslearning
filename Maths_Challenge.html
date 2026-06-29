@@ -503,8 +503,9 @@ function genArith() {
     a = randInt(10, 35); b = randInt(2, a - 1);
     answer = a - b; text = `${a} − ${b} = ?`;
   }
-  return { skill: 'arith', kind: 'choice', text, answer,
-           choices: numChoices(answer, 3) };
+  return { skill: 'arith', kind: 'choice', text,
+           choices: numChoices(answer, 3).map(n => ({ label: String(n), value: n })),
+           answerValue: answer, answerLabel: String(answer) };
 }
 
 // Column sum — full stacked grid with carry/borrow (the priority skill).
@@ -526,8 +527,9 @@ function genColumn(force) {
 function genTimes() {
   const a = randInt(2, 10), b = randInt(2, 10);
   const answer = a * b;
-  return { skill: 'times', kind: 'choice', text: `${a} × ${b} = ?`, answer,
-           choices: numChoices(answer, 3, true) };
+  return { skill: 'times', kind: 'choice', text: `${a} × ${b} = ?`,
+           choices: numChoices(answer, 3, true).map(n => ({ label: String(n), value: n })),
+           answerValue: answer, answerLabel: String(answer) };
 }
 
 // Fractions — 1/n of a number (clean dividing), unit fractions
@@ -539,49 +541,60 @@ function genFrac() {
   return { skill: 'frac', kind: 'choice',
            text: `What is 1/${denom} of ${number}?`,
            sub: `Split ${number} into ${denom} equal groups.`,
-           answer, choices: numChoices(answer, 3) };
+           choices: numChoices(answer, 3).map(n => ({ label: String(n), value: n })),
+           answerValue: answer, answerLabel: String(answer) };
 }
 
-// Shapes — name / sides / corners
+// Shapes — name / sides. Full Master set (all 10 shapes), kept upright.
+// Including octagon/oval/rhombus/star nudges him back to Shape Explorer's
+// Master mode to learn the ones he doesn't know yet.
 const SHAPE_DATA = [
+  { name: 'circle',    sides: 0, svg: '<circle class="poly" cx="60" cy="60" r="50"/>' },
   { name: 'triangle',  sides: 3, svg: '<polygon class="poly" points="60,12 105,100 15,100"/>' },
   { name: 'square',    sides: 4, svg: '<rect class="poly" x="20" y="20" width="80" height="80" rx="3"/>' },
   { name: 'rectangle', sides: 4, svg: '<rect class="poly" x="10" y="32" width="100" height="56" rx="3"/>' },
   { name: 'pentagon',  sides: 5, svg: '<polygon class="poly" points="60,12 105,46 88,100 32,100 15,46"/>' },
   { name: 'hexagon',   sides: 6, svg: '<polygon class="poly" points="60,12 100,36 100,84 60,108 20,36"/>' },
+  { name: 'octagon',   sides: 8, svg: '<polygon class="poly" points="42,10 78,10 110,42 110,78 78,110 42,110 10,78 10,42"/>' },
+  { name: 'oval',      sides: 0, svg: '<ellipse class="poly" cx="60" cy="60" rx="50" ry="35"/>' },
+  { name: 'rhombus',   sides: 4, svg: '<polygon class="poly" points="60,28 108,60 60,92 12,60"/>' },
+  { name: 'star',      sides: 10, svg: '<polygon class="poly" points="60,8 73,42 110,43 81,67 92,104 60,82 28,104 39,67 10,43 47,42"/>' },
 ];
 function genShape() {
   const s = pick(SHAPE_DATA);
-  const askSides = Math.random() < 0.5;
+  // Only ask "how many sides?" for shapes with straight sides (skip circle/oval).
+  const askSides = s.sides > 0 && Math.random() < 0.5;
   if (askSides) {
     return { skill: 'shape', kind: 'choice-visual',
              svg: `<svg viewBox="0 0 120 120">${s.svg}</svg>`,
-             text: 'How many sides?', answer: s.sides,
-             choices: numChoices(s.sides, 3) };
+             text: 'How many sides?',
+             choices: numChoices(s.sides, 3).map(n => ({ label: String(n), value: n })),
+             answerValue: s.sides, answerLabel: String(s.sides) };
   } else {
-    const names = shuffle(SHAPE_DATA.map(x => x.name)).slice(0, 4);
-    if (!names.includes(s.name)) names[0] = s.name;
+    const names = shuffle(SHAPE_DATA.map(x => x.name)).filter(n => n !== s.name).slice(0, 3);
+    const opts = shuffle([s.name, ...names]);
     return { skill: 'shape', kind: 'choice-visual',
              svg: `<svg viewBox="0 0 120 120">${s.svg}</svg>`,
-             text: 'What shape is this?', answer: s.name,
-             choices: shuffle([...new Set([s.name, ...names])].slice(0, 4)), isText: true };
+             text: 'What shape is this?',
+             choices: opts.map(n => ({ label: n, value: n })),
+             answerValue: s.name, answerLabel: s.name, isText: true };
   }
 }
 
-// Money — simple change
+// Money — simple change, in whole dollars
 function genMoney() {
-  const paid = pick([20, 50, 100]);
-  const spent = randInt(5, paid - 5);
-  // keep to round 5s for clean mental change
-  const spentRounded = Math.round(spent / 5) * 5 || 5;
-  const answer = paid - spentRounded;
+  const paid = pick([5, 10, 20]);
+  // spend a whole-dollar amount less than paid, leaving clean change
+  const spent = randInt(1, paid - 1);
+  const answer = paid - spent;
   return { skill: 'money', kind: 'choice',
-           text: `You have ${paid}c and spend ${spentRounded}c. How much change?`,
-           answer, choices: numChoices(answer, 3, false, 'c') };
+           text: `You have $${paid} and spend $${spent}. How much change?`,
+           choices: numChoices(answer, 3).map(n => ({ label: `$${n}`, value: n })),
+           answerValue: answer, answerLabel: `$${answer}` };
 }
 
-// Build numeric multiple-choice options around a correct answer
-function numChoices(correct, count, tight, suffix) {
+// Build numeric multiple-choice options (plain numbers) around a correct answer
+function numChoices(correct, count, tight) {
   const opts = new Set([correct]);
   const spread = tight ? [-2,-1,1,2,3] : [-3,-2,-1,1,2,3,4];
   let guard = 0;
@@ -590,7 +603,7 @@ function numChoices(correct, count, tight, suffix) {
     const cand = correct + pick(spread);
     if (cand >= 0) opts.add(cand);
   }
-  return shuffle([...opts]).map(n => suffix ? `${n}${suffix}` : n);
+  return shuffle([...opts]);
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -694,16 +707,16 @@ function renderQuestion() {
     const b = document.createElement('button');
     b.className = 'choice-btn';
     if (q.isText) b.style.textTransform = 'capitalize';
-    b.textContent = opt;
+    b.textContent = opt.label;
     b.addEventListener('click', () => {
       if (answered) return;
-      const ok = String(opt) === String(q.answer);
+      const ok = opt.value === q.answerValue;
       grid.querySelectorAll('.choice-btn').forEach(x => x.disabled = true);
       b.classList.add(ok ? 'correct' : 'wrong');
       if (!ok) {
-        [...grid.children].find(c => String(c.textContent) === String(q.answer))?.classList.add('correct');
+        [...grid.children].find(c => c.textContent === q.answerLabel)?.classList.add('correct');
       }
-      finishQuestion(ok, q, `The answer is ${q.answer}.`);
+      finishQuestion(ok, q, `The answer is ${q.answerLabel}.`);
     });
     grid.appendChild(b);
   });
